@@ -1,0 +1,1469 @@
+{
+    "version": "1.9.2",
+    "categories": [
+        {
+            "id": "1772710087888",
+            "name": "第九章練習"
+        },
+        {
+            "id": "1774092119551",
+            "name": "第九章小考"
+        },
+        {
+            "id": "1775054154277",
+            "name": "第十章練習"
+        },
+        {
+            "id": "1775054160813",
+            "name": "第十章小考"
+        },
+        {
+            "id": "1776782140603",
+            "name": "第十一章練習"
+        },
+        {
+            "id": "1775119474686",
+            "name": "作業"
+        },
+        {
+            "id": "1777377555516",
+            "name": "第十一章小考"
+        }
+    ],
+    "problems": [
+        {
+            "id": "1772710117057",
+            "catId": "1772710087888",
+            "title": "1102B (一) 第一題-類別屬性",
+            "desc": "請撰寫一個物件Car，該物件中有下列四種屬性:string brand(品牌)、string color(顏色)、double oilPrice(油價)、int tank(油箱大小)\n\nmain函式中已撰寫好程式，請勿修改。\n\n輸入說明: 輸入一組 品牌 string、顏色 string、油價 double、油箱大小 int\n\n輸出說明: 輸出兩組物件的品牌、顏色、加滿油箱所需金額\n\n範例輸入:\n\nBenz White 13.9 70\n\n範例輸出:\n\nToyota Orange 1075\nBenz White 973\n",
+            "tpl_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\n\nint main(){\n\tCar myCar1;\n\tmyCar1.brand = \"Toyota\";\n\tmyCar1.color = \"Orange\";\n\tmyCar1.oilPrice = 21.5;\n\tmyCar1.tank = 50;\n\t\n\tCar myCar2;\n\tcin >> myCar2.brand >> myCar2.color >> myCar2.oilPrice >> myCar2.tank ;\n\t\n\tcout <<myCar1.brand << \" \" << myCar1.color << \" \" << myCar1.oilPrice*myCar1.tank << endl; \n\tcout <<myCar2.brand << \" \" << myCar2.color << \" \" << myCar2.oilPrice*myCar2.tank << endl; \n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\n\nint main(){\n\tCar myCar1;\n\tmyCar1.brand = \"Toyota\";\n\tmyCar1.color = \"Orange\";\n\tmyCar1.oilPrice = 21.5;\n\tmyCar1.tank = 50;\n\t\n\tCar myCar2;\n\tcin >> myCar2.brand >> myCar2.color >> myCar2.oilPrice >> myCar2.tank ;\n\t\n\tcout <<myCar1.brand << \" \" << myCar1.color << \" \" << myCar1.oilPrice*myCar1.tank << endl; \n\tcout <<myCar2.brand << \" \" << myCar2.color << \" \" << myCar2.oilPrice*myCar2.tank << endl; \n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "Benz White 13.9 70",
+                    "output": "Toyota Orange 1075\nBenz White 973"
+                }
+            ],
+            "lastLang": "cpp"
+        },
+        {
+            "id": "1772710181992",
+            "catId": "1772710087888",
+            "title": "1102B (一) 第二題-類別方法",
+            "desc": "延續上一題，請額外在物件中撰寫計算價格的方法(油價*油箱油量) double calculatePrice()\n\nmain函式中已撰寫好程式，請勿修改。\n\n輸入說明: 輸入一組 品牌 string、顏色 string、油價 double、油箱大小 int\n\n輸出說明: 輸出兩組物件的品牌、顏色、加滿油箱所需金額\n\n範例輸入:\n\nBenz White 13.9 70\n\n範例輸出:\n\nToyota Orange 1075\nBenz White 973",
+            "tpl_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main(){\n\tCar myCar1;\n\tmyCar1.brand = \"Toyota\";\n\tmyCar1.color = \"Orange\";\n\tmyCar1.oilPrice = 21.5;\n\tmyCar1.tank = 50;\n\t\n\tCar myCar2;\n\tcin >> myCar2.brand >> myCar2.color >> myCar2.oilPrice >> myCar2.tank ;\n\t\n\tcout <<myCar1.brand << \" \" << myCar1.color << \" \" << myCar1.calculatePrice() << endl; \n\tcout <<myCar2.brand << \" \" << myCar2.color << \" \" << myCar2.calculatePrice() << endl; \n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // C++ Solution\n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "Benz White 13.9 70",
+                    "output": "Toyota Orange 1075\nBenz White 973"
+                }
+            ],
+            "lastLang": "cpp"
+        },
+        {
+            "id": "1772710335845",
+            "catId": "1772710087888",
+            "title": "1102B (一) 第三題-類別使用",
+            "desc": "請撰寫主程式，並使用上述的類別建立兩個物件，帶入輸入的資料後，稍加修改類別內的內容，使其符合題目所需，並使用print()方式將物件內的資訊顯示出來\n\n請勿修改類別中除print以外的部分\n\n輸入說明:輸入兩組資料，每一組資料中有 品牌、顏色、價格、重量。\n\n輸出說明:使用print()印出物件中的資料\n\np.s print中印出的資料包含品牌、顏色、每克價值(請取到小數點後第二位)\n\n範例輸入:\nCoach Silver 1499 1249\nCasio Gold 1264 1301\n\n範例輸出:\nCoach Silver 1.20\nCasio Gold 0.97\n",
+            "tpl_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Watch{\n\tpublic:\n\t\tstring brand;\n\t\tstring color;\n\t\tdouble price;\n\t\tdouble weight;\n\t\tvoid print(){\n\t\t\tcout << brand << \" \" << color << \" \" << price/weight << endl;\n\t\t}\n};\n\nint main(){\n\t\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Watch{\n\tpublic:\n\t\tstring brand;\n\t\tstring color;\n\t\tdouble price;\n\t\tdouble weight;\n\t\tvoid print(){\n\t\t\tcout << brand << \" \" << color << \" \" << price/weight << endl;\n\t\t}\n};\n\nint main(){\n\t\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "Coach Silver 1499 1249\nCasio Gold 1264 1301",
+                    "output": "Coach Silver 1.20\nCasio Gold 0.97"
+                }
+            ],
+            "lastLang": "cpp"
+        },
+        {
+            "id": "1773143612238",
+            "catId": "1774092119551",
+            "title": "第一次小考-第二題",
+            "desc": "【問題描述】\n在台北市有一隻可憐小鯊鯊，腦袋不好，需要你幫他計算，每天吃的餐點總共多少錢，請你幫這隻鯊鯊撰寫一隻程式，一共有21組輸入，分別為一個禮拜的每一餐，每組輸入會有食物名稱、食物價格、食物數量，請你幫幫他計算每天花了多少錢以及一個禮拜總共花了多少錢。\n\n【輸入說明】\n輸入21組資料，每一組資料中有食物名稱、食物價格、食物數量，請在 setFood() 進行輸入的動作。\n\n【輸出說明】\n使用 printData() 印出物件中的資料、printDay() 印出當天三個物件的總金額，printWeek() 印出一週全部物件的總金額。\n\n【備註】\n\nprintData() 中印出的資料包含食物名稱、食物價格以及食物數量。\n\nprintDay() 中印出三餐的資料並以 \"--------\" 換行再輸出當日金額。\n\n範例輸入:\n三明治 35 1\n排骨便當 90 1\n牛肉麵 120 1\n蛋餅 30 2\n雞肉飯 50 1\n火鍋 250 1\n漢堡 45 1\n涼麵 45 1\n壽司 150 1\n御飯糰 30 1\n炒飯 80 1\n牛排 280 1\n鐵板吐司 55 1\n意麵 60 1\n麻辣燙 120 1\n燒餅 25 2\n炸醬麵 70 1\n燒臘便當 110 1\n水煎包 15 3\n水餃 6 10\n小籠包 120 1\n\n範例輸出:\n\n三明治 35 1\n排骨便當 90 1\n牛肉麵 120 1\n--------\n當日總花費: 245\n\n蛋餅 30 2\n雞肉飯 50 1\n火鍋 250 1\n--------\n當日總花費: 360\n\n漢堡 45 1\n涼麵 45 1\n壽司 150 1\n--------\n當日總花費: 240\n\n御飯糰 30 1\n炒飯 80 1\n牛排 280 1\n--------\n當日總花費: 390\n\n鐵板吐司 55 1\n意麵 60 1\n麻辣燙 120 1\n--------\n當日總花費: 235\n\n燒餅 25 2\n炸醬麵 70 1\n燒臘便當 110 1\n--------\n當日總花費: 230\n\n水煎包 15 3\n水餃 6 10\n小籠包 120 1\n--------\n當日總花費: 225\n\n一周的總花費: 1925",
+            "tpl_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Food{\n    private:\n        string name;\n        int price;\n        int quantity;\n    public:\n        void setFood(){\n\n        }\n        void printData(){\n\n        }\n        double getTotal(){\n\n        }\n};\nvoid printDay(Food myFood_1, Food myFood_2, Food myFood_3){\n\n}\nvoid printWeek(Food myFood[], int size){\n\n}\nint main(){\n    Food myFood[21];\n    for(int i=0;i<21;i++)\n        myFood[i].setFood();\n        \n    // TODO: 呼叫 printWeek 處理後續輸出\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Food{\n    private:\n        string name;\n        int price;\n        int quantity;\n    public:\n        void setFood(){\n\n        }\n        void printData(){\n\n        }\n        double getTotal(){\n\n        }\n};\nvoid printDay(Food myFood_1, Food myFood_2, Food myFood_3){\n\n}\nvoid printWeek(Food myFood[], int size){\n\n}\nint main(){\n    Food myFood[21];\n    for(int i=0;i<21;i++)\n        myFood[i].setFood();\n        \n    // TODO: 呼叫 printWeek 處理後續輸出\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "三明治 35 1\n排骨便當 90 1\n牛肉麵 120 1\n蛋餅 30 2\n雞肉飯 50 1\n火鍋 250 1\n漢堡 45 1\n涼麵 45 1\n壽司 150 1\n御飯糰 30 1\n炒飯 80 1\n牛排 280 1\n鐵板吐司 55 1\n意麵 60 1\n麻辣燙 120 1\n燒餅 25 2\n炸醬麵 70 1\n燒臘便當 110 1\n水煎包 15 3\n水餃 6 10\n小籠包 120 1",
+                    "output": "三明治 35 1\n排骨便當 90 1\n牛肉麵 120 1\n--------\n當日總花費: 245\n\n蛋餅 30 2\n雞肉飯 50 1\n火鍋 250 1\n--------\n當日總花費: 360\n\n漢堡 45 1\n涼麵 45 1\n壽司 150 1\n--------\n當日總花費: 240\n\n御飯糰 30 1\n炒飯 80 1\n牛排 280 1\n--------\n當日總花費: 390\n\n鐵板吐司 55 1\n意麵 60 1\n麻辣燙 120 1\n--------\n當日總花費: 235\n\n燒餅 25 2\n炸醬麵 70 1\n燒臘便當 110 1\n--------\n當日總花費: 230\n\n水煎包 15 3\n水餃 6 10\n小籠包 120 1\n--------\n當日總花費: 225\n\n一周的總花費: 1925"
+                }
+            ],
+            "lastLang": "cpp",
+            "modelAnswer": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Food{\n    private:\n        string name;\n        int price;\n        int quantity;\n    public:\n        // 在此進行輸入的動作\n        void setFood(){\n            cin >> name >> price >> quantity;\n        }\n        \n        // 印出物件中的資料\n        void printData(){\n            cout << name << \" \" << price << \" \" << quantity << endl;\n        }\n        \n        // 計算該物件的總金額\n        double getTotal(){\n            return price * quantity;\n        }\n};\n\n// 印出當天三餐資料，並以 \"--------\" 換行再輸出當日金額\nvoid printDay(Food myFood_1, Food myFood_2, Food myFood_3){\n    myFood_1.printData();\n    myFood_2.printData();\n    myFood_3.printData();\n    \n    double dayTotal = myFood_1.getTotal() + myFood_2.getTotal() + myFood_3.getTotal();\n    \n    cout << \"--------\" << endl;\n    cout << \"當日總花費: \" << dayTotal << endl;\n}\n\n// 統整一週輸出，並印出一週全部物件的總金額\nvoid printWeek(Food myFood[], int size){\n    double weekTotal = 0;\n    \n    // 一週有 7 天 (21 / 3 = 7)\n    for(int i = 0; i < size / 3; i++){\n        int idx = i * 3;\n        \n        // 呼叫 printDay 處理一天的資料\n        printDay(myFood[idx], myFood[idx+1], myFood[idx+2]);\n        \n        // 計算並累加這三餐的總金額到週總計\n        weekTotal += myFood[idx].getTotal() + myFood[idx+1].getTotal() + myFood[idx+2].getTotal();\n        \n        // 每天之間空一行，最後一天不空\n        if(i < (size / 3) - 1){\n            cout << endl;\n        }\n    }\n    \n    // 結尾印出一週總花費\n    cout << endl << \"一周的總花費: \" << weekTotal << endl;\n}\n\nint main(){\n    Food myFood[21];\n    \n    // 輸入 21 筆資料\n    for(int i=0;i<21;i++)\n        myFood[i].setFood();\n        \n    // 呼叫 printWeek 進行處理與輸出\n    printWeek(myFood, 21);\n    \n    return 0;\n}"
+        },
+        {
+            "id": "1773662293464",
+            "catId": "1772710087888",
+            "title": "9-1 長方形物件",
+            "desc": "請參考課本範例 TestCircle.cpp\n設計一長方形Rectangle物件\ndata fields(public) : double width, double height\n並完成 getArea()、getPerimeter() 兩個函式\n\n輸入說明：主程式中輸入2組長方形的長寬作為建構2個長方形物件的參數，再將第二個長方形的長改為5.0、寬改為2.5。\n\n輸出說明：第一行與第二行輸出原本2個長方形的面積和周長，第三行輸出第二個長方形修改後的面積和周長。\n\n範例輸入：\n6.9 7.2 9.1 5.6\n\n範例輸出：\n49.68 28.20\n50.96 29.40\n12.50 15.00\n\n※ 面積與周長皆取至小數點後第二位",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n\n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "6.9 7.2 9.1 5.6",
+                    "output": "49.68 28.20\n50.96 29.40\n12.50 15.00"
+                },
+                {
+                    "input": "3 4 5 5",
+                    "output": "12.00 14.00\n25.00 20.00\n12.50 15.00"
+                },
+                {
+                    "input": "10.5 2.0 7.3 4.1",
+                    "output": "21.00 25.00\n29.93 22.80\n12.50 15.00"
+                },
+                {
+                    "input": "15.25 10.0 0.5 0.5",
+                    "output": "152.50 50.50\n0.25 2.00\n12.50 15.00"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1773665187597",
+            "catId": "1772710087888",
+            "title": "9-2 長方形分開檔案",
+            "desc": "承上題\n請以分開檔案方式設計一長方形Rectangle物件\ndata fields(public) : double width, double height\n並完成 getArea()、getPerimeter() 兩個函式\n記得引入.h標頭檔，並在.h檔中避免多重載入\n\n輸入說明：主程式中輸入2組長方形的長寬作為建構2個長方形物件的參數，再將第二個長方形的長改為5.0、寬改為2.5。\n\n輸出說明：第一行與第二行輸出原本2個長方形的面積和周長，第三行輸出第二個長方形修改後的面積和周長。\n\n範例輸入：\n6.9 7.2 9.1 5.6\n\n範例輸出：\n49.68 28.20\n50.96 29.40\n12.50 15.00\n\n※ 面積與周長皆取至小數點後第二位\n",
+            "tpl_cpp": "#include<iostream>\nusing namespace std;\n\nint main(){\n\t\n\t\n\treturn 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include<iostream>\nusing namespace std;\n\nint main(){\n\t\n\t\n\treturn 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "6.9 7.2 9.1 5.6",
+                    "output": "49.68 28.20\n50.96 29.40\n12.50 15.00"
+                },
+                {
+                    "input": "3 4 5 5",
+                    "output": "12.00 14.00\n25.00 20.00\n12.50 15.00"
+                },
+                {
+                    "input": "10.5 2.0 7.3 4.1",
+                    "output": "21.00 25.00\n29.93 22.80\n12.50 15.00"
+                },
+                {
+                    "input": "15.25 10.0 0.5 0.5",
+                    "output": "152.50 50.50\n0.25 2.00\n12.50 15.00"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Rectangle.cpp",
+                    "tpl": "",
+                    "code": ""
+                },
+                {
+                    "name": "Rectangle.h",
+                    "tpl": "",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1773665435598",
+            "catId": "1772710087888",
+            "title": "9-3 長方形封裝",
+            "desc": "承上題\n請設計一長方形Rectangle封裝物件\n將長方形的data fields改成private\ndata fields(private) : double width, double height\n並完成 getArea()、getPerimeter() 兩個原有函式\n再增加2個set function：\nvoid setWidth(double)\nvoid setHeight(double)\n\n記得引入.h標頭檔，並在.h檔中避免多重載入\n\n輸入說明：主程式中輸入2組長方形的長寬作為建構2個長方形物件的參數，再將第二個長方形的長改為5.0、寬改為2.5。\n\n輸出說明：第一行與第二行輸出原本2個長方形的面積和周長，第三行輸出第二個長方形修改後的面積和周長。\n\n範例輸入：\n6.9 7.2 9.1 5.6\n\n範例輸出：\n49.68 28.20\n50.96 29.40\n12.50 15.00\n\n※ 面積與周長皆取至小數點後第二位",
+            "tpl_cpp": "#include<iostream>\nusing namespace std;\n\nint main(){\n\t\n\t\n\treturn 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // C++ Solution\n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "6.9 7.2 9.1 5.6",
+                    "output": "49.68 28.20\n50.96 29.40\n12.50 15.00"
+                },
+                {
+                    "input": "3 4 5 5",
+                    "output": "12.00 14.00\n25.00 20.00\n12.50 15.00"
+                },
+                {
+                    "input": "10.5 2.0 7.3 4.1",
+                    "output": "21.00 25.00\n29.93 22.80\n12.50 15.00"
+                },
+                {
+                    "input": "15.25 10.0 0.5 0.5",
+                    "output": "152.50 50.50\n0.25 2.00\n12.50 15.00"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Ractangle.cpp",
+                    "tpl": "",
+                    "code": "\n"
+                },
+                {
+                    "name": "Rectangle.h",
+                    "tpl": "",
+                    "code": "\n"
+                }
+            ]
+        },
+        {
+            "id": "1773794933560",
+            "catId": "1774092119551",
+            "title": "第二次小考-第四題",
+            "desc": "沒錯，又是一隻可憐小鯊鯊，今天可憐小鯊鯊的褲子破了，請你帶他去服飾店挑選褲子吧!!\n\n物件設計：\n設計一褲子 Pant 物件。\n\n資料欄位 Data fields (private)：\n\nstring color\n\nstring type\n\ndouble length\n\ndouble price\n\n方法 Methods (public)：完成以下六個函式\n\nsetColor() 函式：設定 color 參數。\n\nsetType() 函式：設定 type 參數。\n\nsetLength() 函式：設定 length 參數。\n\nsetPrice() 函式：設定 price 參數。\n\ngetType() 函式：回傳褲子的 type 參數。\n\nprint() 函式：印出褲子的 color、type、length、price（以空白分隔）。\n\n輸入說明：\n依序輸入顏色、類型、長度、價格作為建構 10 個褲子物件的參數，最後再輸入一個要尋找的褲子「類型」(type)。\n\n輸出說明：\n將與最後輸入的「類型」相同的褲子資訊印出。\n\n範例輸入:\ngold jean 119 206\nPurple overalls 106 201\ngold jean 106 200\nBlue leather 108 233\nFluorescent_Red jean 106 224\nRed leather 118 222\nPurple jean 110 219\nFluorescent_Red leather 107 213\nFluorescent_Red jean 109 220\nDark_Orange overalls 102 212\nleather\n\n範例輸出:\nBlue leather 108 233\nRed leather 118 222\nFluorescent_Red leather 107 213\n\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // C++ Solution\n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "gold jean 119 206\nPurple overalls 106 201\ngold jean 106 200\nBlue leather 108 233\nFluorescent_Red jean 106 224\nRed leather 118 222\nPurple jean 110 219\nFluorescent_Red leather 107 213\nFluorescent_Red jean 109 220\nDark_Orange overalls 102 212\nleather",
+                    "output": "Blue leather 108 233\nRed leather 118 222\nFluorescent_Red leather 107 213"
+                },
+                {
+                    "input": "Black Denim 100.5 500\nBlue Denim 105 550\nWhite Cotton 95 300\nBlack Leather 110 1200\nRed Cotton 98 320\nGreen Nylon 102 450\nYellow Denim 101 520\nBlue Cotton 96 310\nBrown Leather 108 1150\nGray Nylon 100 400\nDenim",
+                    "output": "Black Denim 100.5 500\nBlue Denim 105 550\nYellow Denim 101 520"
+                },
+                {
+                    "input": "Black Cargo 100 500\nBlue Cargo 105 550\nGreen Cargo 110 600\nKhaki Cargo 108 580\nCamo Cargo 102 650\nGrey Cargo 104 520\nNavy Cargo 106 560\nOlive Cargo 101 590\nBrown Cargo 103 610\nTan Cargo 107 570\nCargo",
+                    "output": "Black Cargo 100 500\nBlue Cargo 105 550\nGreen Cargo 110 600\nKhaki Cargo 108 580\nCamo Cargo 102 650\nGrey Cargo 104 520\nNavy Cargo 106 560\nOlive Cargo 101 590\nBrown Cargo 103 610\nTan Cargo 107 570"
+                },
+                {
+                    "input": "Cyan Silk 95.5 1200.5\nMagenta Silk 96.2 1250.75\nYellow Linen 102.1 800.25\nBlack Linen 105.4 850\nWhite Wool 110.5 1500.99\nGrey Wool 108.8 1450.5\nRed Silk 94 1150\nBlue Linen 100.5 780.8\nGreen Wool 109.2 1480.2\nNavy Silk 97.5 1300\nSilk",
+                    "output": "Cyan Silk 95.5 1200.5\nMagenta Silk 96.2 1250.75\nRed Silk 94 1150\nNavy Silk 97.5 1300"
+                },
+                {
+                    "input": "Light_Blue Skinny_Jeans 100 900\nDark_Blue Skinny_Jeans 102 950\nBlack Straight_Jeans 105 850\nVintage Baggy_Jeans 110 1200\nWhite Straight_Jeans 104 800\nNavy Skinny_Jeans 98 880\nGrey Baggy_Jeans 108 1100\nAcid_Wash Skinny_Jeans 99 920\nRipped Baggy_Jeans 106 1150\nFaded Straight_Jeans 103 820\nSkinny_Jeans",
+                    "output": "Light_Blue Skinny_Jeans 100 900\nDark_Blue Skinny_Jeans 102 950\nNavy Skinny_Jeans 98 880\nAcid_Wash Skinny_Jeans 99 920"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1773817571442",
+            "catId": "1774092119551",
+            "title": "第二次小考-第五題",
+            "desc": "鯊鯊老師發現，要把上次寫的 StuCard 稍微修改，加入封裝，防止程式碼遭到修改。請寫出一個以分開檔案方式的封裝物件 StuCard。\n\n該物件包含下列屬性：\n資料欄位 Data fields (private)：\n\nstring name\nstring stdID\ndouble chinese\ndouble english\ndouble math\n\n方法 function (public)：\nvoid setName(string)\nvoid setStdID(string)\nvoid setChinese(double)\nvoid setEnglish(double)\nvoid setMath(double)\nvoid print()：印出 Name、StdID、以及 Chinese, English, Math 三科的平均。\n\n輸入說明：\n輸入兩組學生姓名 string、學號 string、國文成績 double、英文成績 double、數學成績 double，並使用 set function 輸入至物件中。\n\n輸出說明：\n輸出兩組物件的姓名、學號、三個課目的成績取平均 (取至小數點第二位)。\n\n範例輸入:\nCharlie B1234567 85 90 95\nEvan B7654321 70 55 45\n\n範例輸出:\nCharlie B1234567 90.00\nEvan B7654321 56.67",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // C++ Solution\n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "Charlie B1234567 85 90 95\nEvan B7654321 70 55 45",
+                    "output": "Charlie B1234567 90.00\nEvan B7654321 56.67"
+                },
+                {
+                    "input": "Alice A0000001 100 100 100\nZero Z0000000 0 0 0",
+                    "output": "Alice A0000001 100.00\nZero Z0000000 0.00"
+                },
+                {
+                    "input": "David D1234567 80 80 81\nEve E7654321 80 80 82",
+                    "output": "David D1234567 80.33\nEve E7654321 80.67"
+                },
+                {
+                    "input": "Frank F9998888 85.5 90.5 95.5\nGrace G1112222 70.2 55.4 45.1",
+                    "output": "Frank F9998888 90.50\nGrace G1112222 56.90"
+                },
+                {
+                    "input": "Henry H5555555 60 78 92\nIvy I3333333 45 88 76",
+                    "output": "Henry H5555555 76.67\nIvy I3333333 69.67"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "StuCard.cpp",
+                    "tpl": "",
+                    "code": ""
+                },
+                {
+                    "name": "StuCard.h",
+                    "tpl": "",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1773817967921",
+            "catId": "1774092119551",
+            "title": "第二次小考-第六題",
+            "desc": "請寫出一個以分開檔案方式的封裝物件 Time，該物件包含下列屬性：\n\n資料欄位 Data fields (private)：\nint hour\nint minute\nint second\n\n方法 function (public)：\nvoid setHour(int)\nvoid setMinute(int)\nvoid setSecond(int)\n\nvoid print()：印出合理的時間，並且如果數字為個位數前面補零。\n例：hour = 3, minute = 4, second = 5 則印出：時間: 03:04:05\n\nbool validTime()：判斷時間是否合理。\n（合理範圍應為：0 <= hour < 24, 0 <= minute < 60, 0 <= second < 60）\n\n輸入說明：\n輸入時、分、秒三個整數，並使用 set function 輸入至物件中。\n\n輸出說明：\n判斷輸入的時間是否合理。若合理，印出格式化後的時間（時間: HH:MM:SS）；若不合理，則印出「時間不合理」。\n\n範例輸入:\n3 4 5\n24 35 69\n\n範例輸出:\n時間: 03:04:05\n時間不合理\n\n需求：\n\nvalidTime()\n\n一個 private",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "時間: 03:04:05\n時間不合理",
+                    "input": "3 4 5\n24 35 69"
+                },
+                {
+                    "output": "時間: 12:30:45\n時間: 20:15:10",
+                    "input": "12 30 45\n20 15 10"
+                },
+                {
+                    "output": "時間: 00:00:00\n時間: 23:59:59",
+                    "input": "0 0 0\n23 59 59"
+                },
+                {
+                    "output": "時間不合理\n時間不合理",
+                    "input": "23 60 59\n24 0 0"
+                },
+                {
+                    "output": "時間不合理\n時間不合理",
+                    "input": "-1 30 30\n12 -5 45"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Time.cpp",
+                    "tpl": "// Class.cpp\n",
+                    "code": "// Class.cpp\n"
+                },
+                {
+                    "name": "Time.h",
+                    "tpl": "// Class.h\n",
+                    "code": "// Class.h\n"
+                }
+            ]
+        },
+        {
+            "id": "1774352337044",
+            "catId": "1774092119551",
+            "title": "第三次小考-第七題",
+            "desc": "鯊鯊學校今天數學課上了矩陣，但平常根本沒在聽課的他，突然遇到課堂作業根本不知道要怎麼寫，請各位幫忙撰寫一個矩陣計算程式幫他完成作業吧！（如果你不想幫，那我也不想幫你計算成績XD）\n\n請設計一個名為 **Matrix** 的類別進行運算，該類別具有以下功能：\n建構子 (Constructor)：將所有元素初始化為 0。\n\n**data(private)**：一個3乘3陣列，代表矩陣的內容。 \n\n**setElement(public)**：接收三個參數，分別為行索引、列索引和值，並將指定位置的元素設定為給定的值。\n\n**getElement(public)**：接收兩個參數，分別為行索引和列索引，並回傳指定位置的元素。\n\n**add(public)**：該函數接收一個 Matrix 物件作為參數，並回傳一個新的 Matrix 物件，該物件的內容為原矩陣與參數矩陣的元素相加的結果。\n\n**minus(public)**：該函數接收一個 Matrix 物件作為參數，並回傳一個新的 Matrix 物件，該物件的內容為原矩陣與參數矩陣的元素相減的結果。\n\n**multiply(public)**：該函數接收一個 Matrix 物件作為參數，並回傳一個新的 Matrix 物件，該物件的內容為原矩陣與參數矩陣的矩陣乘法的結果。\n\n注意：記得引入.h標頭檔，並在.h檔中避免多重載入！\n\n**輸入說明：**\n一共輸入18個數字；前9個為矩陣A的元素，後9個為矩陣B的元素。 兩個矩陣的輸入順序皆為由左到右，由上到下。\n\n**輸出說明：**\n請依照下面範例輸出的輸出格式進行輸出：分別輸出兩個原矩陣、相加、相減以及相乘的結果。\n\n**輸入範例：**\n1 2 3\n4 5 6\n7 8 9\n\n9 8 7\n6 5 4\n3 2 1\n\n**輸出範例：**\n\nMatrix A: \n1 2 3\n4 5 6\n7 8 9\n\nMatrix B:\n9 8 7\n6 5 4\n3 2 1\n\n----------\nAdded Matrix:\n10 10 10\n10 10 10\n10 10 10\n\nMinused Matrix:\n-8 -6 -4\n-2 0 2 \n4 6 8\n\nMultiplied Matrix (A*B):\n30 24 18\n84 69 54\n138 114 90\n\nMultiplied Matrix (B*A):\n90 114 138\n54 69 84\n18 24 30\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Matrix A:\n1 2 3 \n4 5 6 \n7 8 9 \n\nMatrix B:\n9 8 7 \n6 5 4 \n3 2 1 \n\n----------\nAdded Matrix:\n10 10 10 \n10 10 10 \n10 10 10 \n\nMinused Matrix:\n-8 -6 -4 \n-2 0 2 \n4 6 8 \n\nMultiplied Matrix (A*B):\n30 24 18 \n84 69 54 \n138 114 90 \n\nMultiplied Matrix (B*A):\n90 114 138 \n54 69 84 \n18 24 30 ",
+                    "input": "1 2 3\n4 5 6\n7 8 9\n\n9 8 7\n6 5 4\n3 2 1"
+                },
+                {
+                    "input": "1 0 0\n0 1 0\n0 0 1\n\n0 0 0\n0 0 0\n0 0 0",
+                    "output": "Matrix A:\n1 0 0 \n0 1 0 \n0 0 1 \n\nMatrix B:\n0 0 0 \n0 0 0 \n0 0 0 \n\n----------\nAdded Matrix:\n1 0 0 \n0 1 0 \n0 0 1 \n\nMinused Matrix:\n1 0 0 \n0 1 0 \n0 0 1 \n\nMultiplied Matrix (A*B):\n0 0 0 \n0 0 0 \n0 0 0 \n\nMultiplied Matrix (B*A):\n0 0 0 \n0 0 0 \n0 0 0 "
+                },
+                {
+                    "output": "Matrix A:\n1 0 0 \n0 1 0 \n0 0 1 \n\nMatrix B:\n2 4 6 \n1 3 5 \n7 8 9 \n\n----------\nAdded Matrix:\n3 4 6 \n1 4 5 \n7 8 10 \n\nMinused Matrix:\n-1 -4 -6 \n-1 -2 -5 \n-7 -8 -8 \n\nMultiplied Matrix (A*B):\n2 4 6 \n1 3 5 \n7 8 9 \n\nMultiplied Matrix (B*A):\n2 4 6 \n1 3 5 \n7 8 9 ",
+                    "input": "1 0 0\n0 1 0\n0 0 1\n\n2 4 6\n1 3 5\n7 8 9"
+                },
+                {
+                    "input": "-1 -2 -3\n-4 -5 -6\n-7 -8 -9\n\n1 2 3\n4 5 6\n7 8 9",
+                    "output": "Matrix A:\n-1 -2 -3 \n-4 -5 -6 \n-7 -8 -9 \n\nMatrix B:\n1 2 3 \n4 5 6 \n7 8 9 \n\n----------\nAdded Matrix:\n0 0 0 \n0 0 0 \n0 0 0 \n\nMinused Matrix:\n-2 -4 -6 \n-8 -10 -12 \n-14 -16 -18 \n\nMultiplied Matrix (A*B):\n-30 -36 -42 \n-66 -81 -96 \n-102 -126 -150 \n\nMultiplied Matrix (B*A):\n-30 -36 -42 \n-66 -81 -96 \n-102 -126 -150 "
+                },
+                {
+                    "input": "1 1 1\n1 1 1\n1 1 1\n\n1 1 1\n1 1 1\n1 1 1",
+                    "output": "Matrix A:\n1 1 1 \n1 1 1 \n1 1 1 \n\nMatrix B:\n1 1 1 \n1 1 1 \n1 1 1 \n\n----------\nAdded Matrix:\n2 2 2 \n2 2 2 \n2 2 2 \n\nMinused Matrix:\n0 0 0 \n0 0 0 \n0 0 0 \n\nMultiplied Matrix (A*B):\n3 3 3 \n3 3 3 \n3 3 3 \n\nMultiplied Matrix (B*A):\n3 3 3 \n3 3 3 \n3 3 3 "
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Matrix.cpp",
+                    "code": "\n",
+                    "tpl": "\n"
+                },
+                {
+                    "tpl": "\n",
+                    "code": "\n",
+                    "name": "Matrix.h"
+                }
+            ]
+        },
+        {
+            "id": "1774353712685",
+            "catId": "1774092119551",
+            "title": "第三次小考-第八題",
+            "desc": "今天是鯊鯊第一天到銀行上班的日子，他被指派的第一份工作是要幫忙顧客找出他們的銀行歷史提領紀錄。由於手續繁瑣，鯊鯊直接擺爛，打算來當薪水小偷。各位你能幫忙設計出一個能夠快速產生結果的程式，好讓鯊鯊表現得\"好像\"有在做事的人嗎？\n\n請設計一個名為 \"BankAccount\" 的類別來模擬銀行帳戶，這個類別具有以下的功能：\n**name(private)**：儲存帳號名稱。\n**balance(private)**：儲存帳號餘額。\n**建構子(public)**：設定帳號名稱並初始化帳號餘額。\n**deposit(public)**：接收一個參數為金額，進行存款動作。\n**withdraw(public)**：接收一個參數為金額，進行提款動作。\n**setName(public)**：接收一個參數為名子，用於修改/設定帳號名稱。 \n**setBalance(public)**：接收一個參數為金額，用於修改/設定帳號存款。 \n**getName(public)**：用於回傳帳號名稱。\n**getBalance(public)**：用於回傳帳號存款。\n**print_balance(public)**：印出帳戶名稱以及餘額。\n\n**注意：記得引入.h標頭檔，並在.h檔中避免多重載入！**\n\n**輸入說明：**\n先分別輸入一次帳號名稱以及初始化餘額，再輸出接下來要執行n次動作。\n每次動作皆會隨機進行以下指令-- 指令1，進行存款；指令2，進行提款；指令3，印出帳戶名稱以及餘額。（當發生指令1或2時會再輸入一個數值表指定金額，指令3則不會）\n\n**輸出說明：**\n請依照下面範例輸出的輸出格式進行輸出，並於程式最後一個動作結束後再次印出帳戶名稱以及餘額。\n\n**輸入範例：**\nBihuan 1000\n3 1 500\n3 2 100\n\n**輸出範例：**\nDeposited +500\nAccount name: Bihuan\nBalance: 1500\nWithdrawed -100\nAccount name: Bihuan\nBalance: 1400\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Deposited +500\nAccount name: Bihuan\nBalance: 1500\nWithdrawed -100\nAccount name: Bihuan\nBalance: 1400",
+                    "input": "Bihuan 1000\n3 1 500\n3 2 100"
+                },
+                {
+                    "input": "Shark 500\n5\n1 200\n2 100\n1 50\n2 300\n3",
+                    "output": "Deposited +200\nWithdrawed -100\nDeposited +50\nWithdrawed -300\nAccount name: Shark\nBalance: 350\nAccount name: Shark\nBalance: 350"
+                },
+                {
+                    "output": "Account name: Gura\nBalance: 0\nDeposited +10000\nAccount name: Gura\nBalance: 10000\nWithdrawed -5000\nAccount name: Gura\nBalance: 5000",
+                    "input": "Gura 0\n4\n3\n1 10000\n3\n2 5000"
+                },
+                {
+                    "output": "Account name: Ame\nBalance: 999\nAccount name: Ame\nBalance: 999\nAccount name: Ame\nBalance: 999",
+                    "input": "Ame 999\n2\n3\n3"
+                },
+                {
+                    "input": "Ina 100\n3\n2 500\n3\n1 200",
+                    "output": "Withdrawed -500\nAccount name: Ina\nBalance: -400\nDeposited +200\nAccount name: Ina\nBalance: -200"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "\n",
+                    "name": "BankAccount.cpp",
+                    "code": "\n"
+                },
+                {
+                    "name": "BankAccount.h",
+                    "code": "\n",
+                    "tpl": "\n"
+                }
+            ]
+        },
+        {
+            "id": "1774354205971",
+            "catId": "1774092119551",
+            "title": "第三次小考-第九題",
+            "desc": "又來了，今天請你幫鯊鯊還有他的好朋友分配適合他們的書籍\n\n設計一 人 Person 物件\n\ndata feilds(private)：string name , string type\n並完成 Person() 建構子 與 getName()、getType()、print()，三個函式\n\n**getName()函式**；回傳 name 參數\n**getType()函式**；回傳 type 參數\n**print()函式**：印出 Person 的 name、type 等資訊\n\n再設計一 書本 Book 物件\n\n**data feilds(private)**：string name , string type , string serial_number , double price 並完成 Book() 建構子 與 getType()、getPrice、print()，三個函式\n\n**getType()函式**：回傳 type 參數\n**getPrice()函式**：回傳 price 參數\n**print()函式**：印出 Book 的 name、type、serial_number、price 等資訊\n\n**輸入說明：**\n主程式中輸入10個人的姓名、喜愛類型作為建構5個人物件的參數，再輸入50本書的書名、類型、編號、價格。\n\n**輸出說明：**先顯示人名再顯示適合他的書籍\n\n**注意：記得引入.h標頭檔，並在.h檔中避免多重載入！**\n\n舉例：江至揚 的 type 是 travel\n\n則印出所有 travel type 的書籍\n\n**範例輸入：**\n張耀鴻 game\n坦克 work\n李志仁 work\n河馬 game\nToyz food\n徐盛軒 technology\n林世淞 travel\n江至揚 travel\n雄哥 technology\n系辦助教 work\n\n東京醋飯屋壽司私房筆記公開 food K000027830 2820\n書呆與阿宅 technology Z000077365 3466\n區塊鏈與元宇宙 technology A000026788 3141\n手指壽司 travel K000004848 2146\nPython輕鬆學：遊戲設計 game J000081726 2021\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n遊戲設計的藝術 game J000031033 2352\n當諸葛亮外掛金融科技 technology X000021720 3647\n京阪神攻略完全制霸2023~2024 travel O000060304 2002\n七千萬的工作 work Y000064032 2476\n日本名城巡禮 travel E000068717 3039\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n手指壽司 food N000087235 2805\n京都岔路 travel P000005457 2264\n懶遊日本：關東完全圖解攻略 travel V000015872 3410\n創富區塊鏈 technology C000073080 2150\n舒芙蕾遊戲 game X000064852 3849\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n明天就出發!拚死也要去的日本絕景 travel U000018380 2186\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n遊戲治療：建立關係的藝術 game R000054520 3777\n穀倉效應2 technology N000087564 3535\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n京都：春季遊 travel A000061513 2103\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n享受吧!跟著大人氣列車玩九州 travel M000014337 3518\n北海道自駕遊：MM哈日情報誌系列24 travel T000088847 2340\n第二次機器時代 technology I000015652 3098\n量子電腦和量子網路 technology K000050846 2507 ChatGPT×遊戲設計概論 game H000052466 3461\n工作，剛剛好就好 work N000022028 3735\n晶片戰爭 technology V000063770 3136\n遊戲設計與電競運動概論 game W000006756 3370\n燒肉手帳 food X000013475 2586\n火車慢跑!19種你沒看過的北海道 travel Q000026856 2456\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n壽司︰魚片與醋飯背後四百年的秘密 food N000005326 2849\n嵌入式金融大衝擊! technology R000026721 3909\n再忙也不會出錯的完美工作執行力 work H000076815 3278\nApp_Inventor_2_動畫與遊戲程式設計 game Z000050166 3960\n日本酒手帳 food C000000073 2456\nUnity_遊戲設計：程式基礎 game T000008505 3870\n遊戲人生72變：線上‧實體遊戲教學一本通 game M000048423 2797\n讀寫生活好好玩：13則共學遊戲 game Q000068217 2537\nAI未來賽局 technology L000023124 3882\n\n**範例輸出:**\n張耀鴻 game\nPython輕鬆學：遊戲設計 game J000081726 2021\n遊戲設計的藝術 game J000031033 2352\n舒芙蕾遊戲 game X000064852 3849\n遊戲治療：建立關係的藝術 game R000054520 3777\nChatGPT×遊戲設計概論 game H000052466 3461\n遊戲設計與電競運動概論 game W000006756 3370\nApp_Inventor_2_動畫與遊戲程式設計 game Z000050166 3960\nUnity_遊戲設計：程式基礎 game T000008505 3870\n遊戲人生72變：線上‧實體遊戲教學一本通 game M000048423 2797\n讀寫生活好好玩：13則共學遊戲 game Q000068217 2537\n----------\n坦克 work\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n七千萬的工作 work Y000064032 2476\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n工作，剛剛好就好 work N000022028 3735\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n再忙也不會出錯的完美工作執行力 work H000076815 3278\n----------\n李志仁 work\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n七千萬的工作 work Y000064032 2476\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n工作，剛剛好就好 work N000022028 3735\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n再忙也不會出錯的完美工作執行力 work H000076815 3278\n----------\n河馬 game\nPython輕鬆學：遊戲設計 game J000081726 2021\n遊戲設計的藝術 game J000031033 2352\n舒芙蕾遊戲 game X000064852 3849\n遊戲治療：建立關係的藝術 game R000054520 3777\nChatGPT×遊戲設計概論 game H000052466 3461\n遊戲設計與電競運動概論 game W000006756 3370\nApp_Inventor_2_動畫與遊戲程式設計 game Z000050166 3960\nUnity_遊戲設計：程式基礎 game T000008505 3870\n遊戲人生72變：線上‧實體遊戲教學一本通 game M000048423 2797\n讀寫生活好好玩：13則共學遊戲 game Q000068217 2537\n----------\nToyz food\n東京醋飯屋壽司私房筆記公開 food K000027830 2820\n手指壽司 food N000087235 2805 燒肉手帳 food X000013475 2586\n壽司︰魚片與醋飯背後四百年的秘密 food N000005326 2849\n日本酒手帳 food C000000073 2456\n----------\n徐盛軒 technology\n書呆與阿宅 technology Z000077365 3466\n區塊鏈與元宇宙 technology A000026788 3141\n當諸葛亮外掛金融科技 technology X000021720 3647 創富區塊鏈 technology C000073080 2150\n穀倉效應2 technology N000087564 3535\n第二次機器時代 technology I000015652 3098\n量子電腦和量子網路 technology K000050846 2507\n晶片戰爭 technology V000063770 3136\n嵌入式金融大衝擊! technology R000026721 3909\nAI未來賽局 technology L000023124 3882\n----------\n林世淞 travel 手指壽司 travel K000004848 2146\n京阪神攻略完全制霸2023~2024 travel O000060304 2002\n日本名城巡禮 travel E000068717 3039\n京都岔路 travel P000005457 2264\n懶遊日本：關東完全圖解攻略 travel V000015872 3410\n明天就出發!拚死也要去的日本絕景 travel U000018380 2186\n京都：春季遊 travel A000061513 2103\n享受吧!跟著大人氣列車玩九州 travel M000014337 3518\n北海道自駕遊：MM哈日情報誌系列24 travel T000088847 2340\n火車慢跑!19種你沒看過的北海道 travel Q000026856 2456\n----------\n江至揚 travel\n手指壽司 travel K000004848 2146\n京阪神攻略完全制霸2023~2024 travel O000060304 2002\n日本名城巡禮 travel E000068717 3039\n京都岔路 travel P000005457 2264\n懶遊日本：關東完全圖解攻略 travel V000015872 3410\n明天就出發!拚死也要去的日本絕景 travel U000018380 2186\n京都：春季遊 travel A000061513 2103\n享受吧!跟著大人氣列車玩九州 travel M000014337 3518\n北海道自駕遊：MM哈日情報誌系列24 travel T000088847 2340\n火車慢跑!19種你沒看過的北海道 travel Q000026856 2456\n----------\n雄哥 technology\n書呆與阿宅 technology Z000077365 3466\n區塊鏈與元宇宙 technology A000026788 3141\n當諸葛亮外掛金融科技 technology X000021720 3647\n創富區塊鏈 technology C000073080 2150\n穀倉效應2 technology N000087564 3535\n第二次機器時代 technology I000015652 3098\n量子電腦和量子網路 technology K000050846 2507\n晶片戰爭 technology V000063770 3136\n嵌入式金融大衝擊! technology R000026721 3909\nAI未來賽局 technology L000023124 3882\n----------\n系辦助教 work\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n七千萬的工作 work Y000064032 2476\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n工作，剛剛好就好 work N000022028 3735\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n再忙也不會出錯的完美工作執行力 work H000076815 3278\n----------\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "張耀鴻 game\nPython輕鬆學：遊戲設計 game J000081726 2021\n遊戲設計的藝術 game J000031033 2352\n舒芙蕾遊戲 game X000064852 3849\n遊戲治療：建立關係的藝術 game R000054520 3777\nChatGPT×遊戲設計概論 game H000052466 3461\n遊戲設計與電競運動概論 game W000006756 3370\nApp_Inventor_2_動畫與遊戲程式設計 game Z000050166 3960\nUnity_遊戲設計：程式基礎 game T000008505 3870\n遊戲人生72變：線上‧實體遊戲教學一本通 game M000048423 2797\n讀寫生活好好玩：13則共學遊戲 game Q000068217 2537\n----------\n坦克 work\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n七千萬的工作 work Y000064032 2476\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n工作，剛剛好就好 work N000022028 3735\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n再忙也不會出錯的完美工作執行力 work H000076815 3278\n----------\n李志仁 work\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n七千萬的工作 work Y000064032 2476\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n工作，剛剛好就好 work N000022028 3735\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n再忙也不會出錯的完美工作執行力 work H000076815 3278\n----------\n河馬 game\nPython輕鬆學：遊戲設計 game J000081726 2021\n遊戲設計的藝術 game J000031033 2352\n舒芙蕾遊戲 game X000064852 3849\n遊戲治療：建立關係的藝術 game R000054520 3777\nChatGPT×遊戲設計概論 game H000052466 3461\n遊戲設計與電競運動概論 game W000006756 3370\nApp_Inventor_2_動畫與遊戲程式設計 game Z000050166 3960\nUnity_遊戲設計：程式基礎 game T000008505 3870\n遊戲人生72變：線上‧實體遊戲教學一本通 game M000048423 2797\n讀寫生活好好玩：13則共學遊戲 game Q000068217 2537\n----------\nToyz food\n東京醋飯屋壽司私房筆記公開 food K000027830 2820\n手指壽司 food N000087235 2805\n燒肉手帳 food X000013475 2586\n壽司︰魚片與醋飯背後四百年的秘密 food N000005326 2849\n日本酒手帳 food C000000073 2456\n----------\n徐盛軒 technology\n書呆與阿宅 technology Z000077365 3466\n區塊鏈與元宇宙 technology A000026788 3141\n當諸葛亮外掛金融科技 technology X000021720 3647\n創富區塊鏈 technology C000073080 2150\n穀倉效應2 technology N000087564 3535\n第二次機器時代 technology I000015652 3098\n量子電腦和量子網路 technology K000050846 2507\n晶片戰爭 technology V000063770 3136\n嵌入式金融大衝擊! technology R000026721 3909\nAI未來賽局 technology L000023124 3882\n----------\n林世淞 travel\n手指壽司 travel K000004848 2146\n京阪神攻略完全制霸2023~2024 travel O000060304 2002\n日本名城巡禮 travel E000068717 3039\n京都岔路 travel P000005457 2264\n懶遊日本：關東完全圖解攻略 travel V000015872 3410\n明天就出發!拚死也要去的日本絕景 travel U000018380 2186\n京都：春季遊 travel A000061513 2103\n享受吧!跟著大人氣列車玩九州 travel M000014337 3518\n北海道自駕遊：MM哈日情報誌系列24 travel T000088847 2340\n火車慢跑!19種你沒看過的北海道 travel Q000026856 2456\n----------\n江至揚 travel\n手指壽司 travel K000004848 2146\n京阪神攻略完全制霸2023~2024 travel O000060304 2002\n日本名城巡禮 travel E000068717 3039\n京都岔路 travel P000005457 2264\n懶遊日本：關東完全圖解攻略 travel V000015872 3410\n明天就出發!拚死也要去的日本絕景 travel U000018380 2186\n京都：春季遊 travel A000061513 2103\n享受吧!跟著大人氣列車玩九州 travel M000014337 3518\n北海道自駕遊：MM哈日情報誌系列24 travel T000088847 2340\n火車慢跑!19種你沒看過的北海道 travel Q000026856 2456\n----------\n雄哥 technology\n書呆與阿宅 technology Z000077365 3466\n區塊鏈與元宇宙 technology A000026788 3141\n當諸葛亮外掛金融科技 technology X000021720 3647\n創富區塊鏈 technology C000073080 2150\n穀倉效應2 technology N000087564 3535\n第二次機器時代 technology I000015652 3098\n量子電腦和量子網路 technology K000050846 2507\n晶片戰爭 technology V000063770 3136\n嵌入式金融大衝擊! technology R000026721 3909\nAI未來賽局 technology L000023124 3882\n----------\n系辦助教 work\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n七千萬的工作 work Y000064032 2476\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n工作，剛剛好就好 work N000022028 3735\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n再忙也不會出錯的完美工作執行力 work H000076815 3278\n----------",
+                    "input": "張耀鴻 game\n坦克 work\n李志仁 work\n河馬 game\nToyz food\n徐盛軒 technology\n林世淞 travel\n江至揚 travel\n雄哥 technology\n系辦助教 work\n\n東京醋飯屋壽司私房筆記公開 food K000027830 2820\n書呆與阿宅 technology Z000077365 3466\n區塊鏈與元宇宙 technology A000026788 3141\n手指壽司 travel K000004848 2146\nPython輕鬆學：遊戲設計 game J000081726 2021\n誰說工作時不能跳舞? work G000046022 2696\n搞定你的新工作 work Q000070284 2991\n遊戲設計的藝術 game J000031033 2352\n當諸葛亮外掛金融科技 technology X000021720 3647\n京阪神攻略完全制霸2023~2024 travel O000060304 2002\n七千萬的工作 work Y000064032 2476\n日本名城巡禮 travel E000068717 3039\n不上班，每天工作3小時的自由生活 work Z000016827 3814\n手指壽司 food N000087235 2805\n京都岔路 travel P000005457 2264\n懶遊日本：關東完全圖解攻略 travel V000015872 3410\n創富區塊鏈 technology C000073080 2150\n舒芙蕾遊戲 game X000064852 3849\n職業生涯不留遺憾的40歲後的工作術 work Z000065161 2057\n策略思考：一種稀有又精湛的心智工作原則 work H000067671 2901\n明天就出發!拚死也要去的日本絕景 travel U000018380 2186\n為什麼我們這樣生活，那樣工作? work F000011555 3315\n遊戲治療：建立關係的藝術 game R000054520 3777\n穀倉效應2 technology N000087564 3535\n老闆不說，卻很在意的35個工作態度 work K000054871 3479\n工作與生活的技術 work J000022111 2589\n京都：春季遊 travel A000061513 2103\n哪有工作不委屈_不工作你會更委屈 work B000046814 3323\n思考馬達：從生活到工作 work Y000086831 2547\n享受吧!跟著大人氣列車玩九州 travel M000014337 3518\n北海道自駕遊：MM哈日情報誌系列24 travel T000088847 2340\n第二次機器時代 technology I000015652 3098\n量子電腦和量子網路 technology K000050846 2507 ChatGPT×遊戲設計概論 game H000052466 3461\n工作，剛剛好就好 work N000022028 3735\n晶片戰爭 technology V000063770 3136\n遊戲設計與電競運動概論 game W000006756 3370\n燒肉手帳 food X000013475 2586\n火車慢跑!19種你沒看過的北海道 travel Q000026856 2456\n工作排毒：讓你咻咻咻的工作編輯術 work U000058722 2734\n工作DNA_鳥之卷：基層 work Z000007215 2451\n壽司︰魚片與醋飯背後四百年的秘密 food N000005326 2849\n嵌入式金融大衝擊! technology R000026721 3909\n再忙也不會出錯的完美工作執行力 work H000076815 3278\nApp_Inventor_2_動畫與遊戲程式設計 game Z000050166 3960\n日本酒手帳 food C000000073 2456\nUnity_遊戲設計：程式基礎 game T000008505 3870\n遊戲人生72變：線上‧實體遊戲教學一本通 game M000048423 2797\n讀寫生活好好玩：13則共學遊戲 game Q000068217 2537\nAI未來賽局 technology L000023124 3882"
+                },
+                {
+                    "output": "P1 T1\nB1 T1 S1 100\nB2 T1 S2 100\nB3 T1 S3 100\nB4 T1 S4 100\nB5 T1 S5 100\n----------\nP2 T2\nB6 T2 S6 200\nB7 T2 S7 200\nB8 T2 S8 200\nB9 T2 S9 200\nB10 T2 S10 200\n----------\nP3 T3\nB11 T3 S11 300\nB12 T3 S12 300\nB13 T3 S13 300\nB14 T3 S14 300\nB15 T3 S15 300\n----------\nP4 T4\nB16 T4 S16 400\nB17 T4 S17 400\nB18 T4 S18 400\nB19 T4 S19 400\nB20 T4 S20 400\n----------\nP5 T5\nB21 T5 S21 500\nB22 T5 S22 500\nB23 T5 S23 500\nB24 T5 S24 500\nB25 T5 S25 500\n----------\nP6 T6\nB26 T6 S26 600\nB27 T6 S27 600\nB28 T6 S28 600\nB29 T6 S29 600\nB30 T6 S30 600\n----------\nP7 T7\nB31 T7 S31 700\nB32 T7 S32 700\nB33 T7 S33 700\nB34 T7 S34 700\nB35 T7 S35 700\n----------\nP8 T8\nB36 T8 S36 800\nB37 T8 S37 800\nB38 T8 S38 800\nB39 T8 S39 800\nB40 T8 S40 800\n----------\nP9 T9\nB41 T9 S41 900\nB42 T9 S42 900\nB43 T9 S43 900\nB44 T9 S44 900\nB45 T9 S45 900\n----------\nP10 T10\nB46 T10 S46 999\nB47 T10 S47 999\nB48 T10 S48 999\nB49 T10 S49 999\nB50 T10 S50 999\n----------",
+                    "input": "P1 T1\nP2 T2\nP3 T3\nP4 T4\nP5 T5\nP6 T6\nP7 T7\nP8 T8\nP9 T9\nP10 T10\nB1 T1 S1 100\nB2 T1 S2 100\nB3 T1 S3 100\nB4 T1 S4 100\nB5 T1 S5 100\nB6 T2 S6 200\nB7 T2 S7 200\nB8 T2 S8 200\nB9 T2 S9 200\nB10 T2 S10 200\nB11 T3 S11 300\nB12 T3 S12 300\nB13 T3 S13 300\nB14 T3 S14 300\nB15 T3 S15 300\nB16 T4 S16 400\nB17 T4 S17 400\nB18 T4 S18 400\nB19 T4 S19 400\nB20 T4 S20 400\nB21 T5 S21 500\nB22 T5 S22 500\nB23 T5 S23 500\nB24 T5 S24 500\nB25 T5 S25 500\nB26 T6 S26 600\nB27 T6 S27 600\nB28 T6 S28 600\nB29 T6 S29 600\nB30 T6 S30 600\nB31 T7 S31 700\nB32 T7 S32 700\nB33 T7 S33 700\nB34 T7 S34 700\nB35 T7 S35 700\nB36 T8 S36 800\nB37 T8 S37 800\nB38 T8 S38 800\nB39 T8 S39 800\nB40 T8 S40 800\nB41 T9 S41 900\nB42 T9 S42 900\nB43 T9 S43 900\nB44 T9 S44 900\nB45 T9 S45 900\nB46 T10 S46 999\nB47 T10 S47 999\nB48 T10 S48 999\nB49 T10 S49 999\nB50 T10 S50 999"
+                },
+                {
+                    "output": "A food\n----------\nB food\n----------\nC food\n----------\nD food\n----------\nE food\n----------\nF food\n----------\nG food\n----------\nH food\n----------\nI food\n----------\nJ food\n----------",
+                    "input": "A food\nB food\nC food\nD food\nE food\nF food\nG food\nH food\nI food\nJ food\nW1 work ID 10\nW2 work ID 10\nW3 work ID 10\nW4 work ID 10\nW5 work ID 10\nW6 work ID 10\nW7 work ID 10\nW8 work ID 10\nW9 work ID 10\nW10 work ID 10\nW11 work ID 10\nW12 work ID 10\nW13 work ID 10\nW14 work ID 10\nW15 work ID 10\nW16 work ID 10\nW17 work ID 10\nW18 work ID 10\nW19 work ID 10\nW20 work ID 10\nW21 work ID 10\nW22 work ID 10\nW23 work ID 10\nW24 work ID 10\nW25 work ID 10\nW26 work ID 10\nW27 work ID 10\nW28 work ID 10\nW29 work ID 10\nW30 work ID 10\nW31 work ID 10\nW32 work ID 10\nW33 work ID 10\nW34 work ID 10\nW35 work ID 10\nW36 work ID 10\nW37 work ID 10\nW38 work ID 10\nW39 work ID 10\nW40 work ID 10\nW41 work ID 10\nW42 work ID 10\nW43 work ID 10\nW44 work ID 10\nW45 work ID 10\nW46 work ID 10\nW47 work ID 10\nW48 work ID 10\nW49 work ID 10\nW50 work ID 10"
+                },
+                {
+                    "output": "P1 T1\nB1 T1 S1 1\n----------\nP2 T2\nB2 T2 S2 2\n----------\nP3 T3\nB3 T3 S3 3\n----------\nP4 T4\nB4 T4 S4 4\n----------\nP5 T5\nB5 T5 S5 5\n----------\nP6 T6\nB6 T6 S6 6\n----------\nP7 T7\nB7 T7 S7 7\n----------\nP8 T8\nB8 T8 S8 8\n----------\nP9 T9\nB9 T9 S9 9\n----------\nP10 T10\nB10 T10 S10 10\n----------",
+                    "input": "P1 T1\nP2 T2\nP3 T3\nP4 T4\nP5 T5\nP6 T6\nP7 T7\nP8 T8\nP9 T9\nP10 T10\nB1 T1 S1 1\nB2 T2 S2 2\nB3 T3 S3 3\nB4 T4 S4 4\nB5 T5 S5 5\nB6 T6 S6 6\nB7 T7 S7 7\nB8 T8 S8 8\nB9 T9 S9 9\nB10 T10 S10 10\nTrash1 None X 0\nTrash2 None X 0\nTrash3 None X 0\nTrash4 None X 0\nTrash5 None X 0\nTrash6 None X 0\nTrash7 None X 0\nTrash8 None X 0\nTrash9 None X 0\nTrash10 None X 0\nTrash11 None X 0\nTrash12 None X 0\nTrash13 None X 0\nTrash14 None X 0\nTrash15 None X 0\nTrash16 None X 0\nTrash17 None X 0\nTrash18 None X 0\nTrash19 None X 0\nTrash20 None X 0\nTrash21 None X 0\nTrash22 None X 0\nTrash23 None X 0\nTrash24 None X 0\nTrash25 None X 0\nTrash26 None X 0\nTrash27 None X 0\nTrash28 None X 0\nTrash29 None X 0\nTrash30 None X 0\nTrash31 None X 0\nTrash32 None X 0\nTrash33 None X 0\nTrash34 None X 0\nTrash35 None X 0\nTrash36 None X 0\nTrash37 None X 0\nTrash38 None X 0\nTrash39 None X 0\nTrash40 None X 0"
+                },
+                {
+                    "output": "Shark T1\nB1 T1 A 1\nB6 T1 A 1\nB11 T1 A 1\nB16 T1 A 1\nB21 T1 A 1\nB26 T1 A 1\nB31 T1 A 1\nB36 T1 A 1\nB41 T1 A 1\nB46 T1 A 1\n----------\nShark T2\nB2 T2 B 2\nB7 T2 B 2\nB12 T2 B 2\nB17 T2 B 2\nB22 T2 B 2\nB27 T2 B 2\nB32 T2 B 2\nB37 T2 B 2\nB42 T2 B 2\nB47 T2 B 2\n----------\nShark T3\nB3 T3 C 3\nB8 T3 C 3\nB13 T3 C 3\nB18 T3 C 3\nB23 T3 C 3\nB28 T3 C 3\nB33 T3 C 3\nB38 T3 C 3\nB43 T3 C 3\nB48 T3 C 3\n----------\nShark T4\nB4 T4 D 4\nB9 T4 D 4\nB14 T4 D 4\nB19 T4 D 4\nB24 T4 D 4\nB29 T4 D 4\nB34 T4 D 4\nB39 T4 D 4\nB44 T4 D 4\nB49 T4 D 4\n----------\nShark T5\nB5 T5 E 5\nB10 T5 E 5\nB15 T5 E 5\nB20 T5 E 5\nB25 T5 E 5\nB30 T5 E 5\nB35 T5 E 5\nB40 T5 E 5\nB45 T5 E 5\nB50 T5 E 5\n----------\nGura T1\nB1 T1 A 1\nB6 T1 A 1\nB11 T1 A 1\nB16 T1 A 1\nB21 T1 A 1\nB26 T1 A 1\nB31 T1 A 1\nB36 T1 A 1\nB41 T1 A 1\nB46 T1 A 1\n----------\nGura T2\nB2 T2 B 2\nB7 T2 B 2\nB12 T2 B 2\nB17 T2 B 2\nB22 T2 B 2\nB27 T2 B 2\nB32 T2 B 2\nB37 T2 B 2\nB42 T2 B 2\nB47 T2 B 2\n----------\nGura T3\nB3 T3 C 3\nB8 T3 C 3\nB13 T3 C 3\nB18 T3 C 3\nB23 T3 C 3\nB28 T3 C 3\nB33 T3 C 3\nB38 T3 C 3\nB43 T3 C 3\nB48 T3 C 3\n----------\nGura T4\nB4 T4 D 4\nB9 T4 D 4\nB14 T4 D 4\nB19 T4 D 4\nB24 T4 D 4\nB29 T4 D 4\nB34 T4 D 4\nB39 T4 D 4\nB44 T4 D 4\nB49 T4 D 4\n----------\nGura T5\nB5 T5 E 5\nB10 T5 E 5\nB15 T5 E 5\nB20 T5 E 5\nB25 T5 E 5\nB30 T5 E 5\nB35 T5 E 5\nB40 T5 E 5\nB45 T5 E 5\nB50 T5 E 5\n----------",
+                    "input": "Shark T1\nShark T2\nShark T3\nShark T4\nShark T5\nGura T1\nGura T2\nGura T3\nGura T4\nGura T5\nB1 T1 A 1\nB2 T2 B 2\nB3 T3 C 3\nB4 T4 D 4\nB5 T5 E 5\nB6 T1 A 1\nB7 T2 B 2\nB8 T3 C 3\nB9 T4 D 4\nB10 T5 E 5\nB11 T1 A 1\nB12 T2 B 2\nB13 T3 C 3\nB14 T4 D 4\nB15 T5 E 5\nB16 T1 A 1\nB17 T2 B 2\nB18 T3 C 3\nB19 T4 D 4\nB20 T5 E 5\nB21 T1 A 1\nB22 T2 B 2\nB23 T3 C 3\nB24 T4 D 4\nB25 T5 E 5\nB26 T1 A 1\nB27 T2 B 2\nB28 T3 C 3\nB29 T4 D 4\nB30 T5 E 5\nB31 T1 A 1\nB32 T2 B 2\nB33 T3 C 3\nB34 T4 D 4\nB35 T5 E 5\nB36 T1 A 1\nB37 T2 B 2\nB38 T3 C 3\nB39 T4 D 4\nB40 T5 E 5\nB41 T1 A 1\nB42 T2 B 2\nB43 T3 C 3\nB44 T4 D 4\nB45 T5 E 5\nB46 T1 A 1\nB47 T2 B 2\nB48 T3 C 3\nB49 T4 D 4\nB50 T5 E 5"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Book.cpp",
+                    "tpl": "",
+                    "code": "#include \"Book.h\"\n#include <iostream>\n\n    Book::Book(string n,string t,string s,double p){\n        name=n;\n        type=p;\n        serial_number=s;\n        price=p;\n    }\n    \n    string Book::getType(){\n        return type;\n    }\n    int Book::getPrice(){\n        return price;\n    }\n    void Book::print(){\n        std::cout<<name<<\" \"<<type<<\" \"<<serial_number<<\" \"<<price<<std::endl;\n        \n    }"
+                },
+                {
+                    "name": "Book.h",
+                    "tpl": "",
+                    "code": "#ifndef BOOK_H\n#define BOOK_H\n#include <string>\nusing std::string;\n\nclass Book{\nprivate:\n    string name,type,serial_number;\n    double price;\n    \npublic:\n    Book(string ,string ,string ,double);\n    \n    string getType();\n    int getPrice();\n    void print();\n    \n};\n\n#endif"
+                },
+                {
+                    "tpl": "",
+                    "code": "#include \"Person.h\"\n#include <iostream>\n\n    Person::Person(string n,string t){\n        name=n;\n        type=t;\n    }\n    string Person::getName(){\n        return name;\n    }\n    string Person::getType(){\n        return type;\n    }\n    void Person::print(){\n        std::cout<<name<<\" \"<<type<<std::endl;\n    }",
+                    "name": "Person.cpp"
+                },
+                {
+                    "name": "Person.h",
+                    "code": "#ifndef PERSON_H\n#define PERSON_H\n#include <string>\nusing std::string;\n\nclass Person{\nprivate:\n    string name,type;\npublic:\n    Person(string ,string);\n    string getName();\n    string getType();\n    void print();\n    \n};\n\n#endif",
+                    "tpl": ""
+                }
+            ]
+        },
+        {
+            "id": "1775118230677",
+            "catId": "1775054154277",
+            "title": "10-1傳遞string陣列",
+            "desc": "將輸入一段文字一空白隔開，存入一維string陣列(string word[10])。並且輸出功能要寫成printStringArray(string word[], int size)。\n\n範例輸入：\nProgramming is fun\n\n範例輸出：\nProgramming\nis\nfun",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Programming\nis\nfun",
+                    "input": "Programming is fun"
+                },
+                {
+                    "output": "Hello\nworld\nand\neveryone",
+                    "input": "Hello world and everyone"
+                },
+                {
+                    "output": "Year\n2026\nis\nan\namazing\nyear!",
+                    "input": "Year 2026 is an amazing year!"
+                },
+                {
+                    "output": "One\ntwo\nthree\nfour\nfive\nsix\nseven\neight\nnine\nten",
+                    "input": "One two three four five six seven eight nine ten"
+                },
+                {
+                    "output": "The\nQUICK\nbrown\nFOX\njumps",
+                    "input": "The QUICK brown FOX jumps"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1775118564361",
+            "catId": "1775054154277",
+            "title": "10-2函數傳遞物件陣列",
+            "desc": "修改成計算Rectangle陣列的總面積 sum(Rectangle rectArray[], int size)\n輸入4組寬長建立4個長方形，輸出各個長方形的寬、長和面積，最後輸出長方形陣列的總面積。\n\n**範例輸入：**\n13 12 11 7 16 8 19 14\n\n**範例輸出：**\n13 12 156\n11 7 77\n16 8 128\n19 14 266\nTotal: 627",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "13 12 156\n11 7 77\n16 8 128\n19 14 266\nTotal: 627",
+                    "input": "13 12 11 7 16 8 19 14"
+                },
+                {
+                    "output": "2 3 6\n4 5 20\n6 7 42\n8 9 72\nTotal: 140",
+                    "input": "2 3 4 5 6 7 8 9"
+                },
+                {
+                    "output": "5 5 25\n10 10 100\n3 3 9\n1 1 1\nTotal: 135",
+                    "input": "5 5 10 10 3 3 1 1"
+                },
+                {
+                    "output": "0 5 0\n10 0 0\n0 0 0\n4 4 16\nTotal: 16",
+                    "input": "0 5 10 0 0 0 4 4"
+                },
+                {
+                    "output": "100 200 20000\n50 40 2000\n300 100 30000\n25 4 100\nTotal: 52100",
+                    "input": "100 200 50 40 300 100 25 4"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "code": "",
+                    "tpl": "",
+                    "name": "Rectangle.cpp"
+                },
+                {
+                    "name": "Rectangle.h",
+                    "tpl": "",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1775118663516",
+            "catId": "1775054154277",
+            "title": "10-3 static const",
+            "desc": "請參考範例10-8 TestCircleWithStaticDataFields.cpp和10-10 CircleWithConstantMemberFunctions.cpp, 讓Rectangle具有const和static功能。\n要求：static int numOfRect紀錄長方形的個數, getLength(), getArea()為const。\n輸入3組寬長建立3個長方形，輸出各個長方形的寬、長和面積，最後輸出總共有幾個長方形。\n\n**範例輸入：**\n1 2 2 3 3 4\n\n**範例輸出：**\n1 2 2\n2 3 6\n3 4 12\n3 Rectangles",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "1 2 2\n2 3 6\n3 4 12\n3 Rectangles",
+                    "input": "1 2 2 3 3 4"
+                },
+                {
+                    "output": "5 6 30\n7 8 56\n9 10 90\n3 Rectangles",
+                    "input": "5 6 7 8 9 10"
+                },
+                {
+                    "output": "2 2 4\n5 5 25\n10 10 100\n3 Rectangles",
+                    "input": "2 2 5 5 10 10"
+                },
+                {
+                    "output": "0 5 0\n10 0 0\n0 0 0\n3 Rectangles",
+                    "input": "0 5 10 0 0 0"
+                },
+                {
+                    "output": "7 11 77\n13 17 221\n19 23 437\n3 Rectangles",
+                    "input": "7 11 13 17 19 23"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "code": "",
+                    "name": "Rectangle.cpp"
+                },
+                {
+                    "code": "",
+                    "name": "Rectangle.h",
+                    "tpl": ""
+                }
+            ]
+        },
+        {
+            "id": "1775118816238",
+            "catId": "1775054154277",
+            "title": "10-4物件組合",
+            "desc": "利用Deitel範例10.8之Date類別，參考Deitel範例10.10，10.11的用法。\n請分開五個檔案方式設計一類別Student，data fields為name:string, birthDay:Date(月日年), score:int，\n請設計建構者和setName, setDate, setScore, getName, getDate, getScore, print。\n主程式建立兩個Student物件student1和student2，分別為John 3 25 1990 90, Mary 12 1 1993 80，\n然後輸入名字和生日，修改student1的名字和修改student2的生日，最後利用物件的print輸出。\n\n**範例輸入：**\nJerry 5 14 1991\n\n**範例輸出：**\nJerry 3/25/1990 90\nMary 5/14/1991 80",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Jerry 3/25/1990 90\nMary 5/14/1991 80",
+                    "input": "Jerry 5 14 1991"
+                },
+                {
+                    "output": "Alice 3/25/1990 90\nMary 10/31/1995 80",
+                    "input": "Alice 10 31 1995"
+                },
+                {
+                    "output": "K 3/25/1990 90\nMary 1/1/2000 80",
+                    "input": "K 1 1 2000"
+                },
+                {
+                    "output": "Christopher 3/25/1990 90\nMary 2/29/1996 80",
+                    "input": "Christopher 2 29 1996"
+                },
+                {
+                    "output": "Agent47 3/25/1990 90\nMary 11/11/2011 80",
+                    "input": "Agent47 11 11 2011"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "name": "Date.cpp",
+                    "code": ""
+                },
+                {
+                    "code": "",
+                    "name": "Date.h",
+                    "tpl": ""
+                },
+                {
+                    "code": "",
+                    "tpl": "",
+                    "name": "Student.cpp"
+                },
+                {
+                    "name": "Student.h",
+                    "tpl": "",
+                    "code": "#ifndef STUDENT_H\n#define STUDENT_H\n#include <string>\nusing std::string;\n\nclass Student{\nprivate:\n    string name;\n    int score;\n    Data birthDay;\n    \npublic:\n    str\n    \n    \n};\n\n#endif"
+                }
+            ]
+        },
+        {
+            "id": "1775118970210",
+            "catId": "1772710087888",
+            "title": "9-4 物件BMI",
+            "desc": "請以分開檔案方式設計BMI封裝物件\n\ndata fields(private):\nstring name\ndouble weight\ndouble height\n\nfunction: getBMI() -> weight / (height*height)\n\n**輸入說明：**\n主程式將輸入name、weight、height。\n\n**輸出說明：**\n將name和BMI輸出，不論 BMI 是否為整數，請輸出到小數點後兩位。\n\n**範例輸入：**\nJohn 80 1.7\n\n**範例輸出：**\nJohn 27.68\n\n※ .h 檔內請務必避免多重載入(if no define)\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "John 27.68",
+                    "input": "John 80 1.7"
+                },
+                {
+                    "output": "Alice 21.48",
+                    "input": "Alice 55 1.6"
+                },
+                {
+                    "output": "Bob 32.00",
+                    "input": "Bob 72 1.5"
+                },
+                {
+                    "output": "Charlie 27.76",
+                    "input": "Charlie 85 1.75"
+                },
+                {
+                    "output": "Dave 30.00",
+                    "input": "Dave 120 2.0"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "code": "",
+                    "name": "BMI.cpp",
+                    "tpl": ""
+                },
+                {
+                    "code": "",
+                    "name": "BMI.h",
+                    "tpl": ""
+                }
+            ]
+        },
+        {
+            "id": "1775119107189",
+            "catId": "1772710087888",
+            "title": "9-5 數學成績",
+            "desc": "請以分開檔案方式設計Score封裝物件\ndata fields(private)：string name, int math\nfunction:setName, setMath, getName, getMath\n\n輸入說明：主程式建立兩個Score物件score1(\"John\", 90)和score2(\"Mary\", 80)，然後然後輸入2組參數，將score1的名字修改成第一組物件的名字以及將score2的成績修改成第二組物件的成績。\n\n**輸出說明：**\n輸出修改後的兩物件名字與成績。\n\n範例輸入：\nJerry 70\nMay 85\n\n**範例輸出：**\nJerry 90\nMary 85\n\n**※ .h 檔內請務必避免多重載入(if no define)**",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Jerry 90\nMary 85",
+                    "input": "Jerry 70\nMay 85"
+                },
+                {
+                    "output": "Alice 90\nMary 75",
+                    "input": "Alice 100\nBob 75"
+                },
+                {
+                    "output": "Student1 90\nMary 60",
+                    "input": "Student1 50\nStudent2 60"
+                },
+                {
+                    "output": "Peter 90\nMary 100",
+                    "input": "Peter 100\nJane 100"
+                },
+                {
+                    "output": "John 90\nMary 95",
+                    "input": "John 80\nMary 95"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "\n",
+                    "name": "Score.cpp",
+                    "code": "\n"
+                },
+                {
+                    "code": "\n",
+                    "name": "Score.h",
+                    "tpl": "\n"
+                }
+            ]
+        },
+        {
+            "id": "1775119239934",
+            "catId": "1772710087888",
+            "title": "9-6 成績print",
+            "desc": "請以分開檔案方式設計Score封裝物件\ndata fields(private)：string name, int math\nfunction:setName, setMath, getName, getMath\n以及再加上一個 function\n名為 print，輸出 名字、數學成績\n\n**輸入說明：**\n主程式建立兩個Score物件score1(John, 90)和score2(Mary, 80)，然後輸入1個名字(string)和1個數學成績(int)，分別將第1個的輸入值修改score1的名字，第2個的輸入值為修改score2的數學成績。\n\n**輸出說明：**\n於主程式利用 score1.print() 和 score2.print() 進行輸出。\n\n**範例輸入：**\nJerry 85\n\n**範例輸出：**\nJerry 90\nMary 85\n\n**※ .h 檔內請務必避免多重載入(if no define)**\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Jerry 90\nMary 85",
+                    "input": "Jerry 85"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "name": "Score.cpp",
+                    "code": ""
+                },
+                {
+                    "code": "",
+                    "name": "Score.h",
+                    "tpl": ""
+                }
+            ]
+        },
+        {
+            "id": "1775055036139",
+            "catId": "1775054160813",
+            "title": "第四次小考-第六題",
+            "desc": "\n\n太難過了，又是小鯊鯊出問題，今天小鯊鯊太久沒休息，腦袋壞掉了寫的程式出了一堆錯誤，請你將程式碼內的錯誤修正。\n\n**！！！main.cpp 不用動！！！**\n\n**注意： 記得引入 .h 標頭檔，並在 .h 檔中避免多重載入！**",
+            "tpl_cpp": "#include <iostream>\n#include <string>\n#include \"Book.h\"\n#include \"Person.h\"\nusing namespace std;\nint main()\n{\n    Person person[10];for(int i=0;i<10;person[i++].setPerson());\n    Book book[50];for(int i=0;i<50;book[i++].setBook());\n\n    for(int i=0;i<10;i++){\n        person[i].print();\n        for(int j=0;j<50;j++){\n            if(person[i].getType()==book[j].getType())book[j].print();\n        }\n        cout<<\"----------\"<<endl;\n    }\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\n#include <string>\n#include \"Book.h\"\n#include \"Person.h\"\nusing namespace std;\nint main()\n{\n    Person person[10];for(int i=0;i<10;person[i++].setPerson());\n    Book book[50];for(int i=0;i<50;book[i++].setBook());\n\n    for(int i=0;i<10;i++){\n        person[i].print();\n        for(int j=0;j<50;j++){\n            if(person[i].getType()==book[j].getType())book[j].print();\n        }\n        cout<<\"----------\"<<endl;\n    }\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "P1 TypeA\nB01 TypeA S01 100\nB02 TypeA S02 100\nB03 TypeA S03 100\nB04 TypeA S04 100\nB05 TypeA S05 100\n----------\nP2 TypeB\nB06 TypeB S06 100\nB07 TypeB S07 100\nB08 TypeB S08 100\nB09 TypeB S09 100\nB10 TypeB S10 100\n----------\nP3 TypeC\nB11 TypeC S11 100\nB12 TypeC S12 100\nB13 TypeC S13 100\nB14 TypeC S14 100\nB15 TypeC S15 100\n----------\nP4 TypeD\nB16 TypeD S16 100\nB17 TypeD S17 100\nB18 TypeD S18 100\nB19 TypeD S19 100\nB20 TypeD S20 100\n----------\nP5 TypeE\nB21 TypeE S21 100\nB22 TypeE S22 100\nB23 TypeE S23 100\nB24 TypeE S24 100\nB25 TypeE S25 100\n----------\nP6 TypeF\nB26 TypeF S26 100\nB27 TypeF S27 100\nB28 TypeF S28 100\nB29 TypeF S29 100\nB30 TypeF S30 100\n----------\nP7 TypeG\nB31 TypeG S31 100\nB32 TypeG S32 100\nB33 TypeG S33 100\nB34 TypeG S34 100\nB35 TypeG S35 100\n----------\nP8 TypeH\nB36 TypeH S36 100\nB37 TypeH S37 100\nB38 TypeH S38 100\nB39 TypeH S39 100\nB40 TypeH S40 100\n----------\nP9 TypeI\nB41 TypeI S41 100\nB42 TypeI S42 100\nB43 TypeI S43 100\nB44 TypeI S44 100\nB45 TypeI S45 100\n----------\nP10 TypeJ\nB46 TypeJ S46 100\nB47 TypeJ S47 100\nB48 TypeJ S48 100\nB49 TypeJ S49 100\nB50 TypeJ S50 100\n----------",
+                    "input": "P1 TypeA\nP2 TypeB\nP3 TypeC\nP4 TypeD\nP5 TypeE\nP6 TypeF\nP7 TypeG\nP8 TypeH\nP9 TypeI\nP10 TypeJ\nB01 TypeA S01 100\nB02 TypeA S02 100\nB03 TypeA S03 100\nB04 TypeA S04 100\nB05 TypeA S05 100\nB06 TypeB S06 100\nB07 TypeB S07 100\nB08 TypeB S08 100\nB09 TypeB S09 100\nB10 TypeB S10 100\nB11 TypeC S11 100\nB12 TypeC S12 100\nB13 TypeC S13 100\nB14 TypeC S14 100\nB15 TypeC S15 100\nB16 TypeD S16 100\nB17 TypeD S17 100\nB18 TypeD S18 100\nB19 TypeD S19 100\nB20 TypeD S20 100\nB21 TypeE S21 100\nB22 TypeE S22 100\nB23 TypeE S23 100\nB24 TypeE S24 100\nB25 TypeE S25 100\nB26 TypeF S26 100\nB27 TypeF S27 100\nB28 TypeF S28 100\nB29 TypeF S29 100\nB30 TypeF S30 100\nB31 TypeG S31 100\nB32 TypeG S32 100\nB33 TypeG S33 100\nB34 TypeG S34 100\nB35 TypeG S35 100\nB36 TypeH S36 100\nB37 TypeH S37 100\nB38 TypeH S38 100\nB39 TypeH S39 100\nB40 TypeH S40 100\nB41 TypeI S41 100\nB42 TypeI S42 100\nB43 TypeI S43 100\nB44 TypeI S44 100\nB45 TypeI S45 100\nB46 TypeJ S46 100\nB47 TypeJ S47 100\nB48 TypeJ S48 100\nB49 TypeJ S49 100\nB50 TypeJ S50 100"
+                },
+                {
+                    "output": "User1 A\n----------\nUser2 B\n----------\nUser3 C\n----------\nUser4 D\n----------\nUser5 E\n----------\nUser6 F\n----------\nUser7 G\n----------\nUser8 H\n----------\nUser9 I\n----------\nUser10 J\n----------",
+                    "input": "User1 A\nUser2 B\nUser3 C\nUser4 D\nUser5 E\nUser6 F\nUser7 G\nUser8 H\nUser9 I\nUser10 J\nB1 X 0 0\nB2 X 0 0\nB3 X 0 0\nB4 X 0 0\nB5 X 0 0\nB6 X 0 0\nB7 X 0 0\nB8 X 0 0\nB9 X 0 0\nB10 X 0 0\nB11 X 0 0\nB12 X 0 0\nB13 X 0 0\nB14 X 0 0\nB15 X 0 0\nB16 X 0 0\nB17 X 0 0\nB18 X 0 0\nB19 X 0 0\nB20 X 0 0\nB21 X 0 0\nB22 X 0 0\nB23 X 0 0\nB24 X 0 0\nB25 X 0 0\nB26 X 0 0\nB27 X 0 0\nB28 X 0 0\nB29 X 0 0\nB30 X 0 0\nB31 X 0 0\nB32 X 0 0\nB33 X 0 0\nB34 X 0 0\nB35 X 0 0\nB36 X 0 0\nB37 X 0 0\nB38 X 0 0\nB39 X 0 0\nB40 X 0 0\nB41 X 0 0\nB42 X 0 0\nB43 X 0 0\nB44 X 0 0\nB45 X 0 0\nB46 X 0 0\nB47 X 0 0\nB48 X 0 0\nB49 X 0 0\nB50 X 0 0"
+                },
+                {
+                    "output": "Shark Fish\nSharkFact Fish 001 10\n----------\nGura Fish\nSharkFact Fish 001 10\n----------\nAme Time\n----------\nIna Taco\n----------\nKiara Bird\n----------\nCalli Death\n----------\nBaelz Rat\n----------\nMumei Owl\n----------\nFauna Nature\n----------\nKronii Time\n----------",
+                    "input": "Shark Fish\nGura Fish\nAme Time\nIna Taco\nKiara Bird\nCalli Death\nBaelz Rat\nMumei Owl\nFauna Nature\nKronii Time\nSharkFact Fish 001 10\nB2 X 0 0\nB3 X 0 0\nB4 X 0 0\nB5 X 0 0\nB6 X 0 0\nB7 X 0 0\nB8 X 0 0\nB9 X 0 0\nB10 X 0 0\nB11 X 0 0\nB12 X 0 0\nB13 X 0 0\nB14 X 0 0\nB15 X 0 0\nB16 X 0 0\nB17 X 0 0\nB18 X 0 0\nB19 X 0 0\nB20 X 0 0\nB21 X 0 0\nB22 X 0 0\nB23 X 0 0\nB24 X 0 0\nB25 X 0 0\nB26 X 0 0\nB27 X 0 0\nB28 X 0 0\nB29 X 0 0\nB30 X 0 0\nB31 X 0 0\nB32 X 0 0\nB33 X 0 0\nB34 X 0 0\nB35 X 0 0\nB36 X 0 0\nB37 X 0 0\nB38 X 0 0\nB39 X 0 0\nB40 X 0 0\nB41 X 0 0\nB42 X 0 0\nB43 X 0 0\nB44 X 0 0\nB45 X 0 0\nB46 X 0 0\nB47 X 0 0\nB48 X 0 0\nB49 X 0 0\nB50 X 0 0"
+                },
+                {
+                    "output": "PersonA QA\n----------\nPersonB QB\n----------\nPersonC QC\n----------\nPersonD QD\n----------\nPersonE QE\n----------\nPersonF QF\n----------\nPersonG QG\n----------\nPersonH QH\n----------\nPersonI QI\n----------\nPersonJ QJ\n----------",
+                    "input": "PersonA QA\nPersonB QB\nPersonC QC\nPersonD QD\nPersonE QE\nPersonF QF\nPersonG QG\nPersonH QH\nPersonI QI\nPersonJ QJ\nB01 Z 1 1\nB02 Z 1 1\nB03 Z 1 1\nB04 Z 1 1\nB05 Z 1 1\nB06 Z 1 1\nB07 Z 1 1\nB08 Z 1 1\nB09 Z 1 1\nB10 Z 1 1\nB11 Z 1 1\nB12 Z 1 1\nB13 Z 1 1\nB14 Z 1 1\nB15 Z 1 1\nB16 Z 1 1\nB17 Z 1 1\nB18 Z 1 1\nB19 Z 1 1\nB20 Z 1 1\nB21 Z 1 1\nB22 Z 1 1\nB23 Z 1 1\nB24 Z 1 1\nB25 Z 1 1\nB26 Z 1 1\nB27 Z 1 1\nB28 Z 1 1\nB29 Z 1 1\nB30 Z 1 1\nB31 Z 1 1\nB32 Z 1 1\nB33 Z 1 1\nB34 Z 1 1\nB35 Z 1 1\nB36 Z 1 1\nB37 Z 1 1\nB38 Z 1 1\nB39 Z 1 1\nB40 Z 1 1\nB41 Z 1 1\nB42 Z 1 1\nB43 Z 1 1\nB44 Z 1 1\nB45 Z 1 1\nB46 Z 1 1\nB47 Z 1 1\nB48 Z 1 1\nB49 Z 1 1\nB50 Z 1 1"
+                },
+                {
+                    "output": "Alice Sci-Fi\nB01 Sci-Fi S001 300\nB02 Sci-Fi S002 300\nB03 Sci-Fi S003 300\nB04 Sci-Fi S004 300\nB05 Sci-Fi S005 300\nB06 Sci-Fi S006 300\nB07 Sci-Fi S007 300\nB08 Sci-Fi S008 300\nB09 Sci-Fi S009 300\nB10 Sci-Fi S010 300\n----------\nBob Fantasy\nB11 Fantasy S011 400\nB12 Fantasy S012 400\nB13 Fantasy S013 400\nB14 Fantasy S014 400\nB15 Fantasy S015 400\nB16 Fantasy S016 400\nB17 Fantasy S017 400\nB18 Fantasy S018 400\nB19 Fantasy S019 400\nB20 Fantasy S020 400\n----------\nCharlie Mystery\nB21 Mystery S021 350\nB22 Mystery S022 350\nB23 Mystery S023 350\nB24 Mystery S024 350\nB25 Mystery S025 350\nB26 Mystery S026 350\nB27 Mystery S027 350\nB28 Mystery S028 350\nB29 Mystery S029 350\nB30 Mystery S030 350\n----------\nDavid Sci-Fi\nB01 Sci-Fi S001 300\nB02 Sci-Fi S002 300\nB03 Sci-Fi S003 300\nB04 Sci-Fi S004 300\nB05 Sci-Fi S005 300\nB06 Sci-Fi S006 300\nB07 Sci-Fi S007 300\nB08 Sci-Fi S008 300\nB09 Sci-Fi S009 300\nB10 Sci-Fi S010 300\n----------\nEve Mystery\nB21 Mystery S021 350\nB22 Mystery S022 350\nB23 Mystery S023 350\nB24 Mystery S024 350\nB25 Mystery S025 350\nB26 Mystery S026 350\nB27 Mystery S027 350\nB28 Mystery S028 350\nB29 Mystery S029 350\nB30 Mystery S030 350\n----------\nFrank Romance\nB31 Romance S031 250\nB32 Romance S032 250\nB33 Romance S033 250\nB34 Romance S034 250\nB35 Romance S035 250\nB36 Romance S036 250\nB37 Romance S037 250\nB38 Romance S038 250\nB39 Romance S039 250\nB40 Romance S040 250\n----------\nGrace Fantasy\nB11 Fantasy S011 400\nB12 Fantasy S012 400\nB13 Fantasy S013 400\nB14 Fantasy S014 400\nB15 Fantasy S015 400\nB16 Fantasy S016 400\nB17 Fantasy S017 400\nB18 Fantasy S018 400\nB19 Fantasy S019 400\nB20 Fantasy S020 400\n----------\nHank History\nB41 History S041 500\nB42 History S042 500\nB43 History S043 500\nB44 History S044 500\nB45 History S045 500\nB46 History S046 500\nB47 History S047 500\nB48 History S048 500\nB49 History S049 500\nB50 History S050 500\n----------\nIvy Sci-Fi\nB01 Sci-Fi S001 300\nB02 Sci-Fi S002 300\nB03 Sci-Fi S003 300\nB04 Sci-Fi S004 300\nB05 Sci-Fi S005 300\nB06 Sci-Fi S006 300\nB07 Sci-Fi S007 300\nB08 Sci-Fi S008 300\nB09 Sci-Fi S009 300\nB10 Sci-Fi S010 300\n----------\nJack Romance\nB31 Romance S031 250\nB32 Romance S032 250\nB33 Romance S033 250\nB34 Romance S034 250\nB35 Romance S035 250\nB36 Romance S036 250\nB37 Romance S037 250\nB38 Romance S038 250\nB39 Romance S039 250\nB40 Romance S040 250\n----------",
+                    "input": "Alice Sci-Fi\nBob Fantasy\nCharlie Mystery\nDavid Sci-Fi\nEve Mystery\nFrank Romance\nGrace Fantasy\nHank History\nIvy Sci-Fi\nJack Romance\nB01 Sci-Fi S001 300\nB02 Sci-Fi S002 300\nB03 Sci-Fi S003 300\nB04 Sci-Fi S004 300\nB05 Sci-Fi S005 300\nB06 Sci-Fi S006 300\nB07 Sci-Fi S007 300\nB08 Sci-Fi S008 300\nB09 Sci-Fi S009 300\nB10 Sci-Fi S010 300\nB11 Fantasy S011 400\nB12 Fantasy S012 400\nB13 Fantasy S013 400\nB14 Fantasy S014 400\nB15 Fantasy S015 400\nB16 Fantasy S016 400\nB17 Fantasy S017 400\nB18 Fantasy S018 400\nB19 Fantasy S019 400\nB20 Fantasy S020 400\nB21 Mystery S021 350\nB22 Mystery S022 350\nB23 Mystery S023 350\nB24 Mystery S024 350\nB25 Mystery S025 350\nB26 Mystery S026 350\nB27 Mystery S027 350\nB28 Mystery S028 350\nB29 Mystery S029 350\nB30 Mystery S030 350\nB31 Romance S031 250\nB32 Romance S032 250\nB33 Romance S033 250\nB34 Romance S034 250\nB35 Romance S035 250\nB36 Romance S036 250\nB37 Romance S037 250\nB38 Romance S038 250\nB39 Romance S039 250\nB40 Romance S040 250\nB41 History S041 500\nB42 History S042 500\nB43 History S043 500\nB44 History S044 500\nB45 History S045 500\nB46 History S046 500\nB47 History S047 500\nB48 History S048 500\nB49 History S049 500\nB50 History S050 500"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "code": "#include \"Book.h\"\nBook::Book(){\n\n}\nBook::Book(string name, string type, string serial_number){\n    this->name = name;\n    this->type = type;\n    this->serial_number = sGrial_number;\n}\nBook::void setBook(){\n    cin>>name>>type>>serial_number>>price\n}\nBook::string getName(){\n    return name\n}\nBook::string getType(){\n    return type\n}\nBook::string getSerialNumber(){\n    return serial_number\n}\nBook::double getPrice(){\n    return price\n}\nBook::void print(){\n    cout<<name<<\" \"<<type<<\" \"<<serial_number<<\" \"<<price<<endl\n}",
+                    "name": "Book.cpp",
+                    "tpl": "#include \"Book.h\"\nBook::Book(){\n\n}\nBook::Book(string name, string type, string serial_number){\n    this->name = name;\n    this->type = type;\n    this->serial_number = sGrial_number;\n}\nBook::void setBook(){\n    cin>>name>>type>>serial_number>>price\n}\nBook::string getName(){\n    return name\n}\nBook::string getType(){\n    return type\n}\nBook::string getSerialNumber(){\n    return serial_number\n}\nBook::double getPrice(){\n    return price\n}\nBook::void print(){\n    cout<<name<<\" \"<<type<<\" \"<<serial_number<<\" \"<<price<<endl\n}"
+                },
+                {
+                    "tpl": "#ifndef _BOOK_H_\n#define _BOOK_H_\n#include <iostream>\n#include <strimg>\nclass Book\n{\n    private:\n        string name;\n        string type;\n        string serial_number;\n        double price;\n    public:\n        Book();\n        Book(string,string,string);\n        void setBook();\n        string getName();\n        string getType();\n        string getSerialNumber();\n        double getPrice();\n        void print(){;\n}\n#endif",
+                    "code": "#ifndef _BOOK_H_\n#define _BOOK_H_\n#include <iostream>\n#include <strimg>\nclass Book\n{\n    private:\n        string name;\n        string type;\n        string serial_number;\n        double price;\n    public:\n        Book();\n        Book(string,string,string);\n        void setBook();\n        string getName();\n        string getType();\n        string getSerialNumber();\n        double getPrice();\n        void print(){;\n}\n#endif",
+                    "name": "Book.h"
+                },
+                {
+                    "tpl": "#include \"Person.cpp\"\nPerson::Person(){\n\n}\nPerson::Person(string name, string type){\n    this->name = name;\n    this->type = type;\n}\nPerson::void setPerson(){\n    cin>>name>>type;\n}\nPerson::string getName(){\n    return name;\n}\nPerson::string getType(){\n    return type;\n}\nPerson::void print(){\n    cout<<name<<\" \"<<type<<endl;\n}",
+                    "name": "Person.cpp",
+                    "code": "#include \"Person.cpp\"\nPerson::Person(){\n\n}\nPerson::Person(string name, string type){\n    this->name = name;\n    this->type = type;\n}\nPerson::void setPerson(){\n    cin>>name>>type;\n}\nPerson::string getName(){\n    return name;\n}\nPerson::string getType(){\n    return type;\n}\nPerson::void print(){\n    cout<<name<<\" \"<<type<<endl;\n}"
+                },
+                {
+                    "code": "#ifdef _PERSON_H_\n#define _PERSON_H_\ninclude <iostream>\ninclude <strimg>\nclass Person{\n    private:\n        string name;\n        string type;\n    public:\n        Person();\n        Person(string,string);\n        void setPerson();\n        string getName();\n        string getType();\n        void print();\n}\n#endif",
+                    "name": "Person.h",
+                    "tpl": "#ifdef _PERSON_H_\n#define _PERSON_H_\ninclude <iostream>\ninclude <strimg>\nclass Person{\n    private:\n        string name;\n        string type;\n    public:\n        Person();\n        Person(string,string);\n        void setPerson();\n        string getName();\n        string getType();\n        void print();\n}\n#endif"
+                }
+            ]
+        },
+        {
+            "id": "1775054461796",
+            "catId": "1775054160813",
+            "title": "第四次小考-第七題",
+            "desc": "這次鯊鯊收到來自老闆的請求，要求將文字加密轉成密文，使機密不可洩漏給外界知道，並且提供相關數據提供給老闆參考。\n\n請設計一個名為 **StringProcess** 的類別來處理字串，這個類別具有以下的功能：\n**str (private)：**儲存接收到的字串。\n**建構子 (public)：**接收一個字串，並將其儲存起來。\n**reverse_str (public)：**回傳反轉字串。\n**getEvenChars (public)：**回傳該字串所有的偶數位字元\n**getOddChars (public)：**回傳該字串所有的奇數位字元\n**upper_count (public)：**回傳該字串的大寫字元數目。\n**lower_count (public)：**回傳該字串的小寫字元數目。\n\n**限制條件：**\n1.請勿直接使用 string 函式庫裡的 reverse 函式。\n2.請使用 stringstream 來完成字串處理的任務。\n\n**注意： 記得將宣告寫在 .h 標頭檔，並在 .h 檔中避免多重載入！**\n\n**輸入說明：**\n輸入一個沒有空格的字串。\n\n**輸出說明：**\n請依照下面範例輸出的輸出格式進行輸出，處理字串反轉、印出奇/偶數字元與其大/小寫字元數目。\n\n**輸入範例:**\nBihuan_says_Hello!\n\n**輸出範例:**\nInput string: Bihuan_says_Hello!\nReversed string: !olleH_syas_nauhiB\nEven characters: Bha_asHlo\nOdd characters: iunsy_el!\nCount upper characters: 2\nCount lower characters: 13",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Input string: Bihuan_says_Hello!\nReversed string: !olleH_syas_nauhiB\nEven characters: Bha_asHlo\nOdd characters: iunsy_el!\nCount upper characters: 2\nCount lower characters: 13",
+                    "input": "Bihuan_says_Hello!"
+                },
+                {
+                    "output": "Input string: testing12345\nReversed string: 54321gnitset\nEven characters: tsig24\nOdd characters: etn135\nCount upper characters: 0\nCount lower characters: 7",
+                    "input": "testing12345"
+                },
+                {
+                    "output": "Input string: C++_PROGRAMMING_IS_FUN!!!\nReversed string: !!!NUF_SI_GNIMMARGORP_++C\nEven characters: C+PORMIGI_U!!\nOdd characters: +_RGAMN_SFN!\nCount upper characters: 17\nCount lower characters: 0",
+                    "input": "C++_PROGRAMMING_IS_FUN!!!"
+                },
+                {
+                    "output": "Input string: A\nReversed string: A\nEven characters: A\nOdd characters: \nCount upper characters: 1\nCount lower characters: 0",
+                    "input": "A"
+                },
+                {
+                    "output": "Input string: aB!cD@eF#gH$\nReversed string: $Hg#Fe@Dc!Ba\nEven characters: a!De#H\nOdd characters: Bc@Fg$\nCount upper characters: 4\nCount lower characters: 4",
+                    "input": "aB!cD@eF#gH$"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "name": "StringProcess.cpp",
+                    "code": ""
+                },
+                {
+                    "tpl": "",
+                    "code": "",
+                    "name": "StringProcess.h"
+                }
+            ]
+        },
+        {
+            "id": "1776781784065",
+            "catId": "1775054160813",
+            "title": "第五次小考- 第八題 (字串數字加總)",
+            "desc": "請使用 stringstream，在一段字串中取出數字的部分，並計算總和。\n先輸入一個數字n代表有幾個字串，接著將字串中的'，'拿出，只取出數字的部分並相加。\n\n**範例輸入:**\n3\n3,4,5\n5,12,13\n25,100,75\n\n**範例輸出:**\n12\n30\n200\n",
+            "tpl_cpp": "#include <iostream>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "12\n30\n200",
+                    "input": "3\n3,4,5\n5,12,13\n25,100,75"
+                },
+                {
+                    "output": "5\n30",
+                    "input": "2\n1,1,1,1,1\n10,20"
+                },
+                {
+                    "output": "100",
+                    "input": "1\n99,1"
+                },
+                {
+                    "output": "0\n0\n10",
+                    "input": "3\n0,0,0\n-1,1\n5,-5,10"
+                },
+                {
+                    "output": "34\n600",
+                    "input": "2\n7,8,9,10\n100,200,300"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1776781496019",
+            "catId": "1775054160813",
+            "title": "第五次小考-10-3 字串單字切割並統計長度",
+            "desc": "請撰寫一個程式，讀入一行由英文單字組成的句子，句子中的單字之間以空白 (space) 作為分隔。程式需將句子依照空白切割成多個單字，並將每個單字依序輸出其長度。\n\n此外，請將輸出長度的功能實作為一個函式 void printLength(string word[], int size)，並由主程式呼叫該函式完成輸出。\n\n**範例輸入:**\nProgramming is fun\n\n**範例輸出:**\n11\n2\n3\n\nPS. 要有printLength(string word[], int size)、sstream、stringstream、getline",
+            "tpl_cpp": "#include <iostream>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "11\n2\n3",
+                    "input": "Programming is fun"
+                },
+                {
+                    "output": "5\n5",
+                    "input": "Hello World"
+                },
+                {
+                    "output": "1\n4\n3\n11",
+                    "input": "I love C++ programming"
+                },
+                {
+                    "output": "4\n2\n2\n5",
+                    "input": "This is an apple"
+                },
+                {
+                    "output": "10\n6",
+                    "input": "CloudJudge System"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1776782153152",
+            "catId": "1776782140603",
+            "title": "11- 用解構子計算數量",
+            "desc": "**請參考之前的題目: static const，並且請勿修改主程式**\n\n\n請以分開三個檔案的方式將其 Circle 物件修改成 Rectangle 物件，讓 Rectangle 具有 static 功能使其可以計算數量 。\ndata fields(private) 為 width(double)、height(double)、numOfRect(static int)\n以及**請設計建構子(Constructor)**和 function: setWidth、getWidth、setHeight、getHeight、getArea、getNumOfRect、print\n\n\n\n並且為Rectangle**設定解構子(Destructor)**，在解構子中請減少NumOfRect的數量\n\nprint函式中請依序輸出長(height)、寬(width)以及面積\n\n\n**輸入說明：**\n於主程式中輸入 4 組長與寬，建立 4 個 Rectangle 物件\n\n**輸出說明：**\n請依照主程式程式碼輸出。\n\n**範例輸入：**\n5 4 9 3 7 6 4 1\n\n**範例輸出：**\n4 5 20\n3 9 27\n6 7 42\n1 4 4\nStep 1 Total: 4 Rectangles\nStep 2 Total: 2 Rectangles\n\n\n\n※ 要求：int numOfRect 為紀錄長方形的個數需具有 static 功能，getNumOfRect()也須具有 static 功能，而 getWidth()、 getHeight()、getArea() 需具有 const。務必參考課本範例，使用陣列。\n",
+            "tpl_cpp": "#include<iostream>\n#include\"Rectangle.h\"\nusing namespace std;\nint main()\n{\n\tconst int size = 5;\n\tdouble height, width;\n\n\tcin >> width >> height;\n\tRectangle rect1(width, height);\n\tcin >> width >> height;\n\tRectangle rect2(width, height);\n\t{\n\t\tcin >> width >> height;\n\t\tRectangle rect3(width, height);\n\t\tcin >> width >> height;\n\t\tRectangle rect4(width, height);\n\t\trect1.print();\n\t\trect2.print();\n\t\trect3.print();\n\t\trect4.print();\n\t\tcout << \"Step 1 Total: \" << Rectangle::getNumOfRect() << \" Rectangles\" << endl;\n\t}\n\tcout << \"Step 2 Total: \" << Rectangle::getNumOfRect() << \" Rectangles\" << endl;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "4 5 20\n3 9 27\n6 7 42\n1 4 4\nStep 1 Total: 4 Rectangles\nStep 2 Total: 2 Rectangles",
+                    "input": "5 4 9 3 7 6 4 1"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Rectangle.cpp",
+                    "tpl": "\n",
+                    "code": "\n"
+                },
+                {
+                    "code": "\n",
+                    "tpl": "\n",
+                    "name": "Rectangle.h"
+                }
+            ]
+        },
+        {
+            "id": "1776782348236",
+            "catId": "1776782140603",
+            "title": "11-1 Swap function in class",
+            "desc": "以分開三個檔案設計 Rectangle 物件\n於類別內設計適當的建構者\ndata fields(private) 為** width(double)、height(double)**\nfunction 有 **setWidth、getWidth、setHeight、getHeight、getArea、swapByReference、swapByPointer**\n請參考課本範例 TestPointerArgument.cpp 並於 swapByReference 與 swapByPointer 以 this 方式設計\n\n函數名稱與形式為\nRectangle::swapByReference(Rectangle &r2)\nRectangle::swapByPointer(Rectangle *r2)\n\n**輸入說明：**\n請依序輸入兩組 width 與 height。\n\n**輸出說明：**\n將輸入的 width 與 height 建立兩個物件，並將兩物件利用 pass-by-reference 以及 pass-by-pointer 以 this 方式進行交換，最後輸出。\n\n**範例輸入：**\n2.5 3.3 10.5 2.2\n\n**範例輸出(以面積輸出到小數點後兩位)：**\nSwapByReference:8.25 23.10 to 23.10 8.25\nSwapByPointer:23.10 8.25 to 8.25 23.10",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "SwapByReference:8.25 23.10 to 23.10 8.25\nSwapByPointer:23.10 8.25 to 8.25 23.10",
+                    "input": "2.5 3.3 10.5 2.2"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Rectangle.cpp",
+                    "tpl": "\n",
+                    "code": "\n"
+                },
+                {
+                    "code": "\n",
+                    "name": "Rectangle.h",
+                    "tpl": "\n"
+                }
+            ]
+        },
+        {
+            "id": "1776782553832",
+            "catId": "1776782140603",
+            "title": "11-2 Swap function in main",
+            "desc": "承上題\n同樣以分開三個檔案設計 Rectangle 物件\n於類別內設計適當的建構者\ndata fields(private) 為 **width(double)、height(double)**\nfunction 有 **setWidth、getWidth、setHeight、getHeight、getArea**\n但以主程式的觀點來設計 swapByReference 以及 swapByPointer\n可參考課本範例 TestPointerArgument.cpp\n\n函數名稱與形式為\nswapByReference(Rectangle &r1, Rectangle &r2)\nswapByPointer(Rectangle *r1, Rectangle *r2)\n\n**輸入說明：**\n請依序輸入兩組 width 與 height。\n\n**輸出說明：**\n將輸入的 width 與 height 建立兩個物件，並將兩物件利用 pass-by-reference 以及 pass-by-pointer 以進行交換，最後輸出。\n\n**範例輸入：**\n2.5 3.3 10.5 2.2\n\n**範例輸出(以面積輸出)：**\nSwapByReference:8.25 23.10 to 23.10 8.25\nSwapByPointer:23.10 8.25 to 8.25 23.10",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "SwapByReference:8.25 23.10 to 23.10 8.25\nSwapByPointer:23.10 8.25 to 8.25 23.10",
+                    "input": "2.5 3.3 10.5 2.2"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "code": "\n",
+                    "name": "Rectangle.cpp",
+                    "tpl": "\n"
+                },
+                {
+                    "code": "\n",
+                    "name": "Rectangle.h",
+                    "tpl": "\n"
+                }
+            ]
+        },
+        {
+            "id": "1777421531218",
+            "catId": "1777377555516",
+            "title": "第十一章 - 第一題 - 小考",
+            "desc": "請以分開三個檔案（main.cpp, BMI.h, BMI.cpp）的方式設計 BMI 物件。\n\n**類別設計要求：**\n\n於類別內設計適當的建構者 (Constructor)。\n\n資料欄位 (data fields) 必須為 private：\n**height (double)**\n**weight (double)**\n\n成員函式 (member functions) 包含：\n**setHeight、getHeight、setWeight、getWeight、getBMI**\n**swapByReference、swapByPointer**\n\n交換函式的名稱與形式須為：\n**void swapByReference(BMI &bmi2)**\n**void swapByPointer(BMI *bmi2)**\n\n關鍵要求：於 swapByReference 與 swapByPointer 函式中，必須使用 **this **指標的方式來進行物件資料的交換。\n\nBMI 計算公式：BMI = 體重(公斤) / 身高^2(公尺^2)。\n\n**輸出結果需四捨五入並取到小數點第一位。**\n\n**輸入說明：**\n請依序輸入兩組 height 與 weight。\n\n**輸出說明：**\n將輸入的 height 與 weight 建立兩個物件，並將兩物件利用 pass-by-reference 以及 pass-by-pointer 的方式進行交換，最後依指定格式輸出。\n\n**範例輸入:**\n169 65 180 78\n\n**範例輸出:**\nSwapByReference:22.8 24.1 to 24.1 22.8\nSwapByPointer:24.1 22.8 to 22.8 24.1",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "SwapByReference:22.8 24.1 to 24.1 22.8\nSwapByPointer:24.1 22.8 to 22.8 24.1",
+                    "input": "169 65 180 78"
+                },
+                {
+                    "input": "170 60 160 50",
+                    "output": "SwapByReference:20.8 19.5 to 19.5 20.8\nSwapByPointer:19.5 20.8 to 20.8 19.5"
+                },
+                {
+                    "output": "SwapByReference:18.7 26.3 to 26.3 18.7\nSwapByPointer:26.3 18.7 to 18.7 26.3",
+                    "input": "155 45 185 90"
+                },
+                {
+                    "output": "SwapByReference:22.9 20.2 to 20.2 22.9\nSwapByPointer:20.2 22.9 to 22.9 20.2",
+                    "input": "175 70 165 55"
+                },
+                {
+                    "input": "190 100 150 40",
+                    "output": "SwapByReference:27.7 17.8 to 17.8 27.7\nSwapByPointer:17.8 27.7 to 27.7 17.8"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "name": "BMI.cpp",
+                    "code": ""
+                },
+                {
+                    "tpl": "",
+                    "name": "BMI.h",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1777422093349",
+            "catId": "1777377555516",
+            "title": "第十一章 - 第二題 - 小考",
+            "desc": "承上題，同樣以分開三個檔案（main.cpp, BMI.h, BMI.cpp）的方式設計 BMI 物件。\n\n類別設計要求：\n於類別內設計適當的**建構者 (Constructor)**。\n資料欄位 (data fields) 必須為 private：\n**height (double)**\n**weight (double)**\n\n成員函式 (member functions) 有：\n**setHeight、getHeight、setWeight、getWeight、getBMI**\n\n本題關鍵差異：\n請以**「主程式的觀點」**來設計 swapByReference 以及 swapByPointer。\n\nBMI 計算：BMI = 體重(公斤) / 身高^2(公尺^2)。\n\n函數名稱與形式為：\nvoid swapByReference(BMI &bmi1, BMI &bmi2)\nvoid swapByPointer(BMI *bmi1, BMI *bmi2)\n\n**輸入說明：**\n請依序輸入兩組 height 與 weight。\n\n**輸出說明：**\n將輸入的 height 與 weight 建立兩個物件，並將兩物件利用 pass-by-reference 以及 pass-by-pointer 進行交換，最後輸出。\n（並取到小數點第一位）\n\n**範例輸入:**\n169 65 180 78\n\n**範例輸出:**\nSwapByReference:22.8 24.1 to 24.1 22.8\nSwapByPointer:24.1 22.8 to 22.8 24.1\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "169 65 180 78",
+                    "output": "SwapByReference:22.8 24.1 to 24.1 22.8\nSwapByPointer:24.1 22.8 to 22.8 24.1"
+                },
+                {
+                    "input": "170 60 160 50",
+                    "output": "SwapByReference:20.8 19.5 to 19.5 20.8\nSwapByPointer:19.5 20.8 to 20.8 19.5"
+                },
+                {
+                    "output": "SwapByReference:18.7 26.3 to 26.3 18.7\nSwapByPointer:26.3 18.7 to 18.7 26.3",
+                    "input": "155 45 185 90"
+                },
+                {
+                    "input": "175 70 165 55",
+                    "output": "SwapByReference:22.9 20.2 to 20.2 22.9\nSwapByPointer:20.2 22.9 to 22.9 20.2"
+                },
+                {
+                    "output": "SwapByReference:27.7 17.8 to 17.8 27.7\nSwapByPointer:17.8 27.7 to 27.7 17.8",
+                    "input": "190 100 150 40"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "code": "",
+                    "name": "BMI.cpp"
+                },
+                {
+                    "tpl": "",
+                    "code": "",
+                    "name": "BMI.h"
+                }
+            ]
+        },
+        {
+            "id": "1777422748975",
+            "catId": "1777377555516",
+            "title": "第十一章 - 第三題 - 小考",
+            "desc": "請以分開三個檔案的方式設計 **Triangle** 物件，\n讓 Triangle 具有 static 功能使其可以計算數量。\n\nprivate 私有領域：\n**base: double**\n**height: double**\n**numOfTriangles: static int**\n\npublic 公開領域：\n**建構子、解構子**\n**setBase(double)、getBase()**\n**setHeight(double)、getHeight()**\n**getArea()、getNumOfTriangles()、print()**\n**(請把不會更改到 data fields 的函式多加 const 功能)**\n\n※ 這題對你們來說\"可能\"超爆難，所以佛心地給個提示：\n\n1.假設此題目所建立的三角形皆為正三角形！\n2.可能需要用到指標、基本記憶體配置概念 (new、-> 關鍵字)！\n3.限制必須使用到 **this** 關鍵字！\n\n**輸入說明：**\n依序輸入 4 組底邊與高，並使用**物件陣列**建立 4 個 Triangle 物件。\n\n**輸出說明：**\n請配合預設 main.cpp 以提供之內容，並依範例輸出格式輸出。\n(原先文字請勿做修改)\n\n**範例輸入:**\n5 4 9 3 7 6 4 1\n\n**範例輸出:**\n5 4 Area: 10 Perimeter: 15\n9 3 Area: 13.5 Perimeter: 27\n7 6 Area: 21 Perimeter: 21\n4 1 Area: 2 Perimeter: 12\nTotal: 4 Triangles\nTotal: 2 Triangles\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    //\n    delete triangles[1];\n    triangles[1] = nullptr;\n    delete triangles[3];\n    triangles[3] = nullptr;\n    //\n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "5 4 9 3 7 6 4 1",
+                    "output": "5 4 Area: 10 Perimeter: 15\n9 3 Area: 13.5 Perimeter: 27\n7 6 Area: 21 Perimeter: 21\n4 1 Area: 2 Perimeter: 12\nTotal: 4 Triangles\nTotal: 2 Triangles"
+                },
+                {
+                    "output": "10 5 Area: 25 Perimeter: 30\n8 4 Area: 16 Perimeter: 24\n6 3 Area: 9 Perimeter: 18\n2 1 Area: 1 Perimeter: 6\nTotal: 4 Triangles\nTotal: 2 Triangles",
+                    "input": "10 5 8 4 6 3 2 1"
+                },
+                {
+                    "input": "3 2 3 2 3 2 3 2",
+                    "output": "3 2 Area: 3 Perimeter: 9\n3 2 Area: 3 Perimeter: 9\n3 2 Area: 3 Perimeter: 9\n3 2 Area: 3 Perimeter: 9\nTotal: 4 Triangles\nTotal: 2 Triangles"
+                },
+                {
+                    "output": "2.5 4 Area: 5 Perimeter: 7.5\n1.5 6 Area: 4.5 Perimeter: 4.5\n3.5 2 Area: 3.5 Perimeter: 10.5\n4.5 2 Area: 4.5 Perimeter: 13.5\nTotal: 4 Triangles\nTotal: 2 Triangles",
+                    "input": "2.5 4 1.5 6 3.5 2 4.5 2"
+                },
+                {
+                    "input": "0 0 10 10 20 5 1 10",
+                    "output": "0 0 Area: 0 Perimeter: 0\n10 10 Area: 50 Perimeter: 30\n20 5 Area: 50 Perimeter: 60\n1 10 Area: 5 Perimeter: 3\nTotal: 4 Triangles\nTotal: 2 Triangles"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "tpl": "",
+                    "name": "Triangle.cpp",
+                    "code": ""
+                },
+                {
+                    "name": "Triangle.h",
+                    "code": "",
+                    "tpl": ""
+                }
+            ]
+        },
+        {
+            "id": "1775119503394",
+            "catId": "1775119474686",
+            "title": "第一次-作業 - 第十章 練習A",
+            "desc": "請以分開五個檔案方式設計兩類別 Course 與 Student :\n\nCourse 類別的 data fields(private): math(int)、english(int)、computer(int)\n\nStudent 類別的 data fields(private): name(string)、ID(string)、course(Course)、numOfStu(int)\n\nCourse 類別中請設計適當建構子和 function: setMath、setEnglish、setComputer、getMath、getEnglish、getComputer、getSum、getAverage、printScore(print內容包含『mathScore』、『englishScore』、『computerScore』、『個人成績加總』、『個人成績平均』）\n\nStudent 類別中請設計適當建構子和 function: setName、getName、setID、getID、setCourse、getCourse、getNumOfStu、printStudent\n\n輸入說明：\n輸入一個範圍為 2~5 的整數 n 表示輸入學生數，\n並輸入 n 組 name、ID、math、english、computer，以陣列方式建立 n 個 student 物件。\n\n輸出說明：\n利用 Student 物件中的 print 輸出資料，在主程式外部請設計 printAve(Student stuArray[]) 一個函式，分別計算 Student 陣列的各科平均並輸出。\n\n範例輸入：\n4\nJerry B52648 72 71 96\nAmy B35487 70 87 67\nCindy B68421 82 89 81\nRay B95922 70 89 86\n\n範例輸出：\nJerry B52648 72 71 96 Sum:239 Average:79.7\nAmy B35487 70 87 67 Sum:224 Average:74.7\nCindy B68421 82 89 81 Sum:252 Average:84.0\nRay B95922 70 89 86 Sum:245 Average:81.7\nmathAverage:73.5\nenglishAverage:84.0\ncomputerAverage:82.5\n\n※ 要求：int numOfStu 為紀錄學生個數需具有 static 功能。get function 請皆需使用 const。\n\n※ 平均需輸出至小數點後第 1 位\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Jerry B52648 72 71 96 Sum:239 Average:79.7\nAmy B35487 70 87 67 Sum:224 Average:74.7\nCindy B68421 82 89 81 Sum:252 Average:84.0\nRay B95922 70 89 86 Sum:245 Average:81.7\nmathAverage:73.5\nenglishAverage:84.0\ncomputerAverage:82.5",
+                    "input": "4\nJerry B52648 72 71 96\nAmy B35487 70 87 67\nCindy B68421 82 89 81\nRay B95922 70 89 86"
+                },
+                {
+                    "output": "Alice A111 80 90 85 Sum:255 Average:85.0\nBob B222 75 85 95 Sum:255 Average:85.0\nCharlie C333 60 70 80 Sum:210 Average:70.0\nmathAverage:71.7\nenglishAverage:81.7\ncomputerAverage:86.7",
+                    "input": "3\nAlice A111 80 90 85\nBob B222 75 85 95\nCharlie C333 60 70 80"
+                },
+                {
+                    "output": "Tom T123 50 60 70 Sum:180 Average:60.0\nJerry J456 55 65 75 Sum:195 Average:65.0\nmathAverage:52.5\nenglishAverage:62.5\ncomputerAverage:72.5",
+                    "input": "2\nTom T123 50 60 70\nJerry J456 55 65 75"
+                },
+                {
+                    "output": "P1 A01 100 90 80 Sum:270 Average:90.0\nP2 A02 90 80 70 Sum:240 Average:80.0\nP3 A03 80 70 60 Sum:210 Average:70.0\nP4 A04 70 60 50 Sum:180 Average:60.0\nP5 A05 60 50 40 Sum:150 Average:50.0\nmathAverage:80.0\nenglishAverage:70.0\ncomputerAverage:60.0",
+                    "input": "5\nP1 A01 100 90 80\nP2 A02 90 80 70\nP3 A03 80 70 60\nP4 A04 70 60 50\nP5 A05 60 50 40"
+                },
+                {
+                    "output": "Zero Z000 0 0 0 Sum:0 Average:0.0\nOne O001 1 2 3 Sum:6 Average:2.0\nmathAverage:0.5\nenglishAverage:1.0\ncomputerAverage:1.5",
+                    "input": "2\nZero Z000 0 0 0\nOne O001 1 2 3"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "name": "Course.cpp",
+                    "tpl": "",
+                    "code": "#include \"Course.h\"\n"
+                },
+                {
+                    "code": "#ifndef COURSE_H\n#define COURSE_H\n\nclass Course{\nprivate:\n    int math,english,computer;\n    \npublic:\n    void setMath(int );\n    void setEnglish(int );\n    void setComputer(int );\n    \n    int getMath();\n    int getEnglish();\n    int getComputer();\n    int getSum();\n    int getAverage();\n    void printScore();\n    \n    \n}\n\n#endif",
+                    "tpl": "",
+                    "name": "Course.h"
+                },
+                {
+                    "name": "Student.cpp",
+                    "tpl": "",
+                    "code": ""
+                },
+                {
+                    "tpl": "",
+                    "name": "Student.h",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1775132801260",
+            "catId": "1775119474686",
+            "title": "第一次-作業 - 第十章 綜合練習",
+            "desc": "請設計三類別Birthday、Salary、Staff\n按照題目所需為三個類別設計適當的 constructor\n\nBirthday類別的data fields(private): year:int、month:int、day:int\nBirthday類別的function有 setYear、getYear、setMonth、getMonth、setDay、getDay、print\nBirthday的print函式的功能為輸出 year/month/day\n\nSalary類別的data fields(private): hours:int、workDay:int\nSalary類別的function有 setHours、getHours、setWorkDay、getWorkDay、getMonthlySalary、print\ngetMonthlySalary的計算方式: 168 * hours * workDay\nSalary的print函式的功能為輸出 getMonthlySalary\n\nStaff類別的data fields(private): name:string、br:Birthday、sa:Salary 、time:static int\nStaff類別的function有setName、getName、setBr、getBr、setSa、getSa、getTime、print\nStaff的print函式的功能為輸出 name/Birthday的print/Salary的print\n\nStaff建構子務必使用物件組合完成，例如：\nStaff(\"Kirito\", Birthday(1999, 6, 1), Salary(8, 10))\n不限制組合格式\n\n\n**輸入說明：**\n主程式建立三個Staff物件，資訊如下：\n\nStaff1：name-Kirito、birthday-2002年3月2日、hours -10、workDay-20\n\nStaff2：name-Asuna、birthday-2003年5月4日、hours -8、workDay-30\n\nStaff3：name-Alice、birthday-2000年10月8日、hours -3、workDay-4\n\n輸入1個name (string)、1個year(int)、1個day(int)、1個hours (int)\n\n**輸出說明：**\n第1個輸入值修改Staff1的name，第2個輸入值修改Staff2的birthday年份，第3個輸入值修改Staff3的birthday日期，第4個輸入值修改Staff1與Staff3的hours ，請在主程式利用Staff物件中print函式按照範例輸出格式輸出，最後輸出Staff的time即可。\n\n**範例輸入：**\nEden 1995 10 4\n\n**範例輸出：**\nEden 2002/3/2 13440\nAsuna 1995/5/4 40320\nAlice 2000/10/10 2688\nStaff: 3\n\n\n**※ 所有的get都要有const哦!!!**\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Eden 2002/3/2 13440\nAsuna 1995/5/4 40320\nAlice 2000/10/10 2688\nStaff: 3",
+                    "input": "Eden 1995 10 4"
+                },
+                {
+                    "output": "Bob 2002/3/2 16800\nAsuna 2010/5/4 40320\nAlice 2000/10/25 3360\nStaff: 3",
+                    "input": "Bob 2010 25 5"
+                },
+                {
+                    "output": "Agent_47 2002/3/2 26880\nAsuna 1999/5/4 40320\nAlice 2000/10/15 5376\nStaff: 3",
+                    "input": "Agent_47 1999 15 8"
+                },
+                {
+                    "output": "Zero 2002/3/2 0\nAsuna 1990/5/4 40320\nAlice 2000/10/1 0\nStaff: 3",
+                    "input": "Zero 1990 1 0"
+                },
+                {
+                    "output": "Terminator 2002/3/2 80640\nAsuna 2050/5/4 40320\nAlice 2000/10/31 16128\nStaff: 3",
+                    "input": "Terminator 2050 31 24"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "code": "",
+                    "tpl": "",
+                    "name": "Birthday.cpp"
+                },
+                {
+                    "code": "",
+                    "tpl": "",
+                    "name": "Birthday.h"
+                },
+                {
+                    "tpl": "",
+                    "name": "Salary.cpp",
+                    "code": ""
+                },
+                {
+                    "code": "",
+                    "tpl": "",
+                    "name": "Salary.h"
+                },
+                {
+                    "code": "",
+                    "name": "Staff.cpp",
+                    "tpl": ""
+                },
+                {
+                    "name": "Staff.h",
+                    "tpl": "",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1777451547101",
+            "catId": "1775119474686",
+            "title": "第二次-作業 - 物件檢定-第一題",
+            "desc": "請使用for迴圈寫出以下題目 :\n\n**輸入說明：**\n輸入一個n表示輸入的數量，並使用for迴圈執行n次數字輸入。\n輸入值為: 1~99999\n\n22 > n > 3\n\n**輸出說明：**\n將所輸入的數字比大小，最後輸出所有數字的中的最大值、最小值、總和。\n\n**輸入範例：**\n3\n24 35 3\n\n**輸出範例：**\nMax: 35\nMin: 3\nTotal: 62\n\n\n需求 :\n\n一個for\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main(){\n\tint n;\n\tfor ()\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "Max: 35\nMin: 3\nTotal: 62",
+                    "input": "3\n24 35 3"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1777451620275",
+            "catId": "1775119474686",
+            "title": "第二次-作業 - 物件檢定-第二題",
+            "desc": "\n請使用while迴圈寫出以下題目 :\n\n**輸入說明：**\n輸入一個n。\n100000 > n > 2\n\n**輸出說明：**\n找出小於n的最大平方和。\n例: n = 100，輸出81 (9 * 9)。\n\n10001 > n > 1\n\n**輸入範例：**\n50\n\n**輸出範例：**\n49\n\n\n需求 :\n\n一個while\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    #include <iostream>\nusing namespace std;\n\nint main(){\n\tint n;\n\twhile ()\n}\n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "49",
+                    "input": "50"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1777451687380",
+            "catId": "1775119474686",
+            "title": "第二次-作業 - 物件檢定-第三題",
+            "desc": "請利用迴圈方法解題(for 或 while)\n\n輸入說明：\n輸入兩個數字表示二維陣列的大小n m。 (從1開始)\n根據二維陣列的大小將值輸入二維陣列中的每項元素。\n再輸入兩個數字，表示二維陣列中的某項。 (從0開始)\n10 >= n >= 3\n10 >= m >= 3\n\n輸出說明：\n根據最後輸入的兩個數字，輸出二維陣列中的某項的值。\n\n輸入範例：\n3 5\n1 3 5 7 9\n2 4 6 8 10\n3 6 9 12 15\n\n1 2\n\n輸出範例：\n6\n\n需求 :\n\n使用for或while二選一解題\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "input": "3 5\n1 3 5 7 9\n2 4 6 8 10\n3 6 9 12 15\n\n1 2",
+                    "output": "6"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        },
+        {
+            "id": "1777387105531",
+            "catId": "1775119474686",
+            "title": "第二次-作業 - 物件檢定-第四題",
+            "desc": "\n請你將 main.cpp 內的 class 封裝起來到他們該去的檔案\n\n！！！請不要動 main 函式內的東西！！！\n\n並將class內的參數改為private",
+            "tpl_cpp": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Book{\n    public:\n\t\tstring name;\n\t\tstring type;\n\t\tBook(){}\n\t\tBook(string name, string type){\n\t\t\tthis->name = name;\n\t\t\tthis->type = type;\n\t\t}\n\t\tvoid setName(string name){this->name = name;}\n\t\tvoid setType(string type){this->type = type;}\n\t\tstring getName(){return this->name;}\n\t\tstring getType(){return this->type;}\n\t\tvoid print(){cout<<name<<\" \"<<type<<endl;}\n};\nclass BookShelf{\n\tpublic:\n\t    string type;\n\t\tBookShelf(){}\n\t\tBookShelf(string type){this->type = type;}\n\t\tvoid setType(string type){this->type = type;}\n\t\tstring getType(){return this->type;}\n\t\tvoid print(){cout<<type<<endl;}\n};\nint main(){\n\tBookShelf bookShelf;Book book[10];\n\tstring typeBookShelf;cin>>typeBookShelf;\n\tbookShelf.setType(typeBookShelf);\n\tfor(int i=0;i<10;i++){\n\t\tstring name,type;cin>>name>>type;\n\t\tbook[i].setName(name);book[i].setType(type);\n\t}\n\tbookShelf.print();for(int i=0;i<10;book[i++].print());\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "ComputerScience\nC++_Primer Programming\nCleanCode Engineering\nDesignPatterns Architecture\nDataStructures Algorithm\nOperatingSystem OS\nComputerNetworks Network\nArtificialIntelligence AI\nMachineLearning AI\nDeepLearning AI\nDatabaseSystems DB",
+                    "input": "ComputerScience\nC++_Primer Programming\nCleanCode Engineering\nDesignPatterns Architecture\nDataStructures Algorithm\nOperatingSystem OS \nComputerNetworks Network \nArtificialIntelligence AI \nMachineLearning AI \nDeepLearning AI \nDatabaseSystems DB"
+                },
+                {
+                    "input": "Fantasy_Collection\nHarryPotter Fantasy\nTheHobbit Fantasy\nDune Sci-Fi\n1984 Dystopian\nEragon Fantasy\nTwilight Romance\nDracula Horror\nFrankenstein Horror\nPercyJackson Fantasy\nTheWitcher Fantasy",
+                    "output": "Fantasy_Collection\nHarryPotter Fantasy\nTheHobbit Fantasy\nDune Sci-Fi\n1984 Dystopian\nEragon Fantasy\nTwilight Romance\nDracula Horror\nFrankenstein Horror\nPercyJackson Fantasy\nTheWitcher Fantasy"
+                },
+                {
+                    "output": "Comic_Shelf\nNaruto Ninja\nOnePiece Pirate\nBleach Shinigami\nDragonBall Saiyan\nSlamDunk Sports\nHaikyuu Sports\nAttackOnTitan Action\nDemonSlayer Action\nJujutsuKaisen Action\nSpyXFamily Comedy",
+                    "input": "Comic_Shelf\nNaruto Ninja\nOnePiece Pirate\nBleach Shinigami\nDragonBall Saiyan\nSlamDunk Sports\nHaikyuu Sports\nAttackOnTitan Action\nDemonSlayer Action\nJujutsuKaisen Action\nSpyXFamily Comedy"
+                },
+                {
+                    "input": "Mixed\nA B\nC D\nE F\nG H\nI J\nK L\nM N\nO P\nQ R\nS T",
+                    "output": "Mixed\nA B\nC D\nE F\nG H\nI J\nK L\nM N\nO P\nQ R\nS T"
+                },
+                {
+                    "output": "Shelf_123\nBook1 TypeA\nBook2 TypeB\nBook3 TypeC\nBook4 TypeD\nBook5 TypeE\nBook6 TypeF\nBook7 TypeG\nBook8 TypeH\nBook9 TypeI\nBook10 TypeJ",
+                    "input": "Shelf_123\nBook1 TypeA\nBook2 TypeB\nBook3 TypeC\nBook4 TypeD\nBook5 TypeE\nBook6 TypeF\nBook7 TypeG\nBook8 TypeH\nBook9 TypeI\nBook10 TypeJ"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": true,
+            "multiFiles": [
+                {
+                    "code": "",
+                    "name": "Book.cpp",
+                    "tpl": ""
+                },
+                {
+                    "code": "",
+                    "name": "Book.h",
+                    "tpl": ""
+                },
+                {
+                    "tpl": "",
+                    "code": "",
+                    "name": "BookShelf.cpp"
+                },
+                {
+                    "tpl": "",
+                    "name": "BookShelf.h",
+                    "code": ""
+                }
+            ]
+        },
+        {
+            "id": "1777386718613",
+            "catId": "1775119474686",
+            "title": "第二次-作業 - 物件檢定-第五題",
+            "desc": "請利用string使用方法解題\n\n**輸入說明：**\n輸入一個以 _ 間隔的字串，與三個數字。\n請利用getline()的特性切割字串\n\n**輸出說明：**\n請依照下面範例輸出的輸出格式進行輸出，印出字串長度、及第 i 個位置的字元輸出三個字串相加並在字串中加入\":\"、。\n\n**輸入範例：**\nGoGoShark_NoNoPython_BadBadGelo\n\n8 2 3\n\n**輸出範例：**\n9 10 10\nk N B\nGoGoShark:NoNoPython:BadBadGelo\n\n\nstring.length() 會回傳字串長度\n例：str = \"string\" cout<輸出：6\n\nstring + string 會將兩字串相加\n例：str1 = \"string1\",str2 = \"string2\" cout<輸出：string1string2\n\nstring 是 char[] 矩陣\n例：string myString = \"Hello\"; cout << myString[0];\n輸出：H\n例：string myString = \"Hello\"; cout << myString[3];\n輸出：l\n例：string myString = \"Hello\"; myString[0] = 'J';\ncout << myString;\n輸出：Jello\n",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "tpl_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    \n    return 0;\n}",
+            "code_python": "import sys\n\n# Python Solution\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().splitlines()\n    # Write logic here\n    pass\n\nif __name__ == \"__main__\":\n    main()",
+            "testCases": [
+                {
+                    "output": "9 10 10 \nk N B \nGoGoShark:NoNoPython:BadBadGelo",
+                    "input": "GoGoShark_NoNoPython_BadBadGelo\n8 2 3"
+                },
+                {
+                    "output": "5 6 6 \nA a e \nApple:Banana:Cherry",
+                    "input": "Apple_Banana_Cherry\n0 1 2"
+                },
+                {
+                    "input": "C++_Java123_Python!\n1 4 6",
+                    "output": "3 7 7 \n+ 1 ! \nC++:Java123:Python!"
+                },
+                {
+                    "input": "A_BC_DEF\n0 1 2",
+                    "output": "1 2 3 \nA C F \nA:BC:DEF"
+                },
+                {
+                    "input": "ObjectOriented_Programming_Homework\n6 10 4",
+                    "output": "14 11 8 \nO g w \nObjectOriented:Programming:Homework"
+                }
+            ],
+            "lastLang": "cpp",
+            "isMultiFile": false,
+            "multiFiles": []
+        }
+    ]
+}
