@@ -307,11 +307,51 @@ async function syncCategoryDeltaToCloud(catId, diff) {
 
     async function fetchAndLoadBank(jsonUrl, displayName, forceReset = false) {
         if (!currentUser) { alert("請先登入帳號！"); return; }
+
+        pendingUpdateDb = null;
+        const toast = document.getElementById('updateToast');
+        if (toast) toast.style.display = 'none'; 
+        
+        // 🚀 UI 防呆：加入載入中動畫並鎖定全域按鈕
+        const buttons = document.querySelectorAll('.bank-btn');
+        let clickedBtn = null;
+        let originalContent = "";
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(jsonUrl)) {
+                clickedBtn = btn;
+                originalContent = btn.innerHTML;
+                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">⏳ 載入中...</span><span class="bank-desc">同步雲端資料</span>`;
+            }
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.6';
+        });
+
+        try {
+            // 🚀 效能優化：平行化下載 GitHub 題庫與 Firebase 雲端進度
+            // 加上時間戳記強制繞過瀏覽器的 404 快取
+            const fetchPromise = fetch(jsonUrl + '?t=' + new Date().getTime()).then(res => {
+                if (!res.ok) throw new Error("伺服器回傳狀態：" + res.status);
+                return res.json();
+            });
+            const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get() : Promise.resolve(null);
+            
+            const [newDb, docSnap] = await Promise.all([fetchPromise, dbPromise]);
+            
+            (newDb.categories || []).forEach(c => delete c.isUserAdded);
+            (newDb.problems || []).forEach(p => delete p.isUserAdded);
+            
+            newDb.categories = newDb.categories || [];
+            newDb.problems = newDb.problems || [];
+            
+            let shouldSyncDb = forceReset;
+
+            // --- 1. 從 Firebase 抓取你在這份題庫的「雲端歷史存檔」 ---
+            let savedCategories = [];
+            let savedProblems = [];
             const safeKey = jsonUrl.replace(/[\.\#\$\[\]]/g, '_');
 
             if (personalDb) {
                 try {
-                    // docSnap 已經在上方透過 Promise.all 取得了
                     if (docSnap && docSnap.exists) {
                         const data = docSnap.data();
                         if (data.bankProgress && data.bankProgress[safeKey]) {
@@ -320,10 +360,8 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                             savedProblems = prog.problems || [];
                         }
                         
-                        // 🚀 救回遺失的自訂分類：如果 bankProgress 存檔失敗，從 customCategories 的備份中撈回來
                         if (data.customCategories) {
                             Object.values(data.customCategories).forEach(cc => {
-                                // 檢查是否屬於當前正在載入的題庫 (jsonUrl)
                                 if (cc && cc.id && cc.bankUrl === jsonUrl) {
                                     const existingC = savedCategories.find(c => c.id == cc.id);
                                     if (existingC) {
@@ -335,7 +373,6 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                             });
                         }
 
-                        // 🚀 救回遺失的自訂題目：如果 bankProgress 存檔失敗，從 customProblems 的備份中撈回來
                         if (data.customProblems) {
                             Object.values(data.customProblems).forEach(cp => {
                                 if (cp && cp.id) {
@@ -343,7 +380,6 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                                     if (existingP) {
                                         Object.assign(existingP, cp);
                                     } else {
-                                        // 確保這題屬於當前題庫 (分類在官方名單或本地存檔中)
                                         const isForThisBank = newDb.categories.some(c => c.id == cp.catId) || savedCategories.some(c => c.id == cp.catId);
                                         if (isForThisBank) {
                                             savedProblems.push(cp);
@@ -356,22 +392,20 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                 } catch (e) { console.error("讀取目標題庫進度失敗", e); }
             }
 
-            // --- 2. 絕對防呆分離：只要雲端有，但 GitHub 最新官方沒有的，統統視為「自訂擴充」 ---
+            // --- 2. 篩選出純粹的「自訂擴充」 ---
             const userAddedCategories = savedCategories.filter(oldC => !newDb.categories.some(newC => newC.id === oldC.id));
             const userAddedProblems = savedProblems.filter(oldP => !newDb.problems.some(newP => newP.id === oldP.id));
             
-            // 賦予免死金牌，讓系統知道這些是自訂擴充，並允許使用者刪除 (包含被官方淘汰的舊題目)
             userAddedCategories.forEach(c => c.isUserAdded = true);
             userAddedProblems.forEach(p => p.isUserAdded = true);
 
-            // --- 3. 處理預設題庫合併 (🚀 這裡就是你漏改的關鍵！) ---
+            // --- 3. 處理預設題庫合併 ---
             const bankVersions = JSON.parse(localStorage.getItem('oj_v15_bank_versions') || '{}');
             const lastSyncedVersion = bankVersions[jsonUrl];
             const isUpdate = (!forceReset && newDb.version && lastSyncedVersion !== undefined && newDb.version !== lastSyncedVersion);
 
             if (forceReset || isUpdate) {
                 shouldSyncDb = true; 
-                // 【強制覆蓋模式】：有新版本時，用官方題庫覆蓋你修改的敘述，只保留程式碼
                 if (currentUser && personalDb && isUpdate) {
                     let customUpdates = {};
                     newDb.problems.forEach(p => { customUpdates[p.id] = firebase.firestore.FieldValue.delete(); });
@@ -389,7 +423,6 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                     }
                 });
             } else {
-                // 💡【一般切換模式】無損載入：完整保留你對官方題目做的任何修改 (包含標題、敘述、測資)
                 newDb.categories = newDb.categories.map(newC => {
                     const oldC = savedCategories.find(c => c.id === newC.id);
                     return oldC ? Object.assign({}, newC, oldC) : newC;
@@ -423,15 +456,15 @@ async function syncCategoryDeltaToCloud(catId, diff) {
             checkForUpdates();
 
         } catch (err) { 
+            console.error(err);
             alert("載入失敗！請確認 GitHub 檔案是否存在\n\n詳細錯誤：" + err.message); 
+            if (clickedBtn && originalContent) {
+                clickedBtn.innerHTML = originalContent;
+            }
         } finally {
-            // 🚀 恢復按鈕狀態：無論成功或失敗都解鎖按鈕
             buttons.forEach(btn => {
                 btn.style.pointerEvents = 'auto';
                 btn.style.opacity = '1';
             });
-            if (clickedBtn && originalContent) {
-                clickedBtn.innerHTML = originalContent;
-            }
         }
     }
