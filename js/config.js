@@ -14,7 +14,14 @@ let currentBankUrl = "";
 let pendingUpdateDb = null;
 let hasCloudDbData = false;
 let authInitialized = false;
-let isBankSortMode = false; // 控制自訂題庫排序模式的變數
+
+// [版本控制]
+const SYSTEM_VERSION = "1.10.1";
+
+// 全域排序變數，避免舊版程式碼產生 ReferenceError 導致畫面空白
+let isBankSortMode = false;
+
+// 預設關閉開發者除錯模式的變數
 
 // V60: 多檔案支援的狀態變數
 let currentFileIndex = -1; // -1 代表 main，0 以上代表 extraFiles 的 index
@@ -71,3 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.dispatchEvent(new Event('dbLoaded'));
     }
 });
+
+let isCatSortMode = false;
+let isProbSortMode = false;
