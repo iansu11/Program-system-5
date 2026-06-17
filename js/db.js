@@ -317,7 +317,8 @@ async function syncCategoryDeltaToCloud(catId, diff) {
         let clickedBtn = null;
         let originalContent = "";
         buttons.forEach(btn => {
-            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(jsonUrl)) {
+            const onclickAttr = btn.getAttribute('onclick');
+            if (onclickAttr && onclickAttr.includes(jsonUrl)) {
                 clickedBtn = btn;
                 originalContent = btn.innerHTML;
                 btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">⏳ 載入中...</span><span class="bank-desc">同步雲端資料</span>`;
