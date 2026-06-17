@@ -106,7 +106,7 @@ function renderCategoryList() {
     db.categories.forEach((cat, index) => {
         const div = document.createElement('div');
         div.className = 'cat-card';
-        div.draggable = isBankSortMode; 
+        div.draggable = isCatSortMode; 
         div.dataset.index = index; 
 
         const probCount = db.problems.filter(p => p.catId == cat.id).length;
@@ -119,7 +119,7 @@ function renderCategoryList() {
             </div>
         `;
         div.onclick = () => {
-            if (!isBankSortMode) {
+            if (!isCatSortMode) {
                 window.location.href = 'dashboard.html?catId=' + cat.id;
             }
         };
