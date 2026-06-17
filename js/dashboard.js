@@ -125,6 +125,9 @@ function renderCategoryList() {
         };
         list.appendChild(div);
     });
+    if (isCatSortMode) {
+        enableDragSort('categoryList', 'cat-card', saveCategoryOrder);
+    }
 }
 
 function showProblemList(catId) {
