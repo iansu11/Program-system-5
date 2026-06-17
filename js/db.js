@@ -80,7 +80,8 @@ async function loadUserDataFromCloud(isBackground = false) {
                 // 🛑 防呆機制：如果合併雲端進度後發現題庫依然是空的，代表本地快取或雲端存檔損毀，強制重新從伺服器抓取！
                 if (db.categories.length === 0 && currentBankUrl) {
                     console.warn("偵測到題庫異常為空，正在重新拉取官方題庫...");
-                    fetchAndLoadBank(currentBankUrl, currentBankName, false);
+                    // 傳入 true 強制寫入雲端，以修復雲端損毀的紀錄
+                    fetchAndLoadBank(currentBankUrl, currentBankName, true);
                     return; // 中斷，由 fetchAndLoadBank 負責後續的 reload 與 render
                 }
             } else {
@@ -306,48 +307,6 @@ async function syncCategoryDeltaToCloud(catId, diff) {
 
     async function fetchAndLoadBank(jsonUrl, displayName, forceReset = false) {
         if (!currentUser) { alert("請先登入帳號！"); return; }
-
-        pendingUpdateDb = null;
-        const toast = document.getElementById('updateToast');
-        if (toast) toast.style.display = 'none'; 
-        
-        // 🚀 UI 防呆：加入載入中動畫並鎖定全域按鈕
-        const buttons = document.querySelectorAll('.bank-btn');
-        let clickedBtn = null;
-        let originalContent = "";
-        buttons.forEach(btn => {
-            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(jsonUrl)) {
-                clickedBtn = btn;
-                originalContent = btn.innerHTML;
-                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">⏳ 載入中...</span><span class="bank-desc">同步雲端資料</span>`;
-            }
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.6';
-        });
-
-        try {
-            // 🚀 效能優化：平行化下載 GitHub 題庫與 Firebase 雲端進度，節省一半以上的等待時間
-            const fetchPromise = fetch(jsonUrl).then(res => {
-                if (!res.ok) throw new Error("伺服器回傳狀態：" + res.status);
-                return res.json();
-            });
-            const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get() : Promise.resolve(null);
-            
-            const [newDb, docSnap] = await Promise.all([fetchPromise, dbPromise]);
-            
-            // 💡 海關安檢：強制淨化從 GitHub 下載的官方 JSON，拔除不小心殘留的自訂標籤
-            (newDb.categories || []).forEach(c => delete c.isUserAdded);
-            (newDb.problems || []).forEach(p => delete p.isUserAdded);
-            
-            // 確保陣列存在，避免 .some() 拋出錯誤導致整個流程中斷
-            newDb.categories = newDb.categories || [];
-            newDb.problems = newDb.problems || [];
-            
-            let shouldSyncDb = forceReset;
-
-            // --- 1. 從 Firebase 抓取你在這份題庫的「雲端歷史存檔」 ---
-            let savedCategories = [];
-            let savedProblems = [];
             const safeKey = jsonUrl.replace(/[\.\#\$\[\]]/g, '_');
 
             if (personalDb) {
@@ -475,4 +434,4 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                 clickedBtn.innerHTML = originalContent;
             }
         }
-    }
+    }
