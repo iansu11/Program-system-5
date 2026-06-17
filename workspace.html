@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>程式開發區 - 解題系統 V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js"></script>
+</head>
+<body style="background-color: var(--bg-page-light); color: #333; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
+    
+    <!-- 導航列 -->
+    <div style="background: var(--bg-header-blue); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white;">
+        <h3 style="margin: 0;">解題系統 V2</h3>
+        <div style="display:flex; align-items: center; gap: 15px;">
+            <span id="user-name" style="font-size: 0.9rem; color: #cbd5e1;"></span>
+            <button class="btn btn-outline" style="color: white; border-color: white;" onclick="logout()">登出</button>
+        </div>
+    </div>
+<div id="view-workspace">
+    <div class="ws-header">
+        <div style="flex: 0 0 30%; max-width: 30%; min-width: 250px; display: flex; align-items: center; justify-content: flex-start; padding: 0 5px 0 30px; box-sizing: border-box; border-right: 1px solid rgba(0,0,0,0.3);">
+            <span id="wsTitle" style="font-weight:bold; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 100%;">題目名稱</span>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px 0 15px; box-sizing: border-box; overflow-x: visible; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-left: -24px;">
+                <button class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0;" onclick="goToAdmin()">⚙️ 設定</button>
+                
+                <select id="langSelect" onchange="changeWorkspaceLang()">
+                    <option value="cpp">C++ (GCC)</option>
+                    <option value="python">Python 3</option>
+                </select>
+                <button class="btn btn-outline btn-sm" onclick="adjustFontSize(-1)" title="縮小字體">A-</button>
+                <button class="btn btn-outline btn-sm" onclick="adjustFontSize(1)" title="放大字體">A+</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
+                <button id="modeBtn" class="btn btn-outline btn-sm" style="color: var(--accent); border-color: var(--accent);" onclick="toggleCompileMode()">☁️ 雲端編譯</button>
+                <input type="file" id="codeUploadInput" style="display:none;" accept=".cpp,.h,.py,.zip" multiple onchange="handleCodeUpload(this)">
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('codeUploadInput').click()">📤 上傳</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadCode()">📥 下載</button>
+                <button class="btn btn-ai btn-sm" style="padding: 4px 8px; font-size: 0.8rem;" onclick="openAIHelperModal()">🤖 AI 診斷</button>
+                <button class="btn btn-outline btn-sm" onclick="copyCode()">📋 複製</button>
+                <button class="btn btn-outline btn-sm" onclick="resetCode()">🔄 重置</button>
+                <button class="btn btn-success btn-sm" style="height: 32px; display: inline-flex; align-items: center;" id="runBtn" onclick="runCode()">▶️ 執行</button>
+            </div>
+        </div>
+    </div>
+    <div class="ws-container">
+        <div class="pane-left">
+            <h3 style="margin-top:0; color:var(--accent); border-bottom:1px solid #ccc; padding-bottom:10px;">題目描述</h3>
+            <div id="wsDesc" class="problem-content"></div>
+        </div>
+        <div class="pane-right" id="paneRight">
+            <div class="editor-tabs" id="wsEditorTabs" style="display:none;"></div>
+            
+            <div id="editor"></div>
+            <div class="resizer-bar" id="dragHandle"><div class="resizer-icon"></div></div>
+            <div class="console-area" id="consoleArea">
+                <div class="console-header">執行結果 (Output)</div>
+                <div id="outputLogs"><div style="color:#666;">等待執行...</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modelAnswerModal" class="modal">
+    <div class="modal-box" style="width:600px; max-width:90%; height:500px;">
+        <h3>🔑 設定示範解答 (Model Answer)</h3>
+        <textarea id="modelAnswerInput" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#d4d4d4; border:1px solid #333; padding:10px;" placeholder="#include <iostream>..." spellcheck="false"></textarea>
+        <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" onclick="document.getElementById('modelAnswerModal').style.display='none'">取消</button>
+                <button class="btn btn-copy" onclick="copyModelAnswer()">📋 複製解答</button>
+                <button class="btn btn-paste" onclick="pasteModelAnswer()">📋 貼上解答</button>
+                <button class="btn btn-primary" onclick="saveModelAnswerFromModal()">✅ 暫存設定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="aiHelperModal" class="modal">
+    <div class="modal-box" style="width:600px; max-width:90%; height:550px;">
+        <h3 style="display:flex; align-items:center; gap:10px; color:var(--ai-color); margin-top:0;">
+            🤖 AI 程式碼診斷 (傳送門)
+        </h3>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:-5px;">
+            系統已自動生成提問內容。您可以選擇僅複製文字，或複製並開啟新分頁。
+        </p>
+        <textarea id="aiPromptOutput" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#d4d4d4; border:1px solid #333; padding:10px; font-size:0.9rem;" readonly></textarea>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+            <button class="btn btn-outline" onclick="document.getElementById('aiHelperModal').style.display='none'">關閉</button>
+            <button class="btn btn-primary" onclick="copyPromptOnly()">📋 僅複製</button>
+            <button class="btn btn-ai" onclick="copyPromptAndOpenGemini()">🚀 複製並前往 Gemini</button>
+        </div>
+    </div>
+</div>
+
+<div id="historyModal" class="modal">
+    <div class="modal-box" style="width:800px; max-width:95%; height:600px;">
+        <h3 style="margin-top:0;">📜 歷史執行紀錄</h3>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:-5px; margin-bottom:10px;">此處保留您每次點擊「執行測試」的紀錄（最多保留最新 30 筆）。</p>
+        
+        <div style="display:flex; flex:1; gap:15px; overflow:hidden;">
+            <div style="flex:1; overflow-y:auto; background:#121212; border:1px solid #333; border-radius:6px; min-width:200px;" id="historyList"></div>
+            <div style="flex:2; display:flex; flex-direction:column;">
+                <div style="color:#aaa; font-size:0.9rem; margin-bottom:5px;">當時執行的程式碼：</div>
+                <textarea id="historyCodeView" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#ccc; border:1px solid #333; padding:10px;" readonly></textarea>
+            </div>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-top:15px; flex-shrink:0;">
+            <button class="btn btn-danger" onclick="clearProblemHistory()"><i class="fa-solid fa-trash"></i> 清空此題紀錄</button>
+            <button class="btn btn-outline" onclick="document.getElementById('historyModal').style.display='none'">關閉</button>
+        </div>
+    </div>
+</div>
+
+    <script src="js/config.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/legacy_features.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/workspace.js"></script>
+</body>
+</html>
