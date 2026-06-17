@@ -105,12 +105,12 @@
             <div style="display:flex; gap:10px; flex-wrap: wrap; align-items: center; justify-content: flex-end;">
                 <button id="catSortBtn" class="btn btn-outline btn-header-action" onclick="toggleCatSortMode()">⇅ 調整順序</button>
                 <button class="btn btn-outline btn-header-action" onclick="openBackupUI()">📦 備份/還原</button>
-                <button class="btn btn-warning" onclick="resetCurrentBank()">🔄 重新載入本題庫</button>
-                <button class="btn btn-danger" onclick="hardResetAll()">💣 全部重置</button>
+                <button class="btn btn-warning" onclick="resetCurrentBank()">重新載入本題庫</button>
+                <button class="btn btn-danger" onclick="hardResetAll()">⚠️ 全部重置</button>
                 <button class="btn btn-primary" onclick="createCategory()">+ 新增分類</button>
             </div>
         </div>
-        <div id="groupedCategoryContainer"></div>
+        <div id="categoryList" class="cat-grid"></div>
     </div>
 </div>
 
@@ -174,9 +174,9 @@
     <button class="btn" style="background: white; color: #059669;" onclick="applyUpdate()">立即同步</button>
 </div>
 
-    <script src="js/config.js?v=3"></script>
-    <script src="js/db.js?v=3"></script>
-        <script src="js/auth.js?v=3"></script>
-    <script src="js/dashboard.js?v=3"></script>
+    <script src="js/config.js?v=6"></script>
+    <script src="js/db.js?v=6"></script>
+    <script src="js/auth.js?v=6"></script>
+    <script src="js/dashboard.js?v=6"></script>
 </body>
 </html>
