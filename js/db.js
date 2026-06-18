@@ -7,7 +7,10 @@ window.addEventListener('personalCloudReady', () => {
 });
 
 async function loadUserDataFromCloud(isBackground = false) {
-    if (!currentUser || !personalDb) return;
+    if (!currentUser || !personalDb) {
+        if (!isBackground) window.dispatchEvent(new Event('dbLoaded'));
+        return;
+    }
     try {
         const docSnap = await personalDb.collection('users').doc(currentUser.uid).get();
         if (docSnap.exists) {
