@@ -8,7 +8,7 @@ window.addEventListener('personalCloudReady', () => {
 
 async function loadUserDataFromCloud(isBackground = false) {
     if (!currentUser || !personalDb) {
-        if (!isBackground) window.dispatchEvent(new Event('dbLoaded'));
+        if (!isBackground) { window.isDbLoaded = true; window.dispatchEvent(new Event('dbLoaded')); }
         return;
     }
     try {
@@ -109,13 +109,13 @@ async function loadUserDataFromCloud(isBackground = false) {
 
         if (!isBackground) {
             // 資料載入完成後發送事件，讓各頁面自行更新 UI
-            window.dispatchEvent(new Event('dbLoaded'));
+            window.isDbLoaded = true; window.dispatchEvent(new Event('dbLoaded'));
         }
         checkForUpdates();
     } catch (e) { 
         console.error("讀取雲端失敗：", e); 
         if (!isBackground) {
-            window.dispatchEvent(new Event('dbLoaded'));
+            window.isDbLoaded = true; window.dispatchEvent(new Event('dbLoaded'));
         }
     }
 }
@@ -199,7 +199,7 @@ async function applyUpdate() {
     alert("✅ 題庫已成功同步至最新版本！"); 
     
     // 通知 UI 重新渲染
-    window.dispatchEvent(new Event('dbLoaded'));
+    window.isDbLoaded = true; window.dispatchEvent(new Event('dbLoaded'));
 }
 
 async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) { 
