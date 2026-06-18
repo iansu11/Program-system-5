@@ -1,5 +1,5 @@
-let isCatSortMode = false;
-let isProbSortMode = false;
+var isCatSortMode = false;
+var isProbSortMode = false;
 
 // ==========================================
 // 題庫大廳與分類列表邏輯 (js/dashboard.js)
