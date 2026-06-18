@@ -1,0 +1,13 @@
+﻿{
+  "rewrites": [
+    { "source": "/source-selector", "destination": "/dashboard.html" },
+    { "source": "/portal", "destination": "/dashboard.html" },
+    { "source": "/custom-portal", "destination": "/dashboard.html" },
+    { "source": "/categories", "destination": "/dashboard.html" },
+    { "source": "/problems", "destination": "/dashboard.html" },
+    { "source": "/workspace", "destination": "/workspace.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/dashboard.html", "destination": "/dashboard.html" }
+  ]
+}
