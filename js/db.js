@@ -337,10 +337,13 @@ async function syncCategoryDeltaToCloud(catId, diff) {
             // 🚀 效能優化：平行化下載 GitHub 題庫與 Firebase 雲端進度
             // 加上時間戳記強制繞過瀏覽器的 404 快取
             const fetchPromise = fetch(jsonUrl + '?t=' + new Date().getTime()).then(res => {
-                if (!res.ok) throw new Error("伺服器回傳狀態：" + res.status);
+                if (!res.ok) throw new Error("伺服器錯誤: " + res.status);
                 return res.json();
             });
-            const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get() : Promise.resolve(null);
+            const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get().catch(err => {
+                console.warn("個人雲端讀取失敗，將跳過雲端合併", err);
+                return null;
+            }) : Promise.resolve(null);
             
             const [newDb, docSnap] = await Promise.all([fetchPromise, dbPromise]);
             
