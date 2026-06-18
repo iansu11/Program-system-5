@@ -79,5 +79,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-let isCatSortMode = false;
-let isProbSortMode = false;
+
+
