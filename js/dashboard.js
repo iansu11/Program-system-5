@@ -32,10 +32,6 @@ function handleRouteChange() {
     }
 
     if (path === '/source-selector') {
-        currentBankUrl = "";
-        currentBankName = "";
-        localStorage.removeItem('oj_v15_bank_url');
-        localStorage.removeItem('oj_v15_bank_name');
         showView('view-source-selector');
     }
     else if (path === '/portal') {
@@ -84,15 +80,11 @@ function handleRouteChange() {
 window.addEventListener('popstate', handleRouteChange);
 
 function initDashboard() {
-    if (currentBankUrl) {
-        const path = window.location.pathname;
-        if (path === '/' || path === '/dashboard.html' || path === '/source-selector' || path === '/portal' || path === '/custom-portal') {
-            navigateTo('/categories');
-        } else {
-            handleRouteChange();
-        }
-    } else {
+    const path = window.location.pathname;
+    if (path === '/' || path === '/dashboard.html') {
         navigateTo('/source-selector');
+    } else {
+        handleRouteChange();
     }
 }
 
