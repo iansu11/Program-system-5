@@ -98,11 +98,13 @@ masterAuth.onAuthStateChanged(async (user) => {
                 window.dispatchEvent(new Event('personalCloudReady'));
 
             } else {
-                alert("找不到綁定資料，系統將無法同步您的雲端進度！");
+                alert("未設定雲端系統將無法同步您的雲端進度");
+                window.dispatchEvent(new Event('personalCloudReady'));
             }
         } catch (err) {
             console.error(err);
-            alert("連線個人雲端失敗，可能是網路不穩！請重新整理或稍後再試。");
+            alert("初始化個人雲端失敗，可能是網路不穩！請重新整理後再試。");
+            window.dispatchEvent(new Event('personalCloudReady'));
         }
     } else {
         currentUser = null;
