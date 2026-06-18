@@ -111,6 +111,9 @@ async function loadUserDataFromCloud(isBackground = false) {
         checkForUpdates();
     } catch (e) { 
         console.error("讀取雲端失敗：", e); 
+        if (!isBackground) {
+            window.dispatchEvent(new Event('dbLoaded'));
+        }
     }
 }
 
