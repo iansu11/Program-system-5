@@ -7,7 +7,7 @@ let isProbSortMode = false;
 
 let currentCatId = null;
 
-window.addEventListener('dbLoaded', () => {
+function initDashboard() {
     // 判斷要顯示大廳還是分類列表
     if (currentBankUrl) {
         document.getElementById('view-source-selector').style.display = 'none';
@@ -31,7 +31,13 @@ window.addEventListener('dbLoaded', () => {
         document.getElementById('view-problem-list').style.display = 'none';
         document.getElementById('view-source-selector').style.display = 'flex';
     }
-});
+}
+
+if (window.isDbLoaded) {
+    initDashboard();
+} else {
+    window.addEventListener('dbLoaded', initDashboard);
+}
 
 function openDefaultBank() {
     currentBankUrl = "https://raw.githubusercontent.com/iansu11/Program-system-image/refs/heads/main/db.json";
