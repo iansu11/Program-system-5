@@ -462,7 +462,7 @@ async function syncCategoryDeltaToCloud(catId, diff) {
             if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> 目前題庫: ` + currentBankName;
                 
             saveToLocal(shouldSyncDb, false);      
-            window.location.href = '/categories';
+            window.location.href = 'dashboard.html';
             checkForUpdates();
 
         } catch (err) { 
