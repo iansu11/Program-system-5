@@ -4,7 +4,7 @@
 
 let adminProbId = null;
 
-window.addEventListener('dbLoaded', () => {
+function initAdmin() {
     const path = window.location.pathname;
     const match = path.match(/^\/admin\/([a-zA-Z0-9_-]+)$/);
     const probIdStr = match ? match[1] : null;
@@ -357,4 +357,11 @@ function stopAdminDrag() {
     document.removeEventListener('mousemove', doAdminDrag); 
     document.removeEventListener('mouseup', stopAdminDrag); 
     document.body.classList.remove('resizing'); 
+}
+
+
+if (window.isDbLoaded) {
+    initAdmin();
+} else {
+    window.addEventListener('dbLoaded', initAdmin);
 }
