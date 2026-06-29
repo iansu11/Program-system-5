@@ -8,6 +8,8 @@ let pendingRestoreFileName = '';
 // 程式碼編輯與執行區 (js/workspace.js)
 // ==========================================
 
+let currentFileIndex = -1;
+
 let currentProbId = null;
 let editor = null;
 let currentCompileMode = 'wandbox'; 
@@ -22,7 +24,7 @@ function initWorkspace() {
     
     if (!probIdStr) {
         const urlParams = new URLSearchParams(window.location.search);
-        probIdStr = urlParams.get('id');
+        probIdStr = urlParams.get('probId');
     }
     
     if (!probIdStr) {
