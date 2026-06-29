@@ -24,7 +24,7 @@ function initWorkspace() {
     
     if (!probIdStr) {
         const urlParams = new URLSearchParams(window.location.search);
-        probIdStr = urlParams.get('probId');
+        probIdStr = urlParams.get('id');
     }
     
     if (!probIdStr) {
