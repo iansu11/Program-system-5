@@ -3,6 +3,7 @@ let currentFontSize = 16;
 let adminTempTemplates = { cpp: '', python: '' };
 let currentAdminLang = 'cpp';
 let pendingRestoreFileName = '';
+let currentLang = 'cpp';
 
 // ==========================================
 // 程式碼編輯與執行區 (js/workspace.js)
@@ -16,69 +17,47 @@ let currentCompileMode = 'wandbox';
 
 
 function initWorkspace() {
-  try {
-
+try {
     const path = window.location.pathname;
-    const match = path.match(/^\/workspace\/([a-zA-Z0-9_-]+)$/);
-    let probIdStr = match ? match[1] : null;
-    
-    if (!probIdStr) {
-        const urlParams = new URLSearchParams(window.location.search);
-        probIdStr = urlParams.get('id');
+    const urlParams = new URLSearchParams(window.location.search);
+    let probIdStr = null;
+
+    // 1. 優先嘗試從 Vercel 轉導過去的 URL 查詢參數中獲取 probId
+    if (urlParams.has('probId')) {
+        probIdStr = urlParams.get('probId');
+    } 
+    // 2. 如果沒有參數，嘗試直接從網址路徑中抽取出最後一段作為題目 ID
+    else {
+        const pathSegments = path.split('/').filter(Boolean);
+        // 如果網址結構符合 /categories/xxx/problems/yyy，最後一段就是題目 ID
+        if (pathSegments.length >= 4 && pathSegments[pathSegments.length - 2] === 'problems') {
+            probIdStr = pathSegments[pathSegments.length - 1];
+        } else {
+            // 備用方案：傳統的 /workspace/題目ID 結構
+            const match = path.match(/^\/workspace\/([a-zA-Z0-9_-]+)$/);
+            probIdStr = match ? match[1] : null;
+        }
     }
-    
+
     if (!probIdStr) {
         alert("找不到題目 ID，返回大廳");
         window.location.href = '/categories';
         return;
     }
-    
+
     currentProbId = probIdStr;
-    const p = db.problems.find(x => x.id === currentProbId);
     
-    if (!p) {
-        alert("找不到此題目，可能已被刪除");
-        window.location.href = '/categories';
+    // 檢查 db 的完整性
+    if (!db || !db.problems) {
+        console.error("資料庫未就緒，延遲初始化");
         return;
     }
 
-    // 初始化 Ace Editor
-    if (!editor) {
-        editor = ace.edit("editor");
-        editor.setTheme("ace/theme/vscodedark");
-        editor.setOptions({
-            fontSize: currentFontSize + "px",
-            showPrintMargin: false,
-            wrap: true,
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            useSoftTabs: true,
-            tabSize: 4
-        });
-    }
-
-    // 確保空字串模板不會被覆蓋
-    const defaultTemplates = {
-        cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}',
-        python: 'def main():\n    pass\n\nif __name__ == "__main__":\n    main()'
-    };
-    if (p.tpl_cpp === undefined) p.tpl_cpp = p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp;
-    if (p.tpl_python === undefined) p.tpl_python = defaultTemplates.python;
-    
-    // 確保 multiFiles 的 code 屬性存在
-    if (p.isMultiFile && p.multiFiles) {
-        p.multiFiles.forEach(f => { 
-            if (f.code === undefined) f.code = f.tpl !== undefined ? f.tpl : ""; 
-        });
-    }
-    
-    // 只要是全新進入作答區，一律強制重置為「預設模板」
-    p.code_cpp = p.tpl_cpp; 
-    p.code_python = p.tpl_python; 
-    if (p.isMultiFile && p.multiFiles) { 
-        p.multiFiles.forEach(f => { 
-            f.code = f.tpl !== undefined ? f.tpl : ""; 
-        }); 
+    const p = db.problems.find(x => x.id === currentProbId);
+    if (!p) {
+        alert("找不到該題目的詳細資料！");
+        window.location.href = '/categories';
+        return;
     }
 
     document.getElementById('wsTitle').innerText = p.title;
