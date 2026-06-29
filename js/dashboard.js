@@ -210,7 +210,6 @@ function renderProblemList() {
 
         div.innerHTML = `
             <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">
-                <div style="font-size:1.2rem; width:25px; text-align:center;">${statusIcon}</div>
                 <div style="flex:1; min-width:0;">
                     <div class="prob-title">${p.title}</div>
                     <div class="prob-desc-preview">${previewText}</div>
