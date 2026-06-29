@@ -32,62 +32,46 @@
     </div>
 
 <div id="view-workspace">
-    <div class="ws-layout">
-        <!-- 題目說明區塊 -->
-        <div class="ws-left" id="wsLeft">
-            <div class="ws-header">
-                <h3 id="probTitle" style="margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-file-lines" style="color: #60a5fa;"></i> 載入中...
-                </h3>
+    <div class="ws-header">
+        <div style="flex: 0 0 30%; max-width: 30%; min-width: 250px; display: flex; align-items: center; justify-content: flex-start; padding: 0 5px 0 30px; box-sizing: border-box; border-right: 1px solid rgba(0,0,0,0.3);">
+            <span id="wsTitle" style="font-weight:bold; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 100%;">題目名稱</span>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px 0 15px; box-sizing: border-box; overflow-x: visible; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-left: -24px;">
+                <button class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0;" onclick="goToAdmin()">⚙️ 設定</button>
+                
+                <select id="langSelect" onchange="changeWorkspaceLang()">
+                    <option value="cpp">C++ (GCC)</option>
+                    <option value="python">Python 3</option>
+                </select>
+                <button class="btn btn-outline btn-sm" onclick="adjustFontSize(-1)" title="縮小字體">A-</button>
+                <button class="btn btn-outline btn-sm" onclick="adjustFontSize(1)" title="放大字體">A+</button>
             </div>
-            <div id="probDesc" class="ws-content prob-desc-content markdown-body">
-                <!-- 題目敘述由 JS 填入 -->
+            <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
+                <button id="modeBtn" class="btn btn-outline btn-sm" style="color: var(--accent); border-color: var(--accent);" onclick="toggleCompileMode()">☁️ 雲端編譯</button>
+                <input type="file" id="codeUploadInput" style="display:none;" accept=".cpp,.h,.py,.zip" multiple onchange="handleCodeUpload(this)">
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('codeUploadInput').click()">📤 上傳</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadCode()">📥 下載</button>
+                <button class="btn btn-ai btn-sm" style="padding: 4px 8px; font-size: 0.8rem;" onclick="openAIHelperModal()">🤖 AI 診斷</button>
+                <button class="btn btn-outline btn-sm" onclick="copyCode()">📋 複製</button>
+                <button class="btn btn-outline btn-sm" onclick="resetCode()">🔄 重置</button>
+                <button class="btn btn-success btn-sm" style="height: 32px; display: inline-flex; align-items: center;" id="runBtn" onclick="runCode()">▶️ 執行</button>
             </div>
         </div>
-        
-        <!-- 分隔線 (拖曳調整大小) -->
-        <div class="ws-resizer" id="wsResizer"></div>
-        
-        <!-- 程式碼編輯與執行區塊 -->
-        <div class="ws-right" id="wsRight">
-            <div class="ws-header">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <select id="langSelect" class="lang-select" onchange="changeLang()">
-                        <option value="cpp">C / C++</option>
-                        <option value="python">Python</option>
-                    </select>
-                    <button class="btn btn-outline btn-sm" onclick="downloadCode()"><i class="fa-solid fa-download"></i> 下載</button>
-                    <button class="btn btn-outline btn-sm" onclick="copyCode()"><i class="fa-regular fa-copy"></i> 複製</button>
-                    <button class="btn btn-outline btn-sm" onclick="showHistory()"><i class="fa-solid fa-clock-rotate-left"></i> 紀錄</button>
-                    <label class="btn btn-outline btn-sm" style="cursor:pointer; margin:0;">
-                        <i class="fa-solid fa-upload"></i> 上傳
-                        <input type="file" id="codeUploadInput" style="display:none;" accept=".c,.cpp,.h,.py,.txt,.zip" multiple onchange="handleCodeUpload(this)">
-                    </label>
-                    <div class="font-controls">
-                        <button class="btn btn-outline btn-sm" onclick="changeFontSize(-1)">A-</button>
-                        <button class="btn btn-outline btn-sm" onclick="changeFontSize(1)">A+</button>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <select id="compileMode" class="lang-select" onchange="changeCompileMode()">
-                        <option value="wandbox">🌐 雲端編譯 (Wandbox)</option>
-                        <option value="local">💻 本機編譯 (Antigravity CLI)</option>
-                    </select>
-                    <button class="btn btn-primary" onclick="runCode()"><i class="fa-solid fa-play"></i> 執行程式</button>
-                </div>
-            </div>
+    </div>
+    <div class="ws-container">
+        <div class="pane-left">
+            <h3 style="margin-top:0; color:var(--accent); border-bottom:1px solid #ccc; padding-bottom:10px;">題目描述</h3>
+            <div id="wsDesc" class="problem-content"></div>
+        </div>
+        <div class="pane-right" id="paneRight">
+            <div class="editor-tabs" id="wsEditorTabs" style="display:none;"></div>
             
-            <div id="workspaceTabs" style="display:none; background:#1e1e1e; border-bottom:1px solid #333; padding:5px 10px; gap:5px; overflow-x:auto;">
-                <!-- 多檔案分頁由 JS 產生 -->
-            </div>
-            
-            <div class="ws-content" style="padding: 0;">
-                <div id="editor" style="width: 100%; height: 100%;"></div>
-            </div>
-            
-            <div class="output-panel">
-                <div class="output-header">執行輸出結果</div>
-                <pre id="outputContent" class="output-content">準備就緒...</pre>
+            <div id="editor"></div>
+            <div class="resizer-bar" id="dragHandle"><div class="resizer-icon"></div></div>
+            <div class="console-area" id="consoleArea">
+                <div class="console-header">執行結果 (Output)</div>
+                <div id="outputLogs"><div style="color:#666;">等待執行...</div></div>
             </div>
         </div>
     </div>
