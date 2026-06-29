@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    
+
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -94,6 +94,23 @@
     <script src="/js/db.js?v=11"></script>
     <script src="/js/workspace.js?v=11"></script>
     <script src="/js/auth.js?v=11"></script>
+
+    <script>
+        // 確保不依賴舊事件，當 window 載入、且 db 已從本地/雲端就緒後啟動
+        function startWorkspace() {
+            // 💡 防呆檢查：如果 db 變數還沒誕生，或者題庫陣列還沒下載完，就等 100 毫秒再試一次
+                if (typeof db === 'undefined' || !db.problems || db.problems.length === 0) {
+                setTimeout(startWorkspace, 100);
+            return;
+        }
+
+        // 💡 確認資料庫就緒後，正式啟動 workspace.js 裡的主初始化函數
+        initWorkspace();
+        }
+
+        // 當網頁的 HTML 結構一排好，立刻啟動守門員巡檢
+        window.addEventListener('DOMContentLoaded', startWorkspace);
+    </script>
 
 </body>
 </html>
