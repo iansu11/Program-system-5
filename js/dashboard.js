@@ -187,7 +187,7 @@ function renderCategoryList() {
 }
 
 function renderProblemList() {
-    const list = document.getElementById('problemList');
+    const list = document.getElementById('probListContainer');
     if (!list) return;
     list.innerHTML = '';
     const filtered = db.problems.filter(p => p.catId == currentCatId);
