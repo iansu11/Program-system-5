@@ -17,24 +17,12 @@
 </head>
 <body style="background-color: var(--bg-page-light); color: #333; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
     
-    <!-- 導航列 -->
-    <div style="background: var(--bg-header-blue); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white;">
-        <h3 style="margin: 0; display:flex; align-items:center; gap:10px;">
-            <button class="btn btn-outline btn-sm" style="color:white; border-color:white; padding:4px 8px;" onclick="goBackToProblemList()">
-                <i class="fa-solid fa-arrow-left"></i> 返回
-            </button>
-            程式開發區
-        </h3>
-        <div style="display:flex; align-items: center; gap: 15px;">
-            <span id="user-name" style="font-size: 0.9rem; color: #cbd5e1;"></span>
-            <button class="btn btn-outline" style="color: white; border-color: white;" onclick="logout()">登出</button>
-        </div>
-    </div>
+    
 
-<div id="view-workspace">
+<div id="view-workspace" style="flex:1; display:flex; flex-direction:column; width:100%; overflow:hidden;">
     <div class="ws-header">
         <div style="flex: 0 0 30%; max-width: 30%; min-width: 250px; display: flex; align-items: center; justify-content: flex-start; padding: 0 5px 0 30px; box-sizing: border-box; border-right: 1px solid rgba(0,0,0,0.3);">
-            <span id="wsTitle" style="font-weight:bold; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 100%;">題目名稱</span>
+            <span id="wsTitle" style="font-weight:bold; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 100%; cursor:pointer;" onclick="window.location.href='/categories'" title="返回題庫">題目名稱</span>
         </div>
         <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px 0 15px; box-sizing: border-box; overflow-x: visible; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 8px; margin-left: -24px;">
