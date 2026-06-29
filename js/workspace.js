@@ -14,9 +14,16 @@ let currentCompileMode = 'wandbox';
 
 
 function initWorkspace() {
+  try {
+
     const path = window.location.pathname;
     const match = path.match(/^\/workspace\/([a-zA-Z0-9_-]+)$/);
-    const probIdStr = match ? match[1] : null;
+    let probIdStr = match ? match[1] : null;
+    
+    if (!probIdStr) {
+        const urlParams = new URLSearchParams(window.location.search);
+        probIdStr = urlParams.get('id');
+    }
     
     if (!probIdStr) {
         alert("找不到題目 ID，返回大廳");
@@ -91,6 +98,10 @@ function initWorkspace() {
     
     document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
     document.getElementById('view-workspace').style.display = 'flex';
+  } catch (e) {
+    alert('Error in initWorkspace: ' + e.stack);
+    console.error(e);
+  }
 }
 
 
@@ -1417,4 +1428,12 @@ function goBackToProblemList() {
     } else {
         window.location.href = '/categories';
     }
+}
+
+
+window.addEventListener('dbLoaded', () => {
+    if (typeof initWorkspace === 'function') initWorkspace();
+});
+if (window.isDbLoaded) {
+    if (typeof initWorkspace === 'function') initWorkspace();
 }
