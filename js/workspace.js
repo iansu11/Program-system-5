@@ -18,6 +18,15 @@ let currentCompileMode = 'wandbox';
 
 function initWorkspace() {
 try {
+    if (!editor) {
+        editor = ace.edit("editor");
+        editor.setTheme("ace/theme/twilight");
+        editor.session.setMode("ace/mode/c_cpp");
+        editor.setFontSize(currentFontSize);
+        editor.setShowPrintMargin(false);
+        if (typeof initResizer === 'function') initResizer();
+    }
+
     const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     let probIdStr = null;
