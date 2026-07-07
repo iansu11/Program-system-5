@@ -235,7 +235,7 @@ function renderProblemList() {
 }
 
 function openAdmin(probId) {
-    window.location.href = '/admin/' + probId;
+    window.location.href = '/admin.html?probId=' + probId;
 }
 
 function createCategory() {
@@ -253,13 +253,17 @@ function createCategory() {
 function createProblem() {
     const title = prompt("請輸入新題目名稱：");
     if (title && title.trim()) {
-        const id = Date.now();
+        const id = Date.now().toString();
         const newProb = {
             id,
             catId: currentCatId,
             title: title.trim(),
             desc: "在此輸入題目敘述...",
-            testCases: [{ input: "", output: "" }],
+            tpl_cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}",
+            tpl_python: "# your code here\n",
+            code_cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}",
+            code_python: "# your code here\n",
+            testCases: [{ input: "1 2", output: "3" }],
             isUserAdded: true
         };
         db.problems.push(newProb);
@@ -708,7 +712,7 @@ function editProblemInList(e, id) {
         e.stopPropagation(); 
         currentProbId = id; 
         // 修正：直接跳轉 hash，避免 goToAdmin 讀取到 editor 的過期資料
-        window.location.href = '/admin/' + id; 
+        window.location.href = '/admin.html?probId=' + id; 
     }
 
 async function deleteProblemInList(e, id) { 
