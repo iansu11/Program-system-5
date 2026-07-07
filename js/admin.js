@@ -26,7 +26,7 @@ function initAdmin() {
 
     document.getElementById('view-admin').style.display = 'flex';
     renderAdmin();
-});
+}
 
 function goBackToWorkspace() {
     window.location.href = '/workspace/' + adminProbId;
