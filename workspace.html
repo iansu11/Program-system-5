@@ -99,15 +99,30 @@
         // 確保不依賴舊事件，當 window 載入、且 db 已從本地/雲端就緒後啟動
         let wsTimeout = 0;
         function startWorkspace() {
-            // 💡 防呆檢查：如果 db 變數還沒誕生，或者題庫陣列還沒下載完，就等 100 毫秒再試一次
-            if (typeof db === 'undefined' || !db.problems || db.problems.length === 0) {
-                wsTimeout++;
-                if (wsTimeout > 50) { // 5秒
-                    alert("無法載入題庫資料！請確認您是從題庫大廳點擊進入，或嘗試重新登入。");
-                    window.location.href = '/categories';
-                    return;
-                }
+            if (typeof db === 'undefined') {
                 setTimeout(startWorkspace, 100);
+                return;
+            }
+            if (!db.problems || db.problems.length === 0) {
+                // 如果發現題庫是空的，可能是因為 file:/// 跨頁面 localStorage 不共享
+                // 我們直接嘗試抓取預設題庫
+                console.warn("題庫為空，嘗試強制從 currentBankUrl 載入...");
+                if (typeof currentBankUrl !== 'undefined' && currentBankUrl) {
+                    fetch(currentBankUrl + '?t=' + new Date().getTime())
+                        .then(res => res.json())
+                        .then(data => {
+                            db.categories = data.categories || [];
+                            db.problems = data.problems || [];
+                            db.version = data.version || "";
+                            initWorkspace();
+                        })
+                        .catch(err => {
+                            alert("無法載入題庫資料！請確認網路連線或是否使用了 file:/// 且未開啟 CORS。");
+                            console.error(err);
+                        });
+                } else {
+                    alert("題庫為空且找不到 currentBankUrl！");
+                }
                 return;
             }
 
