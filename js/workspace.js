@@ -62,7 +62,7 @@ try {
         return;
     }
 
-    const p = db.problems.find(x => x.id === currentProbId);
+    const p = db.problems.find(x => String(x.id) === String(currentProbId));
     if (!p) {
         alert("找不到該題目的詳細資料！");
         window.location.href = '/categories';
@@ -80,10 +80,10 @@ try {
 
     if (lang === 'cpp') { 
         editor.session.setMode("ace/mode/c_cpp"); 
-        editor.setValue(p.code_cpp !== undefined ? p.code_cpp : p.tpl_cpp, -1); 
+        editor.setValue(p.code_cpp !== undefined ? p.code_cpp : (p.tpl_cpp !== undefined ? p.tpl_cpp : defaultTemplates.cpp), -1); 
     } else if (lang === 'python') { 
         editor.session.setMode("ace/mode/python"); 
-        editor.setValue(p.code_python !== undefined ? p.code_python : p.tpl_python, -1); 
+        editor.setValue(p.code_python !== undefined ? p.code_python : (p.tpl_python !== undefined ? p.tpl_python : defaultTemplates.python), -1); 
     }
     
     document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
@@ -1426,4 +1426,8 @@ window.addEventListener('dbLoaded', () => {
 });
 if (window.isDbLoaded) {
     if (typeof initWorkspace === 'function') initWorkspace();
+}
+
+function goToAdmin() {
+    window.location.href = '/admin/' + currentProbId;
 }
