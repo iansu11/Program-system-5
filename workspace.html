@@ -97,14 +97,20 @@
 
     <script>
         // 確保不依賴舊事件，當 window 載入、且 db 已從本地/雲端就緒後啟動
-        function startWorkspace() {
-            // 💡 防呆檢查：如果 db 變數還沒誕生，或者題庫陣列還沒下載完，就等 100 毫秒再試一次
-            if (typeof db === 'undefined' || !db.problems || db.problems.length === 0) {
+        async function startWorkspace() {
+            if (typeof db === 'undefined') {
                 setTimeout(startWorkspace, 100);
                 return;
             }
-
-            // 💡 確認資料庫就緒後，正式啟動 workspace.js 裡的主初始化函數
+            if (!db.problems || db.problems.length === 0) {
+                // 如果沒有抓到題庫資料，嘗試主動載入
+                if (typeof fetchAndLoadBank === 'function' && typeof currentBankUrl !== 'undefined') {
+                    await fetchAndLoadBank(currentBankUrl);
+                } else {
+                    setTimeout(startWorkspace, 100);
+                    return;
+                }
+            }
             initWorkspace();
         }
 
