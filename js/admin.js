@@ -38,65 +38,43 @@ function renderAdmin() {
     const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (!p) return;
     
-    document.getElementById('adminTitle').value = p.title;
-    document.getElementById('adminDesc').value = p.desc || "";
+    document.getElementById('editTitle').value = p.title || "";
+    document.getElementById('editCatId').value = p.catId || "";
+    document.getElementById('editDesc').value = p.desc || "";
     
-    renderTestCasesAdmin(p);
-}
-
-function renderTestCasesAdmin(p) {
-    const cont = document.getElementById('adminTestCases');
-    cont.innerHTML = '';
-    
-    p.testCases = p.testCases || [];
-    
-    p.testCases.forEach((tc, idx) => {
-        const div = document.createElement('div');
-        div.className = 'tc-row';
-        div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <label>Case ${idx + 1}</label>
-                <button class="btn btn-danger btn-sm" onclick="deleteTestCase(${idx})">刪除</button>
-            </div>
-            <textarea placeholder="Input" onchange="updateTestCase(${idx}, 'input', this.value)">${tc.input}</textarea>
-            <textarea placeholder="Expected Output" onchange="updateTestCase(${idx}, 'output', this.value)">${tc.output}</textarea>
-        `;
-        cont.appendChild(div);
-    });
-}
-
-function updateTestCase(idx, field, value) {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    if (p && p.testCases[idx]) {
-        p.testCases[idx][field] = value;
+    if (p.testCases && p.testCases.length > 0) {
+        document.getElementById('modelAnswerInput').value = p.testCases[0].output || "";
+    } else {
+        document.getElementById('modelAnswerInput').value = "";
     }
-}
 
-function addTestCase() {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    if (p) {
-        p.testCases.push({ input: "", output: "" });
-        renderTestCasesAdmin(p);
-    }
-}
-
-function deleteTestCase(idx) {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    if (p) {
-        p.testCases.splice(idx, 1);
-        renderTestCasesAdmin(p);
-    }
+    if (p.tpl_cpp === undefined) p.tpl_cpp = p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp;
+    document.getElementById('editTemplate').value = p.tpl_cpp;
 }
 
 function saveProblem() {
     const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (!p) return;
     
-    p.title = document.getElementById('adminTitle').value.trim();
-    p.desc = document.getElementById('adminDesc').value;
+    p.title = document.getElementById('editTitle').value.trim();
+    p.desc = document.getElementById('editDesc').value;
+    
+    p.tpl_cpp = document.getElementById('editTemplate').value;
+    if (!p.tpl_python) p.tpl_python = defaultTemplates.python;
+    
+    // Always update code to template when saving in admin, so the user sees the latest template in workspace
+    p.code_cpp = p.tpl_cpp;
+    p.code_python = p.tpl_python;
+    
+    p.testCases = [{
+        input: "1 2", // Auto-fill some dummy input since it's not requested in UI
+        output: document.getElementById('modelAnswerInput').value
+    }];
     
     saveToLocal(true, false);
-    syncProblemDeltaToCloud(p.id, p);
+    if (typeof syncProblemDeltaToCloud === 'function') {
+        syncProblemDeltaToCloud(p.id, p);
+    }
     
     alert("題目設定已儲存！");
 }
@@ -110,8 +88,8 @@ function changeAdminLang() {
         const newLang = document.getElementById('adminLangSelect').value;
         currentAdminLang = newLang;
         
-        document.getElementById('adminEditorTabs').style.display = 
-            (document.getElementById('adminEnableMultiFile').checked && newLang === 'cpp') ? 'flex' : 'none';
+        document.getElementById('adminFileTabsContainer').style.display = 
+            (document.getElementById('isMultiFileCheck').checked && newLang === 'cpp') ? 'flex' : 'none';
         
         switchAdminFile(-1); // Switch back to main template view for the new language
     }
@@ -139,7 +117,7 @@ async function saveAdminAndBack() {
             p.code_python = p.tpl_python;
         }
 
-        p.isMultiFile = document.getElementById('adminEnableMultiFile').checked;
+        p.isMultiFile = document.getElementById('isMultiFileCheck').checked;
         p.multiFiles = JSON.parse(JSON.stringify(adminMultiFiles)); 
         
         if (p.multiFiles) { 
@@ -234,8 +212,8 @@ function addTestCaseUI(input='', output='') {
     }
 
 function toggleAdminMultiFile() {
-        const isEnabled = document.getElementById('adminEnableMultiFile').checked;
-        document.getElementById('adminEditorTabs').style.display = (isEnabled && currentAdminLang === 'cpp') ? 'flex' : 'none';
+        const isEnabled = document.getElementById('isMultiFileCheck').checked;
+        document.getElementById('adminFileTabsContainer').style.display = (isEnabled && currentAdminLang === 'cpp') ? 'flex' : 'none';
         
         if (isEnabled && adminMultiFiles.length === 0) {
             adminMultiFiles.push({ name: "Class.cpp", tpl: "\n" });
@@ -250,7 +228,7 @@ function toggleAdminMultiFile() {
     }
 
 function renderAdminTabs() {
-        const tabsContainer = document.getElementById('adminEditorTabs');
+        const tabsContainer = document.getElementById('adminFileTabsContainer');
         let html = `<div class="editor-tab ${adminCurrentFileIndex === -1 ? 'active' : ''}" onclick="switchAdminFile(-1)">main.cpp</div>`;
         
         adminMultiFiles.forEach((f, idx) => {
