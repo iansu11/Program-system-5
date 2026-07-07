@@ -209,12 +209,12 @@ function renderProblemList() {
         const previewText = (p.desc || "").substring(0, 50).replace(/#/g, '') + "...";
 
         div.innerHTML = `
-            <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">
-                <div style="flex:1; min-width:0;">
-                    <div class="prob-title">${p.title}</div>
-                    <div class="prob-desc-preview">${previewText}</div>
+                <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">
+                    <div style="flex:1; min-width:0;">
+                        <a href="workspace.html?probId=${p.id}" target="_blank" class="prob-title" style="text-decoration:none; color:inherit; display:block;">${p.title}</a>
+                        <div class="prob-desc-preview" style="pointer-events:none;">${previewText}</div>
+                    </div>
                 </div>
-            </div>
             
             <div class="prob-actions">
                 <button class="prob-btn-icon prob-edit-btn" onclick="event.stopPropagation(); openAdmin(${p.id})" title="題目設定與測資">
@@ -227,7 +227,7 @@ function renderProblemList() {
         `;
         div.onclick = () => {
             if (!isBankSortMode) {
-                window.location.href = '/workspace/' + p.id;
+                window.open('workspace.html?probId=' + p.id, '_blank');
             }
         };
         list.appendChild(div);
