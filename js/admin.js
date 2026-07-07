@@ -18,7 +18,7 @@ function initAdmin() {
     }
     
     adminProbId = probIdStr;
-    const p = db.problems.find(x => x.id === adminProbId);
+    const p = db.problems.find(x => String(x.id) === String(adminProbId));
     
     if (!p) {
         alert("找不到此題目，可能已被刪除");
@@ -35,7 +35,7 @@ function goBackToWorkspace() {
 }
 
 function renderAdmin() {
-    const p = db.problems.find(x => x.id === adminProbId);
+    const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (!p) return;
     
     document.getElementById('adminTitle').value = p.title;
@@ -66,14 +66,14 @@ function renderTestCasesAdmin(p) {
 }
 
 function updateTestCase(idx, field, value) {
-    const p = db.problems.find(x => x.id === adminProbId);
+    const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (p && p.testCases[idx]) {
         p.testCases[idx][field] = value;
     }
 }
 
 function addTestCase() {
-    const p = db.problems.find(x => x.id === adminProbId);
+    const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (p) {
         p.testCases.push({ input: "", output: "" });
         renderTestCasesAdmin(p);
@@ -81,7 +81,7 @@ function addTestCase() {
 }
 
 function deleteTestCase(idx) {
-    const p = db.problems.find(x => x.id === adminProbId);
+    const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (p) {
         p.testCases.splice(idx, 1);
         renderTestCasesAdmin(p);
@@ -89,7 +89,7 @@ function deleteTestCase(idx) {
 }
 
 function saveProblem() {
-    const p = db.problems.find(x => x.id === adminProbId);
+    const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (!p) return;
     
     p.title = document.getElementById('adminTitle').value.trim();
