@@ -31,7 +31,7 @@ function initAdmin() {
 }
 
 function goBackToWorkspace() {
-    window.location.href = '/workspace/' + adminProbId;
+    window.location.href = '/workspace.html?probId=' + adminProbId;
 }
 
 function renderAdmin() {
