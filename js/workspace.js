@@ -80,12 +80,36 @@ try {
     currentFileIndex = -1; // 進入題庫時預設顯示 main
     if (typeof renderWorkspaceTabs === 'function') renderWorkspaceTabs();
 
+    // 確保空字串模板不會被覆蓋
+    if (p.tpl_cpp === undefined) p.tpl_cpp = p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp;
+    if (p.tpl_python === undefined) p.tpl_python = defaultTemplates.python;
+
+    // 確保 multiFiles 的 code 屬性存在
+    if (p.isMultiFile && p.multiFiles) {
+        p.multiFiles.forEach(f => {
+            if (f.code === undefined) f.code = f.tpl !== undefined ? f.tpl : "";
+        });
+    }
+
+    const fromAdmin = urlParams.has('fromAdmin') && urlParams.get('fromAdmin') === '1';
+
+    if (!fromAdmin) {
+        // 修正：只要是全新進入作答區（開新分頁），一律強制重置為「預設模板」
+        p.code_cpp = p.tpl_cpp;
+        p.code_python = p.tpl_python;
+        if (p.isMultiFile && p.multiFiles) {
+            p.multiFiles.forEach(f => {
+                f.code = f.tpl !== undefined ? f.tpl : "";
+            });
+        }
+    }
+
     if (lang === 'cpp') { 
         editor.session.setMode("ace/mode/c_cpp"); 
-        editor.setValue(p.code_cpp !== undefined ? p.code_cpp : (p.tpl_cpp !== undefined ? p.tpl_cpp : defaultTemplates.cpp), -1); 
+        editor.setValue(p.code_cpp !== undefined ? p.code_cpp : p.tpl_cpp, -1); 
     } else if (lang === 'python') { 
         editor.session.setMode("ace/mode/python"); 
-        editor.setValue(p.code_python !== undefined ? p.code_python : (p.tpl_python !== undefined ? p.tpl_python : defaultTemplates.python), -1); 
+        editor.setValue(p.code_python !== undefined ? p.code_python : p.tpl_python, -1); 
     }
     
     document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
@@ -127,7 +151,7 @@ try {
     }
 
 function openModelAnswerModal() {
-    const p = db.problems.find(x => x.id === currentProbId);
+    const p = db.problems.find(x => String(x.id) === String(currentProbId));
     if (p && p.modelAnswer) {
         document.getElementById('modelAnswerInput').value = p.modelAnswer;
     } else {
@@ -149,7 +173,7 @@ function pasteModelAnswer() {
 }
 
 function saveModelAnswerFromModal() {
-    const p = db.problems.find(x => x.id === currentProbId);
+    const p = db.problems.find(x => String(x.id) === String(currentProbId));
     if (p) {
         p.modelAnswer = document.getElementById('modelAnswerInput').value;
         saveToLocal(true, false);
@@ -161,7 +185,7 @@ function saveModelAnswerFromModal() {
 
 // === Migrated from legacy ===
 function changeWorkspaceLang() { 
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const oldLang = p.lastLang || 'cpp';
         
         // Save current code before switching
@@ -216,7 +240,7 @@ function parseContent(text) {
     function resetCode() { 
         if (!confirm("重置程式碼到初始模板？這將會還原本題的所有檔案。")) return; 
         
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const lang = document.getElementById('langSelect').value;
         
         if (lang === 'cpp') { 
@@ -279,7 +303,7 @@ function parseContent(text) {
     }
 
     async function saveAdminAndBack() { 
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         
         // --- 開始套用 UI 上的新設定 ---
         p.title = document.getElementById('editTitle').value; 
@@ -385,7 +409,7 @@ function parseContent(text) {
     }
 
     function openModelAnswerUI() { 
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         document.getElementById('modelAnswerInput').value = p.modelAnswer || ""; 
         document.getElementById('modelAnswerModal').style.display = 'flex'; 
     }
@@ -487,7 +511,7 @@ function parseContent(text) {
     }    
 
     function openAIHelperModal() {
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const lang = document.getElementById('langSelect').value; 
         
         // 確保目前編輯器內容有存到變數裡
@@ -707,7 +731,7 @@ function parseContent(text) {
     }
 
     function downloadCode() {
-        const p = db.problems.find(x => x.id === currentProbId);
+        const p = db.problems.find(x => String(x.id) === String(currentProbId));
         if (!p) return;
 
         const lang = document.getElementById('langSelect').value;
@@ -777,7 +801,7 @@ function parseContent(text) {
 function resetCode() { 
         if (!confirm("重置程式碼到初始模板？這將會還原本題的所有檔案。")) return; 
         
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const lang = document.getElementById('langSelect').value;
         
         if (lang === 'cpp') { 
@@ -829,7 +853,7 @@ async function handleCodeUpload(input) {
 	const files = input.files;
 	if (!files || files.length === 0) return;
 
-	const p = db.problems.find(x => x.id === currentProbId);
+	const p = db.problems.find(x => String(x.id) === String(currentProbId));
 	if (!p) return;
 
 	const lang = document.getElementById('langSelect').value;
@@ -982,7 +1006,7 @@ async function handleCodeUpload(input) {
 }
 
 function openModelAnswerUI() { 
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         document.getElementById('modelAnswerInput').value = p.modelAnswer || ""; 
         document.getElementById('modelAnswerModal').style.display = 'flex'; 
     }
@@ -1029,7 +1053,7 @@ function clearProblemHistory() {
     }
 
 function openAIHelperModal() {
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const lang = document.getElementById('langSelect').value; 
         
         // 確保目前編輯器內容有存到變數裡
@@ -1133,7 +1157,7 @@ function initResizer() {
     }
 
 function switchWorkspaceFile(idx) {
-        const p = db.problems.find(x => x.id === currentProbId);
+        const p = db.problems.find(x => String(x.id) === String(currentProbId));
         
         // Save current code
         if (currentFileIndex === -1) { 
@@ -1155,7 +1179,7 @@ function switchWorkspaceFile(idx) {
     }
 
 function renderWorkspaceTabs() {
-        const p = db.problems.find(x => x.id === currentProbId);
+    const p = db.problems.find(x => String(x.id) === String(currentProbId));
         const tabsContainer = document.getElementById('wsEditorTabs');
         if (!p.isMultiFile || document.getElementById('langSelect').value !== 'cpp') {
             tabsContainer.style.display = 'none';
@@ -1193,7 +1217,7 @@ function stopDrag() {
 
 
     async function runCode() {
-        const p = db.problems.find(x => x.id === currentProbId); 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         if (!p.testCases || p.testCases.length === 0) { 
             alert("無測資"); 
             return; 
@@ -1414,7 +1438,7 @@ function stopDrag() {
 
 function goBackToProblemList() {
     autoSaveCode();
-    const p = db.problems.find(x => x.id === currentProbId);
+    const p = db.problems.find(x => String(x.id) === String(currentProbId));
     if (p) {
         window.location.href = '/categories/' + p.catId + '/problems';
     } else {
@@ -1431,5 +1455,5 @@ if (window.isDbLoaded) {
 }
 
 function goToAdmin() {
-    window.location.href = '/admin/' + currentProbId;
+    window.location.href = '/admin.html?probId=' + currentProbId;
 }
