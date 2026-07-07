@@ -1,3 +1,5 @@
+const defaultTemplates = { cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}', python: '# your code here\n' };
+
 
 let currentFontSize = 16;
 let adminTempTemplates = { cpp: '', python: '' };
@@ -27,15 +29,23 @@ try {
         if (typeof initResizer === 'function') initResizer();
     }
 
+    const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
-    let probIdStr = urlParams.get('probId');
+    let probIdStr = null;
 
-    if (!probIdStr) {
-        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    // 1. 優先嘗試從 Vercel 轉導過去的 URL 查詢參數中獲取 probId
+    if (urlParams.has('probId')) {
+        probIdStr = urlParams.get('probId');
+    } 
+    // 2. 如果沒有參數，嘗試直接從網址路徑中抽取出最後一段作為題目 ID
+    else {
+        const pathSegments = path.split('/').filter(Boolean);
+        // 如果網址結構符合 /categories/xxx/problems/yyy，最後一段就是題目 ID
         if (pathSegments.length >= 4 && pathSegments[pathSegments.length - 2] === 'problems') {
             probIdStr = pathSegments[pathSegments.length - 1];
         } else {
-            const match = window.location.pathname.match(/^\/workspace\/([a-zA-Z0-9_-]+)$/);
+            // 備用方案：傳統的 /workspace/題目ID 結構
+            const match = path.match(/^\/workspace\/([a-zA-Z0-9_-]+)$/);
             probIdStr = match ? match[1] : null;
         }
     }
@@ -61,29 +71,6 @@ try {
         return;
     }
 
-    // 確保空字串模板不會被覆蓋
-    if (p.tpl_cpp === undefined) p.tpl_cpp = p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp;
-    if (p.tpl_python === undefined) p.tpl_python = defaultTemplates.python;
-
-    // 確保 multiFiles 的 code 屬性存在
-    if (p.isMultiFile && p.multiFiles) {
-        p.multiFiles.forEach(f => {
-            if (f.code === undefined) f.code = f.tpl !== undefined ? f.tpl : "";
-        });
-    }
-
-    const fromAdmin = urlParams.has('fromAdmin') && urlParams.get('fromAdmin') === '1';
-    if (!fromAdmin) {
-        // 修正：只要是全新進入作答區（開新分頁），一律強制重置為「預設模板」
-        p.code_cpp = p.tpl_cpp;
-        p.code_python = p.tpl_python;
-        if (p.isMultiFile && p.multiFiles) {
-            p.multiFiles.forEach(f => {
-                f.code = f.tpl !== undefined ? f.tpl : "";
-            });
-        }
-    }
-
     document.getElementById('wsTitle').innerText = p.title;
     document.getElementById('wsDesc').innerHTML = typeof parseContent === 'function' ? parseContent(p.desc || "") : (window.markdownit ? window.markdownit({html:true}).render(p.desc || "") : p.desc);
     
@@ -95,10 +82,10 @@ try {
 
     if (lang === 'cpp') { 
         editor.session.setMode("ace/mode/c_cpp"); 
-        editor.setValue(p.code_cpp !== undefined ? p.code_cpp : p.tpl_cpp, -1); 
+        editor.setValue(p.code_cpp !== undefined ? p.code_cpp : (p.tpl_cpp !== undefined ? p.tpl_cpp : defaultTemplates.cpp), -1); 
     } else if (lang === 'python') { 
         editor.session.setMode("ace/mode/python"); 
-        editor.setValue(p.code_python !== undefined ? p.code_python : p.tpl_python, -1); 
+        editor.setValue(p.code_python !== undefined ? p.code_python : (p.tpl_python !== undefined ? p.tpl_python : defaultTemplates.python), -1); 
     }
     
     document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
