@@ -81,3 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+const defaultTemplates = {
+    cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}',
+    python: '# your code here\n'
+};
