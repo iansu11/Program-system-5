@@ -1,3 +1,5 @@
+const defaultTemplates = { cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}', python: '# your code here\n' };
+
 // ==========================================
 // 題庫後台管理邏輯 (js/admin.js)
 // ==========================================
