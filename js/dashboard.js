@@ -211,7 +211,7 @@ function renderProblemList() {
         div.innerHTML = `
                 <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">
                     <div style="flex:1; min-width:0;">
-                        <a href="workspace.html?probId=${p.id}" target="_blank" class="prob-title" style="text-decoration:none; color:inherit; display:block;">${p.title}</a>
+                        <a href="/workspace.html?probId=${p.id}" target="_blank" class="prob-title" style="text-decoration:none; color:inherit; display:block;">${p.title}</a>
                         <div class="prob-desc-preview" style="pointer-events:none;">${previewText}</div>
                     </div>
                 </div>
@@ -227,7 +227,7 @@ function renderProblemList() {
         `;
         div.onclick = () => {
             if (!isBankSortMode) {
-                window.open('workspace.html?probId=' + p.id, '_blank');
+                window.open('/workspace.html?probId=' + p.id, '_blank');
             }
         };
         list.appendChild(div);
