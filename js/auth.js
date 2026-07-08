@@ -57,7 +57,7 @@ function logout() {
 // 監聽 Firebase 登入狀態變化
 masterAuth.onAuthStateChanged(async (user) => {
     authInitialized = true;
-    const isLoginPage = window.location.pathname.endsWith('login.html') || window.location.pathname.endsWith('/login') || window.location.pathname.endsWith('/');
+    const isLoginPage = window.location.pathname.endsWith('login.html') || window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/login') || window.location.pathname === '/';
 
     if (user) {
         currentUser = user;
