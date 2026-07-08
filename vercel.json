@@ -7,6 +7,6 @@
     { "source": "/categories/:catId/problems", "destination": "/dashboard.html" },
     { "source": "/workspace/:probId", "destination": "/workspace.html" },
     { "source": "/admin/:probId", "destination": "/admin.html" },
-    { "source": "/login", "destination": "/login.html" }
+    { "source": "/login", "destination": "/index.html" }
   ]
 }
