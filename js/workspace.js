@@ -73,7 +73,24 @@ try {
 
     document.getElementById('wsTitle').innerText = p.title || "未命名題目";
     const descContent = p.desc ? p.desc : "這個題目目前沒有描述。請回到設定頁面加入描述。";
-    document.getElementById('wsDesc').innerHTML = typeof parseContent === 'function' ? parseContent(descContent) : (window.markdownit ? window.markdownit({html:true}).render(descContent) : descContent);
+    
+    // 依據 78-2.html 完整複製 parseContent 邏輯
+    function parseContent(text) {
+        if (!text) return "";
+        let html = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+        
+        // 解析粗體 **文字**
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // 解析行內程式碼 `文字`
+        html = html.replace(/`(.*?)`/g, '<code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-family:monospace; color:#ef4444;">$1</code>');
+        return html;
+    }
+
+    document.getElementById('wsDesc').innerHTML = parseContent(descContent);
     
     const lang = p.lastLang || 'cpp'; 
     document.getElementById('langSelect').value = lang; 
@@ -1218,10 +1235,10 @@ function stopDrag() {
 
 
     async function runCode() {
-        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
+        const p = db.problems.find(x => x.id === currentProbId); 
         if (!p.testCases || p.testCases.length === 0) { 
-            // Fallback so it doesn't block execution
-            p.testCases = [{ input: "", output: "" }];
+            alert("無測資"); 
+            return; 
         }
         
         const btn = document.getElementById('runBtn'); 
