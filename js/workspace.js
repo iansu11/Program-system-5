@@ -11,7 +11,7 @@ let currentLang = 'cpp';
 // 程式碼編輯與執行區 (js/workspace.js)
 // ==========================================
 
-let currentFileIndex = -1;
+currentFileIndex = -1;
 
 let currentProbId = null;
 let editor = null;
