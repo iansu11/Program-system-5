@@ -115,7 +115,7 @@ try {
     document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
     document.getElementById('view-workspace').style.display = 'flex';
   } catch (e) {
-    alert('Error in initWorkspace: ' + e.stack);
+    document.body.innerHTML = '<div style="color:red; padding:20px; font-size:20px;">CRITICAL ERROR in initWorkspace: <br><pre>' + e.stack + '</pre></div>';
     console.error(e);
   }
 }
