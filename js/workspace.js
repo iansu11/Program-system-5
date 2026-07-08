@@ -71,8 +71,9 @@ try {
         return;
     }
 
-    document.getElementById('wsTitle').innerText = p.title;
-    document.getElementById('wsDesc').innerHTML = typeof parseContent === 'function' ? parseContent(p.desc || "") : (window.markdownit ? window.markdownit({html:true}).render(p.desc || "") : p.desc);
+    document.getElementById('wsTitle').innerText = p.title || "未命名題目";
+    const descContent = p.desc ? p.desc : "這個題目目前沒有描述。請回到設定頁面加入描述。";
+    document.getElementById('wsDesc').innerHTML = typeof parseContent === 'function' ? parseContent(descContent) : (window.markdownit ? window.markdownit({html:true}).render(descContent) : descContent);
     
     const lang = p.lastLang || 'cpp'; 
     document.getElementById('langSelect').value = lang; 
@@ -1219,8 +1220,8 @@ function stopDrag() {
     async function runCode() {
         const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         if (!p.testCases || p.testCases.length === 0) { 
-            alert("無測資"); 
-            return; 
+            // Fallback so it doesn't block execution
+            p.testCases = [{ input: "", output: "" }];
         }
         
         const btn = document.getElementById('runBtn'); 
