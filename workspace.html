@@ -104,8 +104,9 @@
             }
             if (!db.problems || db.problems.length === 0) {
                 // 如果沒有抓到題庫資料，嘗試主動載入
-                if (typeof fetchAndLoadBank === 'function' && typeof currentBankUrl !== 'undefined') {
-                    await fetchAndLoadBank(currentBankUrl);
+                if (typeof fetchAndLoadBank === 'function') {
+                    const fallbackUrl = currentBankUrl ? currentBankUrl : '/program-1.json';
+                    await fetchAndLoadBank(fallbackUrl);
                 } else {
                     setTimeout(startWorkspace, 100);
                     return;
