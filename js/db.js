@@ -43,8 +43,17 @@ async function loadUserDataFromCloud(isBackground = false) {
             if (!isCustom) {
                 // 【預設題庫模式】：讀取隔離進度
                 const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
-                if (safeKey && data.bankProgress && data.bankProgress[safeKey]) {
-                    const prog = JSON.parse(data.bankProgress[safeKey]);
+                const oldSafeKey = "https___raw_githubusercontent_com_iansu11_Programming-System_main_system_design_questions_bank_bank_json"; // 78-2.html 的舊進度 Key
+                
+                // 優先讀取新的 safeKey，如果沒有則嘗試讀取舊版的 safeKey (相容 78-2)
+                let targetKey = safeKey;
+                if (safeKey && data.bankProgress && !data.bankProgress[safeKey] && data.bankProgress[oldSafeKey]) {
+                    targetKey = oldSafeKey;
+                    console.log("偵測到舊版 78-2 進度，正在遷移至新版...");
+                }
+                
+                if (targetKey && data.bankProgress && data.bankProgress[targetKey]) {
+                    const prog = JSON.parse(data.bankProgress[targetKey]);
                     db.categories = prog.categories || [];
                     db.problems = prog.problems || [];
                     db.version = prog.version || "";
@@ -364,8 +373,15 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                 try {
                     if (docSnap && docSnap.exists) {
                         const data = docSnap.data();
-                        if (data.bankProgress && data.bankProgress[safeKey]) {
-                            const prog = JSON.parse(data.bankProgress[safeKey]);
+                        const oldSafeKey = "https___raw_githubusercontent_com_iansu11_Programming-System_main_system_design_questions_bank_bank_json";
+                        let targetKey = safeKey;
+                        
+                        if (data.bankProgress && !data.bankProgress[safeKey] && data.bankProgress[oldSafeKey]) {
+                            targetKey = oldSafeKey;
+                        }
+
+                        if (data.bankProgress && data.bankProgress[targetKey]) {
+                            const prog = JSON.parse(data.bankProgress[targetKey]);
                             savedCategories = prog.categories || [];
                             savedProblems = prog.problems || [];
                         }
