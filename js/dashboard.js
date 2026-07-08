@@ -6,8 +6,12 @@ var isProbSortMode = false;
 // ==========================================
 
 let currentCatId = null;
+let currentView = 'view-source-selector';
+let pendingRestoreFileName = "";
+let problemToMoveId = null;
 
 function showView(viewId) {
+    currentView = viewId;
     const views = ['view-source-selector', 'view-custom-portal', 'view-portal', 'view-categories', 'view-problem-list'];
     views.forEach(v => {
         const el = document.getElementById(v);
@@ -753,6 +757,30 @@ function downloadBackup() {
         document.body.removeChild(a); 
     }
 
+function handleBackupFile(input) { 
+        const file = input.files[0]; 
+        if (!file) return; 
+        
+        pendingRestoreFileName = file.name; 
+        const reader = new FileReader(); 
+        
+        reader.onload = function(e) { 
+            let content = e.target.result.trim(); 
+            if (content.startsWith("{") || content.startsWith("[")) { 
+                try { 
+                    JSON.parse(content); 
+                    content = btoa(encodeURIComponent(content)); 
+                } catch(err) { 
+                    alert("檔案格式錯誤"); 
+                    return; 
+                } 
+            } 
+            document.getElementById('backupStr').value = content; 
+        }; 
+        reader.readAsText(file); 
+        input.value = ''; 
+    }
+
 function copyBackupCode() { 
         document.getElementById('backupStr').select(); 
         document.execCommand('copy'); 
@@ -950,4 +978,3 @@ function toggleBankSortMode() {
         }
         renderCustomPortal(); // 重新渲染列表以套用模式
     }
-
