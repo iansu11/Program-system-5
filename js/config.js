@@ -52,13 +52,13 @@ if (localBankUrl) currentBankUrl = localBankUrl;
 // 雙雲端核心設定 (Master-Tenant 架構)
 // ==========================================
 const masterConfig = {
-    apiKey: "AIzaSyA3xQLjtZ95UzGJIpo2QmhKb4HEeifWhdI",
-    authDomain: "program-system-2-ca5a8.firebaseapp.com",
-    projectId: "program-system-2-ca5a8",
-    storageBucket: "program-system-2-ca5a8.firebasestorage.app",
-    messagingSenderId: "382670100845",
-    appId: "1:382670100845:web:0d05e40672e18c6a5ce264",
-    measurementId: "G-CNV16D9EFV"
+    apiKey: "AIzaSyCfmxMbNAnKE6t8rOk6nv7zNXUkheqGkoo",
+    authDomain: "program-system-3.firebaseapp.com",
+    projectId: "program-system-3",
+    storageBucket: "program-system-3.firebasestorage.app",
+    messagingSenderId: "494972479318",
+    appId: "1:494972479318:web:ac4e7fd68b88339afe18f7",
+    measurementId: "G-0TDMYYMXH9"
 };
 
 firebase.initializeApp(masterConfig);
