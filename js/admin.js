@@ -58,9 +58,14 @@ function renderAdmin() {
     document.getElementById('editTemplate').value = p.tpl_cpp;
 }
 
-function saveProblem() {
+async function saveProblem() {
     const p = db.problems.find(x => String(x.id) === String(adminProbId));
     if (!p) return;
+    
+    // UI Feedback
+    const btn = document.querySelector('button[onclick="saveProblem()"]');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 儲存中...'; }
     
     p.title = document.getElementById('editTitle').value.trim();
     p.desc = document.getElementById('editDesc').value;
@@ -77,11 +82,13 @@ function saveProblem() {
         output: document.getElementById('modelAnswerInput').value
     }];
     
-    saveToLocal(true, false);
+    // AWAIT to ensure Firebase has the data before alerting, preventing race condition in next tab
+    await saveToLocal(true, false);
     if (typeof syncProblemDeltaToCloud === 'function') {
-        syncProblemDeltaToCloud(p.id, p);
+        await syncProblemDeltaToCloud(p.id, p);
     }
     
+    if (btn) { btn.disabled = false; btn.innerHTML = originalText; }
     alert("題目設定已儲存！");
 }
 
