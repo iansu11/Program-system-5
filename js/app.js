@@ -1,12 +1,12 @@
 
     // =========================================================
-    // 0. Eager Load (?å?è¼‰å…¥) & è®Šæ•¸å®??
+    // 0. Eager Load (?  ?è¼‰å…¥) & è®Šæ•¸ ??
     // =========================================================
     let db = { 
 	categories: [], 
 	problems: [], 
 	version: "",
-	customBanks: [] //å­˜æ”¾ä½¿ç”¨?…è‡ªè¨‚ç??€?‰é?åº?
+	customBanks: [] //å­˜æ”¾ä½¿ç”¨? è‡ªè¨‚ ?? ?  ? ?
     };
 
     let executionHistories = {}; 
@@ -16,11 +16,11 @@
     let pendingUpdateDb = null;
     let hasCloudDbData = false;
     let authInitialized = false;
-    let isBankSortMode = false; // ?§åˆ¶?ªè?é¡Œåº«?’å?æ¨¡å??„è???
+    let isBankSortMode = false; // ? åˆ¶?  ?é¡Œåº«?  ?æ¨¡ ??  ???
 
-    // V60: å¤šæ?æ¡ˆæ”¯?´ç??€?‹è???
-    let currentFileIndex = -1; // -1 ä»?¡¨ mainï¼? ä»¥ä?ä»?¡¨ extraFiles ??index
-    let adminMultiFiles = [];  // å¾Œå°è¨­å?å°ˆç”¨?„æš«å­˜ç‰©ä»?
+    // V60: å¤š ?æ¡ˆæ”¯?  ?? ?  ???
+    let currentFileIndex = -1; // -1  ?   main ? ä»¥ ? ?   extraFiles ??index
+    let adminMultiFiles = [];  // å¾Œå°è¨­ ?å°ˆç”¨? æš«å­˜ç‰© ?
     let adminCurrentFileIndex = -1; 
 
     const localData = localStorage.getItem('oj_v15_data');
@@ -44,7 +44,7 @@
     if (localBankUrl) currentBankUrl = localBankUrl;
 
     // ==========================================
-    // 1. ?™é›²ç«¯æ ¸å¿ƒè¨­å®?(Master-Tenant ?¶æ?)
+    // 1. ? é›²ç«¯æ ¸å¿ƒè¨­ ?(Master-Tenant ?  ?)
     // ==========================================
     const masterConfig = {
 	apiKey: "AIzaSyA3xQLjtZ95UzGJIpo2QmhKb4HEeifWhdI",
@@ -62,13 +62,13 @@
     const masterDb = firebase.firestore();
     let currentUser = null;
 
-    // [?¨æˆ¶ç«¯] ä½¿ç”¨?…ç?å°ˆå±¬ Firebase (ä¹‹å??•æ??Ÿæ?)
+    // [? æˆ¶ç«¯] ä½¿ç”¨?  ?å°ˆå±¬ Firebase (ä¹‹ ??  ??  ?)
     let personalApp = null;
     let personalDb = null;
     
 
     // ==========================================
-    // 2. å¸³è?ç³»çµ±
+    // 2. å¸³ ?ç³»çµ±
     // ==========================================
     
     let isLoginMode = true;
@@ -81,41 +81,41 @@
         document.getElementById('tabRegister').style.borderBottomColor = !isLoginMode ? 'var(--accent)' : 'transparent';
         
         document.getElementById('registerConfigArea').style.display = isLoginMode ? 'none' : 'block';
-        document.getElementById('actionBtn').innerText = isLoginMode ? '?»å…¥ç³»çµ±' : 'è¨»å?ä¸¦ç?å®šé›²ç«?;
+        document.getElementById('actionBtn').innerText = isLoginMode ? '? å…¥ç³»çµ±' : 'è¨» ?ä¸¦ ?å®šé›² ?;
         document.getElementById('actionBtn').className = isLoginMode ? 'btn btn-success' : 'btn btn-primary';
     }
         
     async function handleAuthAction() {
         const email = document.getElementById('emailInput').value.trim();
         const pwd = document.getElementById('passwordInput').value;
-        if (!email || !pwd) { alert("è«‹è¼¸?¥é›»å­éƒµä»¶è?å¯†ç¢¼ï¼?); return; }
+        if (!email || !pwd) { alert("è«‹è¼¸? é›»å­éƒµä»¶ ?å¯†ç¢¼ ?); return; }
 
         const actionBtn = document.getElementById('actionBtn');
         const originalText = actionBtn.innerText;
-        actionBtn.innerText = isLoginMode ? '?»å…¥ä¸?..' : '?•ç?ä¸?..';
+        actionBtn.innerText = isLoginMode ? '? å…¥ ?..' : '?  ? ?..';
         actionBtn.disabled = true;
 
         if (isLoginMode) {
             masterAuth.signInWithEmailAndPassword(email, pwd).catch(err => {
-                alert("?»å…¥å¤±æ?ï¼? + err.message);
+                alert("? å…¥å¤± ? ? + err.message);
                 actionBtn.innerText = originalText;
                 actionBtn.disabled = false;
             });
         } else {
-            if (pwd.length < 6) { alert("å¯†ç¢¼å¤ªçŸ­ï¼?); return; }
+            if (pwd.length < 6) { alert("å¯†ç¢¼å¤ªçŸ­ ?); return; }
             const configStr = document.getElementById('registerConfigInput').value.trim();
-            if (!configStr) { alert("è«‹è²¼ä¸?Firebase ?‘é‘°ï¼?); return; }
+            if (!configStr) { alert("è«‹è²¼ ?Firebase ? é‘° ?); return; }
             
-            try { JSON.parse(configStr); } catch(e) { alert("??JSON ?¼å??¯èª¤ï¼?); return; }
+            try { JSON.parse(configStr); } catch(e) { alert("??JSON ?  ?? èª¤ ?); return; }
 
             try {
                 const userCredential = await masterAuth.createUserWithEmailAndPassword(email, pwd);
                 await masterDb.collection('userSettings').doc(userCredential.user.uid).set({
                     firebaseConfig: configStr
                 });
-                alert("??è¨»å??å?ä¸¦ç?å®šé›²ç«¯ï?");
+                alert("??è¨» ??  ?ä¸¦ ?å®šé›²ç«¯ ?");
             } catch(err) { 
-                alert("è¨»å?å¤±æ?ï¼? + err.message); 
+                alert("è¨» ?å¤± ? ? + err.message); 
                 actionBtn.innerText = originalText;
                 actionBtn.disabled = false;
             }
@@ -123,7 +123,7 @@
     }
 
     function logout() {
-        if (confirm("ç¢ºå?è¦ç™»?ºå?ï¼?)) {
+        if (confirm("ç¢º ?è¦ç™»?  ? ?)) {
             masterAuth.signOut().then(() => {
                 localStorage.removeItem('oj_v15_data');
                 localStorage.removeItem('oj_v15_history');
@@ -141,7 +141,7 @@
             document.getElementById('user-name').innerText = user.email;
             
             try {
-                // ??Master ?“å? JSON ?‘é‘°
+                // ??Master ?  ? JSON ? é‘°
                 let userConfigStr = localStorage.getItem('oj_v15_firebaseConfig');
                 try {
                     const doc = await masterDb.collection('userSettings').doc(user.uid).get();
@@ -150,13 +150,13 @@
                         localStorage.setItem('oj_v15_firebaseConfig', userConfigStr);
                     }
                 } catch (netErr) {
-                    console.warn("?¡æ?å¾é›²ç«¯å?å¾—é??°ï?å°‡å?è©¦ä½¿?¨æœ¬?°å¿«?–ï?", netErr);
+                    console.warn("?  ?å¾é›²ç«¯ ?å¾— ??  ?å°‡ ?è©¦ä½¿? æœ¬? å¿«?  ?", netErr);
                 }
 
                 if (userConfigStr) {
                     const userConfig = JSON.parse(userConfigStr);
                     
-                    // ?Ÿå??‹äºº?²ç«¯
+                    // ?  ?? äºº? ç«¯
                     if (personalApp) await personalApp.delete();
 		    personalApp = firebase.initializeApp(userConfig, "PersonalCloud");
                     await personalApp.auth().signInAnonymously();
@@ -179,18 +179,18 @@
                     }
 
 		    if (!window.location.hash || window.location.hash === '#/login') {
-			window.location.hash = '/source-selector'; // ?»å…¥å¾Œè‹¥?¡æ?å®šç›®æ¨™æ??¨ç™»?¥é?ï¼Œå?è·³è??°ä?æºé¸?‡å™¨
+			window.location.hash = '/source-selector'; // ? å…¥å¾Œè‹¥?  ?å®šç›®æ¨™ ?? ç™»?  ?ï¼Œ ?è·³ ??  ?æºé¸? å™¨
 		    }
 		    handleHashChange();
 		
                 } else {
-                    alert("?¾ä??°ç?å®šè??™ï?ç³»çµ±å°‡ç„¡æ³•å?æ­¥æ‚¨?„é›²ç«¯é€²åº¦ï¼?);
-                    // ç§»é™¤?ªå??»å‡ºï¼Œå??ä½¿?¨è€…ç?è¦æ?
+                    alert("?  ??  ?å®š ??  ?ç³»çµ±å°‡ç„¡æ³• ?æ­¥æ‚¨? é›²ç«¯é€²åº¦ ?);
+                    // ç§»é™¤?  ?? å‡ºï¼Œ ?? ä½¿? è€… ?è¦ ?
                 }
             } catch (err) {
                 console.error(err);
-                // ç§»é™¤?ªå??»å‡ºï¼Œæ”¹?ºæ?ç¤?
-                alert("????‹äºº?²ç«¯å¤±æ?ï¼Œå¯?½æ˜¯ç¶²è·¯ä¸ç©©ï¼è??æ–°?´ç??–ç?å¾Œå?è©¦ã€?);
+                // ç§»é™¤?  ?? å‡ºï¼Œæ”¹?  ? ?
+                alert("???? äºº? ç«¯å¤± ?ï¼Œå¯? æ˜¯ç¶²è·¯ä¸ç©©ï¼ ?? æ–°?  ??  ?å¾Œ ?è©¦ ?);
             }
         } else {
             currentUser = null;
@@ -199,16 +199,16 @@
             const actionBtn = document.getElementById('actionBtn');
             if (actionBtn) {
                 actionBtn.disabled = false;
-                actionBtn.innerText = isLoginMode ? '?»å…¥ç³»çµ±' : 'è¨»å?ä¸¦ç?å®šé›²ç«?;
+                actionBtn.innerText = isLoginMode ? '? å…¥ç³»çµ±' : 'è¨» ?ä¸¦ ?å®šé›² ?;
             }
 
             window.location.hash = '/login';
-	    handleHashChange(); //ç¢ºä??ªç™»?¥æ?ç«‹åˆ»é¡¯ç¤º?»å…¥??
+	    handleHashChange(); //ç¢º ?? ç™»?  ?ç«‹åˆ»é¡¯ç¤º? å…¥??
         }
     });
     
     // ==========================================
-    // 3. ?²ç«¯è³‡æ??Œæ­¥ & ?ªå??´æ–°æ©Ÿåˆ¶
+    // 3. ? ç«¯è³‡ ?? æ­¥ & ?  ?? æ–°æ©Ÿåˆ¶
     // ==========================================
     
     async function loadUserDataFromCloud(isBackground = false) {
@@ -218,11 +218,11 @@
             if (docSnap.exists) {
                 const data = docSnap.data();
 
-                // è¼‰å…¥?ªè?é¡Œåº«æ¸…å–® (?™æ˜¯è³‡æ??‰åº«)
+                // è¼‰å…¥?  ?é¡Œåº«æ¸…å–® (? æ˜¯è³‡ ?? åº«)
                 if (data.userCustomBanks) {
                     const parsedBanks = JSON.parse(data.userCustomBanks);
                     try {
-                        // ?’¡ ?¸å?ä¿®æ­£ï¼šå?å­é??ˆæ??–å??´ç? customBanks è³‡æ?ï¼Œç???1MB ?åˆ¶
+                        // ?   ?  ?ä¿®æ­£ï¼š ?å­ ??  ??  ??  ? customBanks è³‡ ?ï¼Œ ???1MB ? åˆ¶
                         const customBanksSnap = await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').get();
                         if (!customBanksSnap.empty) {
                             const fullBanksMap = {};
@@ -235,7 +235,7 @@
                             db.customBanks = parsedBanks;
                         }
                     } catch(e) {
-                        console.error("è¼‰å…¥?ªè?é¡Œåº«?§å®¹å¤±æ?ï¼?, e);
+                        console.error("è¼‰å…¥?  ?é¡Œåº«? å®¹å¤± ? ?, e);
                         db.customBanks = parsedBanks;
                     }
                 }
@@ -243,7 +243,7 @@
                 const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
 
                 if (!isCustom) {
-                    // ?é?è¨­é?åº«æ¨¡å¼ã€‘ï?è®€?–é??¢é€²åº¦
+                    // ?  ?è¨­ ?åº«æ¨¡å¼ã€‘ ?è®€?  ?? é€²åº¦
                     const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
                     if (safeKey && data.bankProgress && data.bankProgress[safeKey]) {
                         const prog = JSON.parse(data.bankProgress[safeKey]);
@@ -252,10 +252,10 @@
                         db.version = prog.version || "";
                     }
                     
-                    // ?? ?‘å??ºå¤±?„è‡ªè¨‚å?é¡ï?å¦‚æ? bankProgress å­˜æ?å¤±æ?ï¼Œå? customCategories ?‘å?ä¾?
+                    // ?? ?  ?? å¤±? è‡ªè¨‚ ?é¡ ?å¦‚ ? bankProgress å­˜ ?å¤± ?ï¼Œ ? customCategories ?  ? ?
                     if (data.customCategories) {
                         Object.values(data.customCategories).forEach(cc => {
-                            // ç¢ºä??¯å±¬?¼é€™å€‹é?åº«ç??ªè??†é?
+                            // ç¢º ?? å±¬? é€™å€‹ ?åº« ??  ??  ?
                             if (cc && cc.id && cc.bankUrl === currentBankUrl) {
                                 const existingC = db.categories.find(c => c.id == cc.id);
                                 if (existingC) {
@@ -267,15 +267,15 @@
                         });
                     }
 
-                    // ?? ?‘å??ºå¤±?„è‡ªè¨‚é??®ï?å¦‚æ? bankProgress å­˜æ?å¤±æ?ï¼ˆä?å¦‚å®¹?ç?è¡¨ï?ï¼Œå? customProblems ?‘å?ä¾?
+                    // ?? ?  ?? å¤±? è‡ªè¨‚ ??  ?å¦‚ ? bankProgress å­˜ ?å¤± ?ï¼ˆ ?å¦‚å®¹?  ?è¡¨ ?ï¼Œ ? customProblems ?  ? ?
                     if (data.customProblems) {
                         Object.values(data.customProblems).forEach(cp => {
                             if (cp && cp.id) {
                                 const existingP = db.problems.find(p => p.id == cp.id);
                                 if (existingP) {
-                                    Object.assign(existingP, cp); // ?ˆä½µä¿®æ”¹
+                                    Object.assign(existingP, cp); // ? ä½µä¿®æ”¹
                                 } else {
-                                    // ç¢ºä??™é?å±¬æ–¼?¶å?é¡Œåº« (æª¢æŸ¥?†é??¯å¦å­˜åœ¨)
+                                    // ç¢º ??  ?å±¬æ–¼?  ?é¡Œåº« (æª¢æŸ¥?  ?? å¦å­˜åœ¨)
                                     if (db.categories.some(c => c.id == cp.catId)) {
                                         db.problems.push(cp);
                                     }
@@ -284,12 +284,12 @@
                         });
                     }
                 } else {
-                    // ?è‡ªè¨‚é?åº«æ¨¡å¼ã€‘ï??¹æ? ID å¾?customBanks ?‰åº«ä¸­æ?æ´»è???
+                    // ? è‡ªè¨‚ ?åº«æ¨¡å¼ã€‘ ??  ? ID  ?customBanks ? åº«ä¸­ ?æ´» ???
                     const customId = currentBankUrl.replace("local_custom_", "");
                     const targetBank = db.customBanks.find(b => b.id === customId);
                     if (targetBank) {
-                        // ?’¡ ?¸å?ä¿®æ­£ï¼šå??œæ˜¯?Œæ™¯è¼‰å…¥ï¼Œç?å°ä?è¦è??‹ç›®?æ­£?¨ç·¨è¼¯ç??ªè?é¡Œåº«?§å®¹ï¼?
-                        // ? ç‚º?¬åœ° localStorage ?„è??™æ??¯æ??°é®®?„ï??²ç«¯?„å¯?½æ˜¯ä¸Šæ¬¡?„æ?å­˜å??„è?è³‡æ?
+                        // ?   ?  ?ä¿®æ­£ï¼š ?? æ˜¯? æ™¯è¼‰å…¥ï¼Œ ?å° ?è¦ ?? ç›®? æ­£? ç·¨è¼¯ ??  ?é¡Œåº«? å®¹ ?
+                        // ? ç‚º? åœ° localStorage ?  ??  ??  ?? é®®?  ?? ç«¯? å¯? æ˜¯ä¸Šæ¬¡?  ?å­˜ ??  ?è³‡ ?
                         if (!isBackground) {
                             db.categories = JSON.parse(JSON.stringify(targetBank.categories || []));
                             db.problems = JSON.parse(JSON.stringify(targetBank.problems || []));
@@ -300,7 +300,7 @@
                 
                 if (data.historyData) executionHistories = JSON.parse(data.historyData);
 
-                // ?´æ–°?¬åœ°å¿«å?ï¼Œç¢ºä¿ä?æ¬¡é??°æ•´?†æ‹¿?°ç?ä¹Ÿæ˜¯å°ç?
+                // ? æ–°? åœ°å¿« ?ï¼Œç¢ºä¿ ?æ¬¡ ?? æ•´? æ‹¿?  ?ä¹Ÿæ˜¯å° ?
                 localStorage.setItem('oj_v15_data', JSON.stringify(db));
                 localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
             }
@@ -308,13 +308,13 @@
             if (!isBackground) checkUrlAndLoad();
             checkForUpdates();
         } catch (e) { 
-            console.error("è®€?–é›²ç«¯å¤±?—ï?", e); 
+            console.error("è®€? é›²ç«¯å¤±?  ?", e); 
         }
     }
     
 
     async function checkForUpdates() {
-        // ?›¡ï¸??²è­· 1ï¼šå??œæ˜¯?ªè?é¡Œåº«ï¼Œç?å°ä??¼é€?GitHub ?´æ–°è«‹æ?
+        // ?   ?? è­· 1ï¼š ?? æ˜¯?  ?é¡Œåº«ï¼Œ ?å° ??  ?GitHub ? æ–°è«‹ ?
         if (!currentBankUrl || currentBankUrl.startsWith("local_custom_")) return; 
         
         const checkUrl = currentBankUrl; 
@@ -323,7 +323,7 @@
             if (res.ok) {
                 const newDb = await res.json();
                 if (newDb.version && newDb.version !== db.version) {
-                    // ?›¡ï¸??²è­· 2ï¼šæ?ä¸Šç¶²?€æ¨™ç±¤
+                    // ?   ?? è­· 2ï¼š ?ä¸Šç¶²? æ¨™ç±¤
                     newDb._sourceUrl = checkUrl; 
                     pendingUpdateDb = newDb;
                     if (currentView === 'view-categories') { 
@@ -332,7 +332,7 @@
                 }
             }
         } catch (e) { 
-            console.error("æª¢æŸ¥?´æ–°å¤±æ?", e); 
+            console.error("æª¢æŸ¥? æ–°å¤± ?", e); 
         }
     }
     
@@ -346,23 +346,23 @@
 
         const newDb = pendingUpdateDb;
         
-        // ?’¡ æµ·é?å®‰æª¢ï¼šå¼·?¶æ·¨?–å? GitHub ä¸‹è??„å???JSONï¼Œæ??¤ä?å°å?æ®˜ç??„è‡ªè¨‚æ?ç±?
+        // ?   æµ· ?å®‰æª¢ï¼šå¼·? æ·¨?  ? GitHub ä¸‹ ??  ???JSONï¼Œ ??  ?å° ?æ®˜ ?? è‡ªè¨‚ ? ?
         (newDb.categories || []).forEach(c => delete c.isUserAdded);
         (newDb.problems || []).forEach(p => delete p.isUserAdded);
         
-        // ç¢ºä????å­˜åœ¨ï¼Œé¿??.some() ?‹å‡º?¯èª¤å°è‡´?´å€‹æ?ç¨‹ä¸­??
+        // ç¢º ????å­˜åœ¨ï¼Œé¿??.some() ? å‡º? èª¤å°è‡´? å€‹ ?ç¨‹ä¸­??
         newDb.categories = newDb.categories || [];
         newDb.problems = newDb.problems || [];
         
-        // 1. ç²¾æ??½å‡º?ªè??§å®¹ï¼šåªè¦å??¨æ–¼?¬åœ°/?²ç«¯ï¼Œä??Œä??¨æ??°å??¹å??®ä¸­?ç?ï¼Œä?å¾‹è??ºè‡ªè¨‚æ“´??
+        // 1. ç²¾ ?? å‡º?  ?? å®¹ï¼šåªè¦ ?? æ–¼? åœ°/? ç«¯ï¼Œ ??  ??  ??  ??  ?? ä¸­?  ?ï¼Œ ?å¾‹ ?? è‡ªè¨‚æ“´??
         const userAddedCategories = db.categories.filter(oldC => !newDb.categories.some(newC => newC.id === oldC.id));
         const userAddedProblems = db.problems.filter(oldP => !newDb.problems.some(newP => newP.id === oldP.id));
         
-        // è³¦ä??æ­»?‘ç?ï¼Œè?ç³»çµ±?¥é??™ä??¯è‡ªè¨‚æ“´?…ï?ä¸¦å?è¨±ä½¿?¨è€…åˆª??(?…å«è¢«å??¹æ?æ±°ç??Šé???
+        // è³¦ ?? æ­»?  ?ï¼Œ ?ç³»çµ±?  ??  ?? è‡ªè¨‚æ“´?  ?ä¸¦ ?è¨±ä½¿? è€…åˆª??(? å«è¢« ??  ?æ±° ??  ???
         userAddedCategories.forEach(c => c.isUserAdded = true);
         userAddedProblems.forEach(p => p.isUserAdded = true);
 
-        // 2. æ¸…é™¤ Firebase ?Šå®¢è£½å?ç´€?„ï?ç¢ºä?å®˜æ–¹é¡Œåº«è¦†è?
+        // 2. æ¸…é™¤ Firebase ? å®¢è£½ ?ç´€?  ?ç¢º ?å®˜æ–¹é¡Œåº«è¦† ?
         if (currentUser && personalDb) {
             let customUpdates = {};
             newDb.problems.forEach(p => {
@@ -375,7 +375,7 @@
             } catch(e) {}
         }
 
-        // ?’¡ ?Œæ­¥ä¿ç?ç¨‹å?ç¢¼ä?ç­”é€²åº¦ï¼Œé¿?å??¹æ›´?°å?ï¼Œè‡ªå·±å¯«?„ç?å¼ç¢¼ä¸è?
+        // ?   ? æ­¥ä¿ ?ç¨‹ ?ç¢¼ ?ç­”é€²åº¦ï¼Œé¿?  ?? æ›´?  ?ï¼Œè‡ªå·±å¯«?  ?å¼ç¢¼ä¸ ?
         newDb.problems.forEach(newP => {
             const oldP = db.problems.find(p => p.id === newP.id);
             if (oldP) {
@@ -387,7 +387,7 @@
             }
         });
 
-        // 3. çµ„å?ï¼šå…¨?°å??¹é?åº?+ ä½ ç??ªè??´å?
+        // 3. çµ„ ?ï¼šå…¨?  ??  ? ?+ ä½  ??  ??  ?
         newDb.categories = [...newDb.categories, ...userAddedCategories];
         newDb.problems = [...newDb.problems, ...userAddedProblems];
         
@@ -395,12 +395,12 @@
         db = newDb; 
         db.customBanks = preservedCustomBanks;
 
-        // ?? å¼·åˆ¶?²ç«¯è¦†è?å­˜æ?
+        // ?? å¼·åˆ¶? ç«¯è¦† ?å­˜ ?
         await saveToLocal(true, false);
         
         document.getElementById('updateToast').style.display = 'none'; 
         pendingUpdateDb = null;
-        alert("??é¡Œåº«å·²æ??Ÿå?æ­¥è‡³?€?°ç??¬ï?\n?è¨­é¡Œç›®å·²å…¨?¢æ›´?°ï??¨ç?ä½œç?ç´€?„è??ªè?é¡Œç›®ä¹Ÿå·²å®‰å…¨ä¿ç???); 
+        alert("??é¡Œåº«å·² ??  ?æ­¥è‡³? ?  ??  ?\n? è¨­é¡Œç›®å·²å…¨? æ›´?  ??  ?ä½œ ?ç´€?  ??  ?é¡Œç›®ä¹Ÿå·²å®‰å…¨ä¿ ???); 
         renderCategoryList();
     }
     
@@ -415,7 +415,7 @@
    
 
     async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) { 
-        // 1. å¦‚æ??¯è‡ªè¨‚é?åº«ï??ˆå??¶å?ç·¨è¼¯?§å®¹?å¡«??customBanks ???ä¸?
+        // 1. å¦‚ ?? è‡ªè¨‚ ?åº« ??  ??  ?ç·¨è¼¯? å®¹? å¡«??customBanks ??? ?
         const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
         if (isCustom) {
             const customId = currentBankUrl.replace("local_custom_", "");
@@ -424,7 +424,7 @@
                 db.customBanks[bankIdx].categories = JSON.parse(JSON.stringify(db.categories));
                 db.customBanks[bankIdx].problems = JSON.parse(JSON.stringify(db.problems));
                 
-                // ?’¡ ?²å??™å€‹ç‰¹å®šç? custom bank ?°ç¨ç«‹ç? subcollection
+                // ?   ?  ?? å€‹ç‰¹å®š ? custom bank ? ç¨ç«‹ ? subcollection
                 if (syncDbToCloud && currentUser && personalDb) {
                     try {
                         personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(customId).set(db.customBanks[bankIdx]);
@@ -433,28 +433,28 @@
             }
         }
 
-        // 2. ?¬åœ°ç«¯å??´å?æª?(?šç‚ºä¿éšª)
+        // 2. ? åœ°ç«¯ ??  ? ?(? ç‚ºä¿éšª)
         localStorage.setItem('oj_v15_data', JSON.stringify(db)); 
         localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
         if (currentUser) localStorage.setItem('oj_v15_uid', currentUser.uid);
 
         if (!syncDbToCloud && !syncHistoryToCloud) return; 
 
-        // 3. ?²ç«¯?†é›¢?²å?
-        if (currentUser && personalDb) { // ç¢ºä? personalDb å­˜åœ¨
+        // 3. ? ç«¯? é›¢?  ?
+        if (currentUser && personalDb) { // ç¢º ? personalDb å­˜åœ¨
             try {
                 let updatePayload = {
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // ?†æ?ï¼šæ ¹?šç•¶?ç’°å¢ƒé¸?‡å„²å­˜æ?ä½?
+                // ?  ?ï¼šæ ¹? ç•¶? ç’°å¢ƒé¸? å„²å­˜ ? ?
                 if (syncDbToCloud) {
-                    // ?’¡ è¼•é???userCustomBanksï¼Œåªå­˜åŸº?¬è?è¨Šä»¥ç¶­æ??’å??‡æ??®ï?è§?±ºä¸»æ?ä»?1MB ?åˆ¶
+                    // ?   è¼• ???userCustomBanksï¼Œåªå­˜åŸº?  ?è¨Šä»¥ç¶­ ??  ??  ??  ? ?  ä¸» ? ?1MB ? åˆ¶
                     const lightweightBanks = (db.customBanks || []).map(b => ({ id: b.id, name: b.name, version: b.version }));
                     updatePayload.userCustomBanks = JSON.stringify(lightweightBanks);
                     
                     if (!isCustom) {
-                        // ?ç§»æ¤?70-5 æ­?¸¸?ˆé?è¼¯ã€‘ï??©ç”¨ç¶²å??¢ç??¨ç?å®‰å…¨??Key
+                        // ? ç§» ?70-5  ?  ?  ?è¼¯ã€‘ ?? ç”¨ç¶² ??  ??  ?å®‰å…¨??Key
                         const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
                         
                         updatePayload.bankProgress = {
@@ -465,9 +465,9 @@
                             })
                         };
                         
-                        // ?Šç??¬è??‰åˆ°?€å¤–å±¤
+                        // ?  ??  ?? åˆ°? å¤–å±¤
                         updatePayload.bankVersions = {
-                            [safeKey]: db.version || "?ªè???
+                            [safeKey]: db.version || "?  ???
                         };
                     }
                 }
@@ -476,43 +476,43 @@
                     updatePayload.historyData = JSON.stringify(executionHistories);
                 }
 
-                // å¯«å…¥?‹äºº?„è??™åº«
+                // å¯«å…¥? äºº?  ?? åº«
                 await personalDb.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
-                console.log("???²ç«¯?†é›¢?²å??å?");
+                console.log("??? ç«¯? é›¢?  ??  ?");
             } catch (e) { 
-                console.error("?²ç«¯?Œæ­¥å¤±æ?ï¼?, e); 
+                console.error("? ç«¯? æ­¥å¤± ? ?, e); 
             }
         }
     }
 
 
-    // ?¨ç??²å??‡å??¨æ›´?°å‡½??
+    // ?  ??  ??  ?? æ›´? å‡½??
     async function syncProblemDeltaToCloud(probId, diff) {
         if (!currentUser) return;
         
-        // ?›¡ï¸??°å??²è­·ï¼šå??œæ˜¯?ªè?é¡Œåº«ï¼Œå??ºå??¢ç? saveToLocal å·²ç??´å?å­˜å¥½äº†ï??™è£¡?´æ¥?»æ?ï¼Œé¿?æµªè²»é›²ç«¯ç©º??
+        // ?   ??  ?? è­·ï¼š ?? æ˜¯?  ?é¡Œåº«ï¼Œ ??  ??  ? saveToLocal å·² ??  ?å­˜å¥½äº† ?? è£¡? æ¥?  ?ï¼Œé¿? æµªè²»é›²ç«¯ç©º??
         const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
         if (isCustom) return; 
 
         let payload = { customProblems: {} };
         
         if (diff === null) {
-            // ?³å…¥ null ä»?¡¨è¦æ??™é?å¾é›²ç«¯åˆª??
+            // ? å…¥ null  ?  è¦ ??  ?å¾é›²ç«¯åˆª??
             payload.customProblems[probId] = firebase.firestore.FieldValue.delete();
         } else {
-            // ?å??Œæ?ä¿®æ”¹?„æ?ä½ã€æ›´??
+            // ?  ??  ?ä¿®æ”¹?  ?ä½ã€æ›´??
             payload.customProblems[probId] = diff;
          }
         
         try {
             await personalDb.collection('users').doc(currentUser.uid).set(payload, { merge: true });
-            console.log(`é¡Œç›® ${probId} å·²å??¨æ›´?°è‡³?²ç«¯`, diff);
+            console.log(`é¡Œç›® ${probId} å·² ?? æ›´? è‡³? ç«¯`, diff);
         } catch(e) {
-            console.error("?²ç«¯å±€?¨æ›´?°å¤±?—ï?", e);
+            console.error("? ç«¯å±€? æ›´? å¤±?  ?", e);
         }
     }
     
-    // ?’¡ ?°å?ï¼šå?æ­¥è‡ªè¨‚å?é¡è‡³?²ç«¯ (è§?±º 1MB å®¹é??åˆ¶å°è‡´?„è‡ªè¨‚å?é¡éºå¤±å?é¡?
+    // ?   ?  ?ï¼š ?æ­¥è‡ªè¨‚ ?é¡è‡³? ç«¯ ( ?   1MB å®¹ ?? åˆ¶å°è‡´? è‡ªè¨‚ ?é¡éºå¤± ? ?
     async function syncCategoryDeltaToCloud(catId, diff) {
         if (!currentUser) return;
         
@@ -529,19 +529,19 @@
         
         try {
             await personalDb.collection('users').doc(currentUser.uid).set(payload, { merge: true });
-            console.log(`?†é? ${catId} ?²ç«¯?Œæ­¥å®Œæ?`, diff);
+            console.log(`?  ? ${catId} ? ç«¯? æ­¥å®Œ ?`, diff);
         } catch(e) {
-            console.error(`?†é? ${catId} ?²ç«¯?Œæ­¥å¤±æ?ï¼š`, e);
+            console.error(`?  ? ${catId} ? ç«¯? æ­¥å¤± ?ï¼š`, e);
         }
     }
     
     
     // ==========================================
-    // 4. è§??ç³»çµ±?¸å??è¼¯
+    // 4.  ??ç³»çµ±?  ?? è¼¯
     // ==========================================
     let currentCatId = null;
     let currentProbId = null;
-    let currentCompileMode = 'wandbox'; // ?¨å?ä¸‰æ®µå¼è???
+    let currentCompileMode = 'wandbox'; // ?  ?ä¸‰æ®µå¼ ???
     let pendingRestoreFileName = ""; 
     
     const defaultTemplates = {
@@ -571,20 +571,20 @@
 	
 	
 	
-	// ===== ?°å?ï¼šç™»??è¨»å?æ¬„ä???Enter å¿«æ·??=====
+	// ===== ?  ?ï¼šç™»??è¨» ?æ¬„ ???Enter å¿«æ·??=====
 	const emailInput = document.getElementById('emailInput');
 	const passwordInput = document.getElementById('passwordInput');
     
 	if (emailInput && passwordInput) {
-	    // Email æ¬„ä??‰ä? Enterï¼Œç„¦é»è·³?°å?ç¢¼æ?ä½?
+	    // Email æ¬„ ??  ? Enterï¼Œç„¦é»è·³?  ?ç¢¼ ? ?
 	    emailInput.addEventListener('keydown', function(e) {
 		if (e.key === 'Enter') {
-		    e.preventDefault(); // ?¿å?è§¸ç™¼ç¶²é??è¨­?„æ?è¡Œæ??äº¤è¡Œç‚º
+		    e.preventDefault(); // ?  ?è§¸ç™¼ç¶² ?? è¨­?  ?è¡Œ ?? äº¤è¡Œç‚º
 		    passwordInput.focus();
 		}
 	    });
         
-	    // å¯†ç¢¼æ¬„ä??‰ä? Enterï¼Œç›´?¥åŸ·è¡Œç™»??è¨»å?æµç?
+	    // å¯†ç¢¼æ¬„ ??  ? Enterï¼Œç›´? åŸ·è¡Œç™»??è¨» ?æµ ?
 	    passwordInput.addEventListener('keydown', function(e) {
 		if (e.key === 'Enter') {
 		    e.preventDefault();
@@ -600,24 +600,24 @@
     function handleHashChange() {
         if (!authInitialized) return;
 
-        // 1. ?–å?è·¯å?
+        // 1. ?  ?è·¯ ?
         const hash = window.location.hash || '#/source-selector'; 
         const [path, queryString] = hash.substring(1).split('?');
         const params = new URLSearchParams(queryString || '');
 
-        // 2. ?å„ª?ˆã€‘å…¬?‹é??¢åˆ¤?·ï?è®“æ?å­¸é?ç¶²å??‡ç•«?¢ä??å?æ­¥ï?ä¸è¢«?»å…¥?è¼¯?”æˆª
+        // 2. ? å„ª? ã€‘å…¬?  ?? åˆ¤?  ?è®“ ?å­¸ ?ç¶² ?? ç•«?  ??  ?æ­¥ ?ä¸è¢«? å…¥? è¼¯? æˆª
         if (path === '/firebase-tutorial') {
             showView('view-firebase-tutorial');
             return; 
         }
 
-        // 3. ?å??€?¡ã€‘ç™»?¥æª¢?¥ï??ªæ??ªã€Œé??¬é??ä??Œæœª?»å…¥?ç?å­˜å?
+        // 3. ?  ?? ? ã€‘ç™»? æª¢?  ??  ?? ã€Œ ??  ??  ?? æœª? å…¥?  ?å­˜ ?
         if (!currentUser) {
             showView('view-login');
             return;
         }
 
-        // 4. ?ç?äººé??¢ã€‘è·¯å¾‘åˆ¤??
+        // 4. ?  ?äºº ?? ã€‘è·¯å¾‘åˆ¤??
         if (path === '/login' || path === '') {
             window.location.hash = '/source-selector';
             return;
@@ -628,7 +628,7 @@
             if (nameEl) nameEl.innerText = currentUser.email;
             
             const emailEl = document.getElementById('sourceSelectorUserEmail');
-            if (emailEl) emailEl.innerText = "?®å??»å…¥ï¼? + currentUser.email;
+            if (emailEl) emailEl.innerText = "?  ?? å…¥ ? + currentUser.email;
             
             showView('view-source-selector');
         } 
@@ -639,13 +639,13 @@
         else if (path === '/portal') {
             showView('view-portal');
         } 
-        else if (path === '/categories') {
+        else if (path === 'dashboard.html') {
             currentCatId = null;
             
-            //ç¢ºä??æ–°?´ç?å¾Œï?æ¨™é??½é¡¯ç¤ºç›®?è??¸ä¸­?„é?åº«å?ç¨?
+            //ç¢º ?? æ–°?  ?å¾Œ ?æ¨™ ?? é¡¯ç¤ºç›®?  ?? ä¸­?  ?åº« ? ?
             if (currentBankName) {
                 const nameEl = document.getElementById('currentBankName');
-                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?®å?é¡Œåº«: ` + currentBankName;
+                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?é¡Œåº«: ` + currentBankName;
             }
             
             renderCategoryList();
@@ -671,29 +671,29 @@
                 _goToAdminInternal();
             }
         } else {
-            // ?è¨­è·³è?å¤§å»³ï¼Œé¿?æœª?¥è·¯å¾‘å??´ç™½?«é¢
+            // ? è¨­è·³ ?å¤§å»³ï¼Œé¿? æœª? è·¯å¾‘ ?? ç™½? é¢
             showView('view-portal');
         }
     }
 
     
-    //?‡æ??ªè?é¡Œåº«?’å?æ¨¡å?
+    //?  ??  ?é¡Œåº«?  ?æ¨¡ ?
     function toggleBankSortMode() {
         isBankSortMode = !isBankSortMode;
         const btn = document.getElementById('bankSortBtn');
         if (btn) {
-            btn.innerText = isBankSortMode ? "??å®Œæ??’å?" : "??èª¿æ•´?†å?";
+            btn.innerText = isBankSortMode ? "??å®Œ ??  ?" : "??èª¿æ•´?  ?";
             btn.className = isBankSortMode ? "btn btn-danger" : "btn btn-outline";
             if (!isBankSortMode) {
-                // çµæ??’å??‚æ¢å¾©ç™½?²æ¨£å¼?
+                // çµ ??  ?? æ¢å¾©ç™½? æ¨£ ?
                 btn.style.color = "white";
                 btn.style.borderColor = "white";
             }
         }
-        renderCustomPortal(); // ?æ–°æ¸²æ??—è¡¨ä»¥å??¨æ¨¡å¼?
+        renderCustomPortal(); // ? æ–°æ¸² ?? è¡¨ä»¥ ?? æ¨¡ ?
     }
     
-    //?²å??ªè?é¡Œåº«?°é?åºç??è¼¯ (?­é??’å??Ÿèƒ½)
+    //?  ??  ?é¡Œåº«?  ?åº ?? è¼¯ (?  ??  ?? èƒ½)
     function saveBankOrder() {
         const cards = document.querySelectorAll('#customBankList .bank-btn');
         const newOrder = [];
@@ -705,7 +705,7 @@
         saveToLocal(true, false); 
     }
     
-    // æ¸²æ??ªè?é¡Œåº«æ¸…å–®
+    // æ¸² ??  ?é¡Œåº«æ¸…å–®
     function renderCustomPortal() {
         const container = document.getElementById('customBankList');
         container.innerHTML = '';
@@ -720,45 +720,45 @@
             const card = document.createElement('div');
             card.className = 'bank-btn';
             card.style.position = 'relative';
-            card.style.padding = '40px 20px'; // ? å¤§?ªè?é¡Œåº«?¡ç?é«˜åº¦
+            card.style.padding = '40px 20px'; // ? å¤§?  ?é¡Œåº«?  ?é«˜åº¦
             card.setAttribute('draggable', isBankSortMode);
-            card.dataset.idx = idx; // ç´€?„å?å§‹ç´¢å¼?(ä¿ç?çµ?onclick ä½¿ç”¨)
-            card.dataset.id = bank.id; // ç´€?„å”¯ä¸€ ID (?’å???
+            card.dataset.idx = idx; // ç´€?  ?å§‹ç´¢ ?(ä¿ ? ?onclick ä½¿ç”¨)
+            card.dataset.id = bank.id; // ç´€? å”¯ä¸€ ID (?  ???
             
-            // ?’å?æ¨¡å?ä¸‹ä?é¡¯ç¤º?ä??‰é?ï¼Œé??’å?æ¨¡å?é¡¯ç¤º?´å??‡åˆª??
+            // ?  ?æ¨¡ ?ä¸‹ ?é¡¯ç¤º?  ??  ?ï¼Œ ??  ?æ¨¡ ?é¡¯ç¤º?  ?? åˆª??
             const actionsHtml = isBankSortMode ? '' : `
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;">
-                    <button class="prob-btn-icon" style="color: #1e3a8a; background: rgba(0,0,0,0.05);" onclick="renameCustomBank(event, ${idx})" title="?´å?"><i class="fa-solid fa-pen"></i></button>
-                    <button class="prob-btn-icon" style="color: #ef4444; background: rgba(0,0,0,0.05);" onclick="deleteCustomBank(event, ${idx})" title="?ªé™¤">??/button>
+                    <button class="prob-btn-icon" style="color: #1e3a8a; background: rgba(0,0,0,0.05);" onclick="renameCustomBank(event, ${idx})" title="?  ?"><i class="fa-solid fa-pen"></i></button>
+                    <button class="prob-btn-icon" style="color: #ef4444; background: rgba(0,0,0,0.05);" onclick="deleteCustomBank(event, ${idx})" title="? é™¤">??/button>
                 </div>
             `;
 
             card.innerHTML = `
                 <div onclick="if(!isBankSortMode) loadCustomBank(${idx})" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; text-align:left; padding-left: 5px; cursor: ${isBankSortMode ? 'grab' : 'pointer'};">
                     <span style="font-size:1.5rem;"><i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ${bank.name}</span>
-                    <span class="bank-desc" style="color: inherit;">${bank.problems ? bank.problems.length : 0} é¡?/span>
+                    <span class="bank-desc" style="color: inherit;">${bank.problems ? bank.problems.length : 0}  ?/span>
                 </div>
                 <div class="bank-actions">
-                    <button class="btn btn-outline btn-sm" style="background: white; color: #333; padding: 4px 8px; font-size: 0.85rem; border-color: #ccc;" onclick="renameCustomBank(event, ${idx})" title="?´å?"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-outline btn-sm" style="background: white; color: #f44747; border-color: #f44747; padding: 4px 8px; font-size: 0.85rem;" onclick="deleteCustomBank(event, ${idx})" title="?ªé™¤"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-outline btn-sm" style="background: white; color: #333; padding: 4px 8px; font-size: 0.85rem; border-color: #ccc;" onclick="renameCustomBank(event, ${idx})" title="?  ?"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-outline btn-sm" style="background: white; color: #f44747; border-color: #f44747; padding: 4px 8px; font-size: 0.85rem;" onclick="deleteCustomBank(event, ${idx})" title="? é™¤"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `;
             container.appendChild(card);
         });
 
-        // å¦‚æ??¨æ?åºæ¨¡å¼ï??Ÿå??–æ›³?Ÿèƒ½
+        // å¦‚ ??  ?åºæ¨¡å¼ ??  ?? æ›³? èƒ½
         if (isBankSortMode) {
             enableDragSort('customBankList', 'bank-btn', saveBankOrder);
         }
     }
     
 
-    // ?°å??ªè?é¡Œåº«
+    // ?  ??  ?é¡Œåº«
     async function addCustomBank() {
-    	const name = prompt("è«‹è¼¸?¥è‡ªè¨‚é?åº«å?ç¨±ï?");
+    	const name = prompt("è«‹è¼¸? è‡ªè¨‚ ?åº« ?ç¨± ?");
     	if (!name) return;
 	
-	// ?²å?æ©Ÿåˆ¶ï¼Œå??œè?è³‡æ?æ²’æ??™å€‹é™£?—ï?å°±å¹«å®ƒå»ºä¸€?‹ç©º??
+	// ?  ?æ©Ÿåˆ¶ï¼Œ ??  ?è³‡ ?æ²’ ?? å€‹é™£?  ?å°±å¹«å®ƒå»ºä¸€? ç©º??
 	if (!db.customBanks) {
 	    db.customBanks = [];
 	}
@@ -773,43 +773,43 @@
     	db.customBanks.push(newBank);
     
         const btn = document.querySelector('#view-custom-portal .btn-success');
-        if (btn) { btn.disabled = true; btn.innerText = "??å»ºç?ä¸?.."; }
-        await saveToLocal(true, false); // ?Œæ­¥?°ä½¿?¨è€…é›²ç«?
+        if (btn) { btn.disabled = true; btn.innerText = "??å»º ? ?.."; }
+        await saveToLocal(true, false); // ? æ­¥? ä½¿? è€…é›² ?
         
-        // ?’¡ ?Œæ­¥å¯«å…¥å­é???
+        // ?   ? æ­¥å¯«å…¥å­ ???
         if (currentUser && personalDb) {
             try {
                 await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(newBank.id).set(newBank);
             } catch(e) {}
         }
         
-        if (btn) { btn.disabled = false; btn.innerText = "+ ?°å?é¡Œåº«"; }
+        if (btn) { btn.disabled = false; btn.innerText = "+ ?  ?é¡Œåº«"; }
         renderCustomPortal();
     }
     
-    //?´å??Ÿèƒ½
+    //?  ?? èƒ½
     async function renameCustomBank(e, idx) {
-        e.stopPropagation(); // ?²æ­¢è§¸ç™¼?²å…¥é¡Œåº«?„é??Šä?ä»?
+        e.stopPropagation(); // ? æ­¢è§¸ç™¼? å…¥é¡Œåº«?  ??  ? ?
         const oldName = db.customBanks[idx].name;
-        const newName = prompt("è«‹è¼¸?¥æ–°?„é?åº«å?ç¨±ï?", oldName);
+        const newName = prompt("è«‹è¼¸? æ–°?  ?åº« ?ç¨± ?", oldName);
         
         if (newName && newName.trim() !== "" && newName !== oldName) {
             db.customBanks[idx].name = newName.trim();
             
-            // ?’¡ å¦‚æ??´æ”¹?„æ˜¯?®å?æ­?œ¨ä½¿ç”¨?„é?åº«ï??Œæ­¥?´æ–°?ç¨±
+            // ?   å¦‚ ?? æ”¹? æ˜¯?  ? ?  ä½¿ç”¨?  ?åº« ?? æ­¥? æ–°? ç¨±
             if (currentBankUrl === "local_custom_" + db.customBanks[idx].id) {
                 currentBankName = newName.trim();
                 localStorage.setItem('oj_v15_bank_name', currentBankName);
                 const bankNameEl = document.getElementById('currentBankName');
-                if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?®å?é¡Œåº«: ` + currentBankName;
+                if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?é¡Œåº«: ` + currentBankName;
             }
             
             const btn = e.target;
             const originalText = btn.innerText;
             if (btn) { btn.disabled = true; btn.innerText = "??; }
-            await saveToLocal(true, false); // ?Œæ­¥?°é›²ç«¯è??¬åœ°
+            await saveToLocal(true, false); // ? æ­¥? é›²ç«¯ ?? åœ°
             
-            // ?’¡ ?Œæ­¥?°å??†å?
+            // ?   ? æ­¥?  ??  ?
             if (currentUser && personalDb) {
                 try {
                     await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(db.customBanks[idx].id).set({ name: newName.trim() }, { merge: true });
@@ -817,13 +817,13 @@
             }
             
             if (btn) { btn.disabled = false; btn.innerText = originalText; }
-            renderCustomPortal();    // ç«‹å³?æ–°æ¸²æ??«é¢
+            renderCustomPortal();    // ç«‹å³? æ–°æ¸² ?? é¢
         }
     }
     
-    // è¼‰å…¥?¹å??„è‡ªè¨‚é?åº«å…§å®¹åˆ°ç³»çµ±ä¸»é?   
+    // è¼‰å…¥?  ?? è‡ªè¨‚ ?åº«å…§å®¹åˆ°ç³»çµ±ä¸» ?   
     async function loadCustomBank(idx) {
-        // ?? UI ?²å?ï¼šå??¥è??¥ä¸­?•ç•«ä¸¦é?å®šå…¨?Ÿæ??•ï??²æ­¢?è?é»æ?
+        // ?? UI ?  ?ï¼š ??  ?? ä¸­? ç•«ä¸¦ ?å®šå…¨?  ??  ?? æ­¢?  ?é» ?
         const container = document.getElementById('customBankList');
         const cards = container.querySelectorAll('.bank-btn');
         let clickedCard = null;
@@ -834,7 +834,7 @@
                 clickedCard = card.querySelector('div[onclick]');
                 if (clickedCard) {
                     originalContent = clickedCard.innerHTML;
-                    clickedCard.innerHTML = `<span style="font-size:1.5rem; font-weight:bold;">??è¼‰å…¥ä¸?..</span><span class="bank-desc" style="color: inherit;">?²å?ä¸¦å??›é?åº?/span>`;
+                    clickedCard.innerHTML = `<span style="font-size:1.5rem; font-weight:bold;">??è¼‰å…¥ ?..</span><span class="bank-desc" style="color: inherit;">?  ?ä¸¦ ??  ? ?/span>`;
                 }
             }
             card.style.pointerEvents = 'none';
@@ -842,10 +842,10 @@
         });
 
         try {
-            // ?ˆå?ä¸€ä¸‹ç›®?åœ¨?©ç??±è¥¿
+            // ?  ?ä¸€ä¸‹ç›®? åœ¨?  ?? è¥¿
             await saveToLocal(true, false);
 
-        // ?›¡ï¸??²è­· 4ï¼šå¼·?¶æ?ç©ºç?å¾…ä¸­?„æ›´?°å??‡å?çª?
+        // ?   ?? è­· 4ï¼šå¼·?  ?ç©º ?å¾…ä¸­? æ›´?  ??  ? ?
         pendingUpdateDb = null;
         const toast = document.getElementById('updateToast');
         if (toast) toast.style.display = 'none';
@@ -854,28 +854,28 @@
         currentBankName = selected.name;
         currentBankUrl = "local_custom_" + selected.id;
 
-        // å¾¹å??‡æ?è³‡æ?ä¸»é?
+        // å¾¹ ??  ?è³‡ ?ä¸» ?
         db.categories = JSON.parse(JSON.stringify(selected.categories || []));
         db.problems = JSON.parse(JSON.stringify(selected.problems || []));
         db.version = selected.version;
 
-        // ?’¡ ?¸å?ä¿®æ­£ï¼šå??›å?é¡Œåº«è³‡æ?å¾Œï?ç«‹åˆ»å¯«å…¥ localStorage ??data
-        // ?¦å?å¦‚æ?ä½¿ç”¨?…æ­¤?‚æ?ä¸?F5ï¼Œæ?è®€?–åˆ°?Œæ–°ç¶²å??ä??Œè?é¡Œåº«?§å®¹?ï?å°è‡´è³‡æ??¯ä?ï¼?
+        // ?   ?  ?ä¿®æ­£ï¼š ??  ?é¡Œåº«è³‡ ?å¾Œ ?ç«‹åˆ»å¯«å…¥ localStorage ??data
+        // ?  ?å¦‚ ?ä½¿ç”¨? æ­¤?  ? ?F5ï¼Œ ?è®€? åˆ°? æ–°ç¶² ??  ??  ?é¡Œåº«? å®¹?  ?å°è‡´è³‡ ??  ? ?
         localStorage.setItem('oj_v15_data', JSON.stringify(db));
 
         localStorage.setItem('oj_v15_bank_name', currentBankName);
         localStorage.setItem('oj_v15_bank_url', currentBankUrl);
         
         const bankNameEl = document.getElementById('currentBankName');
-        if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?®å?é¡Œåº«: ` + currentBankName;
+        if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?é¡Œåº«: ` + currentBankName;
         
-        window.location.hash = '/categories';
+        window.location.hash = 'dashboard.html';
         
         } catch (e) {
-            console.error("?‡æ?é¡Œåº«?¼ç??¯èª¤", e);
-            alert("?‡æ?é¡Œåº«?‚ç™¼?ŸéŒ¯èª¤ï?");
+            console.error("?  ?é¡Œåº«?  ?? èª¤", e);
+            alert("?  ?é¡Œåº«? ç™¼? éŒ¯èª¤ ?");
         } finally {
-            // ?? ?¢å¾©?‰é??€??
+            // ?? ? å¾©?  ?? ??
             cards.forEach(card => {
                 card.style.pointerEvents = 'auto';
                 card.style.opacity = '1';
@@ -886,10 +886,10 @@
         }
     } 
 
-    // ?ªé™¤?ªè?é¡Œåº«
+    // ? é™¤?  ?é¡Œåº«
     async function deleteCustomBank(e, idx) {
         e.stopPropagation();
-        if (confirm(`ç¢ºå?è¦åˆª?¤è‡ªè¨‚é?åº«ã€?{db.customBanks[idx].name}?å?ï¼Ÿæ­¤?•ä??¡æ?å¾©å??‚`)) {
+        if (confirm(`ç¢º ?è¦åˆª? è‡ªè¨‚ ?åº« ?{db.customBanks[idx].name}?  ?ï¼Ÿæ­¤?  ??  ?å¾© ?? `)) {
             db.customBanks.splice(idx, 1);
             const btn = e.target;
             if (btn) { btn.disabled = true; btn.innerText = "??; }
@@ -900,13 +900,13 @@
        
     
     async function fetchAndLoadBank(jsonUrl, displayName, forceReset = false) {
-        if (!currentUser) { alert("è«‹å??»å…¥å¸³è?ï¼?); return; }
+        if (!currentUser) { alert("è«‹ ?? å…¥å¸³ ? ?); return; }
 
         pendingUpdateDb = null;
         const toast = document.getElementById('updateToast');
         if (toast) toast.style.display = 'none'; 
         
-        // ?? UI ?²å?ï¼šå??¥è??¥ä¸­?•ç•«ä¸¦é?å®šå…¨?Ÿæ???
+        // ?? UI ?  ?ï¼š ??  ?? ä¸­? ç•«ä¸¦ ?å®šå…¨?  ???
         const buttons = document.querySelectorAll('.bank-btn');
         let clickedBtn = null;
         let originalContent = "";
@@ -914,40 +914,40 @@
             if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(jsonUrl)) {
                 clickedBtn = btn;
                 originalContent = btn.innerHTML;
-                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">??è¼‰å…¥ä¸?..</span><span class="bank-desc">?Œæ­¥?²ç«¯è³‡æ?</span>`;
+                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">??è¼‰å…¥ ?..</span><span class="bank-desc">? æ­¥? ç«¯è³‡ ?</span>`;
             }
             btn.style.pointerEvents = 'none';
             btn.style.opacity = '0.6';
         });
 
         try {
-            // ?? ?ˆèƒ½?ªå?ï¼šå¹³è¡Œå?ä¸‹è? GitHub é¡Œåº«??Firebase ?²ç«¯?²åº¦ï¼Œç??ä??Šä»¥ä¸Šç?ç­‰å??‚é?
+            // ?? ? èƒ½?  ?ï¼šå¹³è¡Œ ?ä¸‹ ? GitHub é¡Œåº«??Firebase ? ç«¯? åº¦ï¼Œ ??  ?? ä»¥ä¸Š ?ç­‰ ??  ?
             const fetchPromise = fetch(jsonUrl).then(res => {
-                if (!res.ok) throw new Error("ä¼ºæ??¨å??³ç??‹ï?" + res.status);
+                if (!res.ok) throw new Error("ä¼º ??  ??  ??  ?" + res.status);
                 return res.json();
             });
             const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get() : Promise.resolve(null);
             
             const [newDb, docSnap] = await Promise.all([fetchPromise, dbPromise]);
             
-            // ?’¡ æµ·é?å®‰æª¢ï¼šå¼·?¶æ·¨?–å? GitHub ä¸‹è??„å???JSONï¼Œæ??¤ä?å°å?æ®˜ç??„è‡ªè¨‚æ?ç±?
+            // ?   æµ· ?å®‰æª¢ï¼šå¼·? æ·¨?  ? GitHub ä¸‹ ??  ???JSONï¼Œ ??  ?å° ?æ®˜ ?? è‡ªè¨‚ ? ?
             (newDb.categories || []).forEach(c => delete c.isUserAdded);
             (newDb.problems || []).forEach(p => delete p.isUserAdded);
             
-            // ç¢ºä????å­˜åœ¨ï¼Œé¿??.some() ?‹å‡º?¯èª¤å°è‡´?´å€‹æ?ç¨‹ä¸­??
+            // ç¢º ????å­˜åœ¨ï¼Œé¿??.some() ? å‡º? èª¤å°è‡´? å€‹ ?ç¨‹ä¸­??
             newDb.categories = newDb.categories || [];
             newDb.problems = newDb.problems || [];
             
             let shouldSyncDb = forceReset;
 
-            // --- 1. å¾?Firebase ?“å?ä½ åœ¨?™ä»½é¡Œåº«?„ã€Œé›²ç«¯æ­·?²å?æª”ã€?---
+            // --- 1.  ?Firebase ?  ?ä½ åœ¨? ä»½é¡Œåº«? ã€Œé›²ç«¯æ­·?  ?æª” ?---
             let savedCategories = [];
             let savedProblems = [];
             const safeKey = jsonUrl.replace(/[\.\#\$\[\]]/g, '_');
 
             if (personalDb) {
                 try {
-                    // docSnap å·²ç??¨ä??¹é€é? Promise.all ?–å?äº?
+                    // docSnap å·² ??  ?? é€ ? Promise.all ?  ? ?
                     if (docSnap && docSnap.exists) {
                         const data = docSnap.data();
                         if (data.bankProgress && data.bankProgress[safeKey]) {
@@ -956,10 +956,10 @@
                             savedProblems = prog.problems || [];
                         }
                         
-                        // ?? ?‘å??ºå¤±?„è‡ªè¨‚å?é¡ï?å¦‚æ? bankProgress å­˜æ?å¤±æ?ï¼Œå? customCategories ?„å?ä»½ä¸­?ˆå?ä¾?
+                        // ?? ?  ?? å¤±? è‡ªè¨‚ ?é¡ ?å¦‚ ? bankProgress å­˜ ?å¤± ?ï¼Œ ? customCategories ?  ?ä»½ä¸­?  ? ?
                         if (data.customCategories) {
                             Object.values(data.customCategories).forEach(cc => {
-                                // æª¢æŸ¥?¯å¦å±¬æ–¼?¶å?æ­?œ¨è¼‰å…¥?„é?åº?(jsonUrl)
+                                // æª¢æŸ¥? å¦å±¬æ–¼?  ? ?  è¼‰å…¥?  ? ?(jsonUrl)
                                 if (cc && cc.id && cc.bankUrl === jsonUrl) {
                                     const existingC = savedCategories.find(c => c.id == cc.id);
                                     if (existingC) {
@@ -971,7 +971,7 @@
                             });
                         }
 
-                        // ?? ?‘å??ºå¤±?„è‡ªè¨‚é??®ï?å¦‚æ? bankProgress å­˜æ?å¤±æ?ï¼Œå? customProblems ?„å?ä»½ä¸­?ˆå?ä¾?
+                        // ?? ?  ?? å¤±? è‡ªè¨‚ ??  ?å¦‚ ? bankProgress å­˜ ?å¤± ?ï¼Œ ? customProblems ?  ?ä»½ä¸­?  ? ?
                         if (data.customProblems) {
                             Object.values(data.customProblems).forEach(cp => {
                                 if (cp && cp.id) {
@@ -979,7 +979,7 @@
                                     if (existingP) {
                                         Object.assign(existingP, cp);
                                     } else {
-                                        // ç¢ºä??™é?å±¬æ–¼?¶å?é¡Œåº« (?†é??¨å??¹å??®æ??¬åœ°å­˜æ?ä¸?
+                                        // ç¢º ??  ?å±¬æ–¼?  ?é¡Œåº« (?  ??  ??  ??  ?? åœ°å­˜ ? ?
                                         const isForThisBank = newDb.categories.some(c => c.id == cp.catId) || savedCategories.some(c => c.id == cp.catId);
                                         if (isForThisBank) {
                                             savedProblems.push(cp);
@@ -989,25 +989,25 @@
                             });
                         }
                     }
-                } catch (e) { console.error("è®€?–ç›®æ¨™é?åº«é€²åº¦å¤±æ?", e); }
+                } catch (e) { console.error("è®€? ç›®æ¨™ ?åº«é€²åº¦å¤± ?", e); }
             }
 
-            // --- 2. çµ•å??²å??†é›¢ï¼šåªè¦é›²ç«¯æ?ï¼Œä? GitHub ?€?°å??¹æ??‰ç?ï¼Œçµ±çµ±è??ºã€Œè‡ªè¨‚æ“´?…ã€?---
+            // --- 2. çµ• ??  ?? é›¢ï¼šåªè¦é›²ç«¯ ?ï¼Œ ? GitHub ? ?  ??  ??  ?ï¼Œçµ±çµ± ?? ã€Œè‡ªè¨‚æ“´?  ?---
             const userAddedCategories = savedCategories.filter(oldC => !newDb.categories.some(newC => newC.id === oldC.id));
             const userAddedProblems = savedProblems.filter(oldP => !newDb.problems.some(newP => newP.id === oldP.id));
             
-            // è³¦ä??æ­»?‘ç?ï¼Œè?ç³»çµ±?¥é??™ä??¯è‡ªè¨‚æ“´?…ï?ä¸¦å?è¨±ä½¿?¨è€…åˆª??(?…å«è¢«å??¹æ?æ±°ç??Šé???
+            // è³¦ ?? æ­»?  ?ï¼Œ ?ç³»çµ±?  ??  ?? è‡ªè¨‚æ“´?  ?ä¸¦ ?è¨±ä½¿? è€…åˆª??(? å«è¢« ??  ?æ±° ??  ???
             userAddedCategories.forEach(c => c.isUserAdded = true);
             userAddedProblems.forEach(p => p.isUserAdded = true);
 
-            // --- 3. ?•ç??è¨­é¡Œåº«?ˆä½µ (?? ?™è£¡å°±æ˜¯ä½ æ??¹ç??œéµï¼? ---
+            // --- 3. ?  ?? è¨­é¡Œåº«? ä½µ (?? ? è£¡å°±æ˜¯ä½  ??  ?? éµ ? ---
             const bankVersions = JSON.parse(localStorage.getItem('oj_v15_bank_versions') || '{}');
             const lastSyncedVersion = bankVersions[jsonUrl];
             const isUpdate = (!forceReset && newDb.version && lastSyncedVersion !== undefined && newDb.version !== lastSyncedVersion);
 
             if (forceReset || isUpdate) {
                 shouldSyncDb = true; 
-                // ?å¼·?¶è??‹æ¨¡å¼ã€‘ï??‰æ–°?ˆæœ¬?‚ï??¨å??¹é?åº«è??‹ä?ä¿®æ”¹?„æ?è¿°ï??ªä??™ç?å¼ç¢¼
+                // ? å¼·?  ?? æ¨¡å¼ã€‘ ?? æ–°? æœ¬?  ??  ??  ?åº« ??  ?ä¿®æ”¹?  ?è¿° ??  ??  ?å¼ç¢¼
                 if (currentUser && personalDb && isUpdate) {
                     let customUpdates = {};
                     newDb.problems.forEach(p => { customUpdates[p.id] = firebase.firestore.FieldValue.delete(); });
@@ -1025,7 +1025,7 @@
                     }
                 });
             } else {
-                // ?’¡?ä??¬å??›æ¨¡å¼ã€‘ç„¡?è??¥ï?å®Œæ•´ä¿ç?ä½ å?å®˜æ–¹é¡Œç›®?šç?ä»»ä?ä¿®æ”¹ (?…å«æ¨™é??æ?è¿°ã€æ¸¬è³?
+                // ?  ?  ??  ?? æ¨¡å¼ã€‘ç„¡?  ??  ?å®Œæ•´ä¿ ?ä½  ?å®˜æ–¹é¡Œç›®?  ?ä»» ?ä¿®æ”¹ (? å«æ¨™ ??  ?è¿°ã€æ¸¬ ?
                 newDb.categories = newDb.categories.map(newC => {
                     const oldC = savedCategories.find(c => c.id === newC.id);
                     return oldC ? Object.assign({}, newC, oldC) : newC;
@@ -1036,10 +1036,10 @@
                 });
             }
 
-            // --- 4. å®Œç?çµ„å?ï¼šå??¹ç? + ?ªè??´å? ---
+            // --- 4. å®Œ ?çµ„ ?ï¼š ??  ? + ?  ??  ? ---
             db.categories = [...newDb.categories, ...userAddedCategories];
             db.problems = [...newDb.problems, ...userAddedProblems];
-            db.version = newDb.version || (userAddedProblems.length > 0 ? "ä¿ç??²åº¦?? : ""); 
+            db.version = newDb.version || (userAddedProblems.length > 0 ? "ä¿ ?? åº¦?? : ""); 
 
             const preservedCustomBanks = db.customBanks || [];
             db.customBanks = preservedCustomBanks;
@@ -1052,16 +1052,16 @@
             localStorage.setItem('oj_v15_bank_url', currentBankUrl);
             
             const bankNameEl = document.getElementById('currentBankName');
-            if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?®å?é¡Œåº«: ` + currentBankName;
+            if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?é¡Œåº«: ` + currentBankName;
                 
             saveToLocal(shouldSyncDb, false);      
-            window.location.hash = '/categories';
+            window.location.hash = 'dashboard.html';
             checkForUpdates();
 
         } catch (err) { 
-            alert("è¼‰å…¥å¤±æ?ï¼è?ç¢ºè? GitHub æª”æ??¯å¦å­˜åœ¨\n\nè©³ç´°?¯èª¤ï¼? + err.message); 
+            alert("è¼‰å…¥å¤± ?ï¼ ?ç¢º ? GitHub æª” ?? å¦å­˜åœ¨\n\nè©³ç´°? èª¤ ? + err.message); 
         } finally {
-            // ?? ?¢å¾©?‰é??€?‹ï??¡è??å??–å¤±?—éƒ½è§???‰é?
+            // ?? ? å¾©?  ?? ?  ??  ??  ?? å¤±? éƒ½ ???  ?
             buttons.forEach(btn => {
                 btn.style.pointerEvents = 'auto';
                 btn.style.opacity = '1';
@@ -1081,19 +1081,19 @@
 
     async function resetCurrentBank() { 
         if (!currentBankUrl) { 
-            alert("?®å??¯ç©º?½ç??‹ï??¡æ??æ–°è¼‰å…¥??); 
+            alert("?  ?? ç©º?  ??  ??  ?? æ–°è¼‰å…¥??); 
             return; 
         } 
-        if (confirm("? ï? è­¦å?ï¼šé€™å??ƒæ??¤ã€Œé?è¨­é?åº«ã€ç??€?‰è‡ªè¨‚è¨­å®šè?ä»?¢¼ï¼Œä¸¦?æ–°ä¸‹è??€?°é?åº«ï?\n(?¨è‡ªè¡Œæ–°å¢ç?é¡Œç›®?‡å?é¡å??ƒè¢«å®‰å…¨ä¿ç?ï¼ŒåŸ·è¡Œç??„ä?ä¸æ?æ¶ˆå¤±)")) { 
-            // å°‡æ??¤é?è¼¯äº¤??fetchAndLoadBank ?¨æ?å°å??·è?
+        if (confirm("?  ? è­¦ ?ï¼šé€™ ??  ?? ã€Œ ?è¨­ ?åº«ã€ ?? ? è‡ªè¨‚è¨­å®š ? ?  ï¼Œä¸¦? æ–°ä¸‹ ?? ?  ?åº« ?\n(? è‡ªè¡Œæ–°å¢ ?é¡Œç›®?  ?é¡ ?? è¢«å®‰å…¨ä¿ ?ï¼ŒåŸ·è¡Œ ??  ?ä¸ ?æ¶ˆå¤±)")) { 
+            // å°‡ ??  ?è¼¯äº¤??fetchAndLoadBank ?  ?å° ??  ?
             fetchAndLoadBank(currentBankUrl, currentBankName, true); 
         } 
     }
     
     function hardResetAll() { 
-        if (confirm("? ï? è­¦å?ï¼šé€™å??ƒæ??¤æ??‰è??™ï?è®“ç³»çµ±å??°ã€Œå??¨ç©º?½ã€ç??‹ï?ç¢ºå??ï?")) { 
+        if (confirm("?  ? è­¦ ?ï¼šé€™ ??  ??  ??  ??  ?è®“ç³»çµ± ?? ã€Œ ?? ç©º? ã€ ??  ?ç¢º ??  ?")) { 
             db = { categories: [], problems: [], version: "" }; 
-            currentBankName = "?ªè??°é?åº?(ç©ºç™½)"; 
+            currentBankName = "?  ??  ? ?(ç©ºç™½)"; 
             currentBankUrl = ""; 
             localStorage.setItem('oj_v15_bank_name', currentBankName); 
             localStorage.removeItem('oj_v15_bank_url'); 
@@ -1227,7 +1227,7 @@
         window.location.hash = '/problem-list?catId=' + id;
     }
 
-    // === V60: Workspace ?†é?ç¹ªè£½?‡å???===
+    // === V60: Workspace ?  ?ç¹ªè£½?  ???===
     function renderWorkspaceTabs() {
         const p = db.problems.find(x => x.id === currentProbId);
         const tabsContainer = document.getElementById('wsEditorTabs');
@@ -1272,11 +1272,11 @@
         const p = db.problems.find(x => x.id === id);
         if (!p) return;
         
-        // ç¢ºä?ç©ºå?ä¸²æ¨¡?¿ä??ƒè¢«è¦†è?
+        // ç¢º ?ç©º ?ä¸²æ¨¡?  ?? è¢«è¦† ?
         if (p.tpl_cpp === undefined) p.tpl_cpp = p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp;
         if (p.tpl_python === undefined) p.tpl_python = defaultTemplates.python;
         
-        // ç¢ºä? multiFiles ??code å±¬æ€§å???
+        // ç¢º ? multiFiles ??code å±¬æ€§ ???
         if (p.isMultiFile && p.multiFiles) {
             p.multiFiles.forEach(f => { 
                 if (f.code === undefined) f.code = f.tpl !== undefined ? f.tpl : ""; 
@@ -1284,7 +1284,7 @@
         }
         
         if (!fromAdmin) { 
-                // ä¿®æ­£ï¼šåªè¦æ˜¯?¨æ–°?²å…¥ä½œç??€ï¼ˆé??°å??ï?ï¼Œä?å¾‹å¼·?¶é?ç½®ç‚º?Œé?è¨­æ¨¡?¿ã€?
+                // ä¿®æ­£ï¼šåªè¦æ˜¯? æ–°? å…¥ä½œ ?? ï¼ˆ ??  ??  ?ï¼Œ ?å¾‹å¼·?  ?ç½®ç‚º?  ?è¨­æ¨¡?  ?
         p.code_cpp = p.tpl_cpp; 
                         p.code_python = p.tpl_python; 
                         if (p.isMultiFile && p.multiFiles) { 
@@ -1299,7 +1299,7 @@
         const lang = p.lastLang || 'cpp'; 
         document.getElementById('langSelect').value = lang; 
         
-        currentFileIndex = -1; // ?²å…¥é¡Œåº«?‚é?è¨­é¡¯ç¤?main
+        currentFileIndex = -1; // ? å…¥é¡Œåº«?  ?è¨­é¡¯ ?main
         renderWorkspaceTabs();
 
         if (lang === 'cpp') { 
@@ -1310,7 +1310,7 @@
             editor.setValue(p.code_python !== undefined ? p.code_python : p.tpl_python, -1); 
         }
         
-        document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">ç­‰å??·è?...</div>';
+        document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">ç­‰ ??  ?...</div>';
         showView('view-workspace');
     }
 
@@ -1318,7 +1318,7 @@
         const lang = document.getElementById('langSelect').value;
         const p = db.problems.find(x => x.id === currentProbId);
         
-        // ä¿å? Workspace ç·¨è¼¯?¨ç›®?ç??€??
+        // ä¿ ? Workspace ç·¨è¼¯? ç›®?  ?? ??
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -1329,7 +1329,7 @@
         window.location.hash = '/admin?probId=' + currentProbId;
     }
 
-    // === V60: Admin å¤šæ?æ¡ˆå??ç¹ªè£½è??‡æ? ===
+    // === V60: Admin å¤š ?æ¡ˆ ?? ç¹ªè£½ ??  ? ===
     function toggleAdminMultiFile() {
         const isEnabled = document.getElementById('adminEnableMultiFile').checked;
         document.getElementById('adminEditorTabs').style.display = (isEnabled && currentAdminLang === 'cpp') ? 'flex' : 'none';
@@ -1340,7 +1340,7 @@
         }
         
         if (!isEnabled || currentAdminLang !== 'cpp') { 
-            switchAdminFile(-1); // ?¥é??‰å??‡å? main ?è¦½
+            switchAdminFile(-1); // ?  ??  ??  ? main ? è¦½
         } else { 
             renderAdminTabs(); 
         }
@@ -1353,12 +1353,12 @@
         adminMultiFiles.forEach((f, idx) => {
             html += `<div class="editor-tab ${adminCurrentFileIndex === idx ? 'active' : ''}" onclick="switchAdminFile(${idx})">
                         ${f.name} 
-                        <span class="tab-icon" title="?æ–°?½å?" onclick="renameAdminFile(event, ${idx})"><i class="fa-solid fa-pen"></i></span> 
+                        <span class="tab-icon" title="? æ–°?  ?" onclick="renameAdminFile(event, ${idx})"><i class="fa-solid fa-pen"></i></span> 
                         <span class="tab-icon" title="ç§»é™¤" onclick="removeAdminFile(event, ${idx})">??/span>
                      </div>`;
         });
         
-        html += `<div class="editor-tab" style="color:var(--success);" onclick="addAdminFile()">+ ?°å?æª”æ?</div>`;
+        html += `<div class="editor-tab" style="color:var(--success);" onclick="addAdminFile()">+ ?  ?æª” ?</div>`;
         tabsContainer.innerHTML = html;
     }
 
@@ -1383,7 +1383,7 @@
     }
 
     function addAdminFile() {
-        const name = prompt("è«‹è¼¸?¥æ–°å¢æ?æ¡ˆå?ç¨?(ä¾‹å? Rectangle.cpp):", "NewClass.cpp");
+        const name = prompt("è«‹è¼¸? æ–°å¢ ?æ¡ˆ ? ?(ä¾‹ ? Rectangle.cpp):", "NewClass.cpp");
         if (name && name.trim() !== "") {
             adminMultiFiles.push({ name: name.trim(), tpl: "// " + name.trim() + "\n" });
             switchAdminFile(adminMultiFiles.length - 1);
@@ -1392,7 +1392,7 @@
 
     function renameAdminFile(e, idx) {
         e.stopPropagation();
-        const newName = prompt("?æ–°?½å?:", adminMultiFiles[idx].name);
+        const newName = prompt("? æ–°?  ?:", adminMultiFiles[idx].name);
         if (newName && newName.trim() !== "") {
             adminMultiFiles[idx].name = newName.trim();
             renderAdminTabs();
@@ -1401,17 +1401,17 @@
     
     function removeAdminFile(e, idx) {
         e.stopPropagation();
-        if (confirm("ç¢ºå??ªé™¤æ­¤æ?æ¡ˆï?")) {
+        if (confirm("ç¢º ?? é™¤æ­¤ ?æ¡ˆ ?")) {
             const wasCurrentTab = (adminCurrentFileIndex === idx);
             if (adminCurrentFileIndex > idx) adminCurrentFileIndex--; 
             
-            adminMultiFiles.splice(idx, 1); //?ˆå?è³‡æ????ç§»é™¤
+            adminMultiFiles.splice(idx, 1); //?  ?è³‡ ????ç§»é™¤
 
             if (wasCurrentTab) {
                 adminCurrentFileIndex = -1;
                 document.getElementById('editTemplate').value = adminTempTemplates[currentAdminLang] || ""; 
             }
-            renderAdminTabs(); //?ªæ¸²?“ä?æ¬¡æ??°ç??€??
+            renderAdminTabs(); //? æ¸²?  ?æ¬¡ ??  ?? ??
         }
     }
     
@@ -1426,7 +1426,7 @@
         document.getElementById('adminLangSelect').value = 'cpp'; 
         currentAdminLang = 'cpp';
         
-        // ?å???Admin ?„å?æª”æ?è¨­å?
+        // ?  ???Admin ?  ?æª” ?è¨­ ?
         adminCurrentFileIndex = -1;
         adminMultiFiles = p.multiFiles ? JSON.parse(JSON.stringify(p.multiFiles)) : [];
         document.getElementById('adminEnableMultiFile').checked = !!p.isMultiFile;
@@ -1507,7 +1507,7 @@
             card.setAttribute('draggable', isCatSortMode); 
             card.dataset.id = cat.id;
             
-            card.innerHTML = `<div class="cat-title">${cat.name}</div><div class="cat-count">${probCount} é¡?/div><div class="cat-actions"><button class="btn btn-outline btn-sm" onclick="editCategory(event, '${cat.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-sm" onclick="deleteCategory(event, '${cat.id}')" style="color:#f44747; border-color:#f44747;"><i class="fa-solid fa-trash"></i></button></div>`;
+            card.innerHTML = `<div class="cat-title">${cat.name}</div><div class="cat-count">${probCount}  ?/div><div class="cat-actions"><button class="btn btn-outline btn-sm" onclick="editCategory(event, '${cat.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-sm" onclick="deleteCategory(event, '${cat.id}')" style="color:#f44747; border-color:#f44747;"><i class="fa-solid fa-trash"></i></button></div>`;
             card.onclick = (e) => { 
                 if (!isCatSortMode && !e.target.closest('button')) openCategory(cat.id); 
             };
@@ -1534,16 +1534,16 @@
     
     async function createCategory() { 
         if (isCatSortMode) return; 
-        const name = prompt("?°å?é¡å?ç¨±ï?"); 
+        const name = prompt("?  ?é¡ ?ç¨± ?"); 
         if (!name) return; 
-        // ?’¡ ? ä? isUserAdded æ¨™ç±¤ï¼Œä¸¦ç¶å? bankUrl ä¾›è·¨è£ç½®?™ä»½è¾¨è?
+        // ?   ?  ? isUserAdded æ¨™ç±¤ï¼Œä¸¦ç¶ ? bankUrl ä¾›è·¨è£ç½®? ä»½è¾¨ ?
         const newCat = { id: Date.now().toString(), name: name, isUserAdded: true, bankUrl: currentBankUrl };
         db.categories.push(newCat); 
         const btn = document.querySelector('#view-categories .btn-primary');
-        if (btn) { btn.disabled = true; btn.innerText = "???°å?ä¸?.."; }
+        if (btn) { btn.disabled = true; btn.innerText = "???  ? ?.."; }
         await saveToLocal(true, false); 
         await syncCategoryDeltaToCloud(newCat.id, newCat);
-        if (btn) { btn.disabled = false; btn.innerText = "+ ?°å??†é?"; }
+        if (btn) { btn.disabled = false; btn.innerText = "+ ?  ??  ?"; }
         renderCategoryList(); 
     }
     
@@ -1551,7 +1551,7 @@
     async function editCategory(e, id) { 
         e.stopPropagation(); 
         const cat = db.categories.find(c => c.id === id); 
-        const newName = prompt("ä¿®æ”¹?†é??ç¨±ï¼?, cat.name); 
+        const newName = prompt("ä¿®æ”¹?  ?? ç¨± ?, cat.name); 
         if (newName) { 
             cat.name = newName; 
             await saveToLocal(true, false); 
@@ -1562,7 +1562,7 @@
 
     async function deleteCategory(e, id) { 
         e.stopPropagation(); 
-        if (!confirm("ç¢ºå??ªé™¤ï¼Ÿå?ä¸‹ç?é¡Œç›®ä¹Ÿæ?ä¸€ä½µåˆª?¤ã€?)) return; 
+        if (!confirm("ç¢º ?? é™¤ï¼Ÿ ?ä¸‹ ?é¡Œç›®ä¹Ÿ ?ä¸€ä½µåˆª?  ?)) return; 
         
         const problemsToDelete = db.problems.filter(p => p.catId === id);
         
@@ -1571,7 +1571,7 @@
         
         await saveToLocal(true, false); 
         
-        // ?²ç«¯?Œæ­¥?ªé™¤?†é??‡å…¶é¡Œç›®
+        // ? ç«¯? æ­¥? é™¤?  ?? å…¶é¡Œç›®
         await syncCategoryDeltaToCloud(id, null);
         for (const p of problemsToDelete) {
             await syncProblemDeltaToCloud(p.id, null);
@@ -1588,7 +1588,7 @@
 
     function renderProblemList() {
         const cat = db.categories.find(c => c.id === currentCatId); 
-        document.getElementById('currentCatTitle').innerText = cat ? cat.name : "?†é?é¡Œåº«";
+        document.getElementById('currentCatTitle').innerText = cat ? cat.name : "?  ?é¡Œåº«";
         const container = document.getElementById('probListContainer');
         
         if (isProbSortMode) { 
@@ -1627,9 +1627,9 @@
                 
                 const isCustomBank = currentBankUrl && currentBankUrl.startsWith("local_custom_");
                 const canDelete = isCustomBank || p.isUserAdded;
-                const delBtnHtml = canDelete ? `<button class="prob-btn-icon prob-del-btn" onclick="deleteProblemInList(event, '${p.id}')" title="?ªé™¤é¡Œç›®"><i class="fa-solid fa-trash"></i></button>` : '';
+                const delBtnHtml = canDelete ? `<button class="prob-btn-icon prob-del-btn" onclick="deleteProblemInList(event, '${p.id}')" title="? é™¤é¡Œç›®"><i class="fa-solid fa-trash"></i></button>` : '';
                 
-                item.innerHTML = `<div style="flex:1; overflow:hidden;"><div class="prob-title">${p.title}</div><div class="prob-desc-preview">${p.desc.substring(0, 50)}...</div></div><div class="prob-actions"><button class="prob-btn-icon prob-edit-btn" onclick="openMoveModal(event, '${p.id}')" title="ç§»å??†é?">?“¦</button><button class="prob-btn-icon prob-edit-btn" onclick="editProblemInList(event, '${p.id}')" title="ä¿®æ”¹é¡Œç›®"><i class="fa-solid fa-pen"></i></button>${delBtnHtml}</div>`;
+                item.innerHTML = `<div style="flex:1; overflow:hidden;"><div class="prob-title">${p.title}</div><div class="prob-desc-preview">${p.desc.substring(0, 50)}...</div></div><div class="prob-actions"><button class="prob-btn-icon prob-edit-btn" onclick="openMoveModal(event, '${p.id}')" title="ç§» ??  ?">?  </button><button class="prob-btn-icon prob-edit-btn" onclick="editProblemInList(event, '${p.id}')" title="ä¿®æ”¹é¡Œç›®"><i class="fa-solid fa-pen"></i></button>${delBtnHtml}</div>`;
                 currentContainer.appendChild(item);
             });
         }
@@ -1650,13 +1650,13 @@
         
     async function createProblemInCat() { 
         if (isProbSortMode) return; 
-        const title = prompt("é¡Œç›®?ç¨±ï¼?); 
+        const title = prompt("é¡Œç›®? ç¨± ?); 
         if (title) { 
             const newProb = { 
                 id: Date.now().toString(), 
                 catId: currentCatId, 
                 title: title, 
-                desc: "è«‹è¼¸?¥é??®æ?è¿?..", 
+                desc: "è«‹è¼¸?  ??  ? ?..", 
                 tpl_cpp: defaultTemplates.cpp, 
                 tpl_python: defaultTemplates.python, 
                 code_cpp: defaultTemplates.cpp, 
@@ -1664,15 +1664,15 @@
                 testCases: [{ input: "1 2", output: "3" }], 
                 lastLang: 'cpp', 
                 isMultiFile: false,
-                isUserAdded: true // ?’¡ ? ä??æ­»?‘ç?æ¨™ç±¤
+                isUserAdded: true // ?   ?  ?? æ­»?  ?æ¨™ç±¤
             };
             db.problems.push(newProb); 
             
             const btn = document.querySelector('#view-problem-list .btn-primary');
-            if (btn) { btn.disabled = true; btn.innerText = "???°å?ä¸?.."; }
+            if (btn) { btn.disabled = true; btn.innerText = "???  ? ?.."; }
             await saveToLocal(true, false); 
             await syncProblemDeltaToCloud(newProb.id, newProb); 
-            if (btn) { btn.disabled = false; btn.innerText = "+ ?°å?é¡Œç›®"; }
+            if (btn) { btn.disabled = false; btn.innerText = "+ ?  ?é¡Œç›®"; }
             renderProblemList(); 
         } 
     }
@@ -1682,23 +1682,23 @@
     function editProblemInList(e, id) { 
         e.stopPropagation(); 
         currentProbId = id; 
-        // ä¿®æ­£ï¼šç›´?¥è·³è½?hashï¼Œé¿??goToAdmin è®€?–åˆ° editor ?„é??Ÿè???
+        // ä¿®æ­£ï¼šç›´? è·³ ?hashï¼Œé¿??goToAdmin è®€? åˆ° editor ?  ??  ???
         window.location.hash = '/admin?probId=' + id; 
     }
     
 
     async function deleteProblemInList(e, id) { 
         e.stopPropagation(); 
-        if (confirm("ç¢ºå??ªé™¤ï¼?)) { 
+        if (confirm("ç¢º ?? é™¤ ?)) { 
             db.problems = db.problems.filter(p => p.id !== id); 
             
             await saveToLocal(true, false); 
-            await syncProblemDeltaToCloud(id, null); // ?³é? nullï¼Œè§¸?¼é›²ç«¯ç¨ç«‹åˆª?¤è©²é¡?
+            await syncProblemDeltaToCloud(id, null); // ?  ? nullï¼Œè§¸? é›²ç«¯ç¨ç«‹åˆª? è©² ?
             renderProblemList(); 
         } 
     }
 
-// ================= ç§»å?é¡Œç›®?Ÿèƒ½ =================
+// ================= ç§» ?é¡Œç›®? èƒ½ =================
     let problemToMoveId = null;
 
     function openMoveModal(e, probId) { 
@@ -1708,14 +1708,14 @@
         const select = document.getElementById('moveCategorySelect'); 
         select.innerHTML = ''; 
         
-        // ?“å??®å??„å?é¡æ??®æ”¾?¥ä??‰é¸??
+        // ?  ??  ??  ?é¡ ?? æ”¾?  ?? é¸??
         db.categories.forEach(cat => { 
             const option = document.createElement('option'); 
             option.value = cat.id; 
             option.text = cat.name; 
             if (cat.id === currentCatId) {
-                option.text += " (?®å??†é?)"; 
-                option.disabled = true; // ?ç™½ï¼Œä?è®“ä½¿?¨è€…ç§»?°å??¬ç??†é?
+                option.text += " (?  ??  ?)"; 
+                option.disabled = true; // ? ç™½ï¼Œ ?è®“ä½¿? è€…ç§»?  ??  ??  ?
             }
             select.appendChild(option); 
         }); 
@@ -1734,17 +1734,17 @@
 
         const p = db.problems.find(x => x.id === problemToMoveId); 
         if (p) { 
-            // 1. ?´æ”¹é¡Œç›®?„æ?å±¬å?é¡?
+            // 1. ? æ”¹é¡Œç›®?  ?å±¬ ? ?
             p.catId = targetCatId; 
             
-            // 2. å­˜æ?ä¸¦å?æ­¥é›²ç«?
+            // 2. å­˜ ?ä¸¦ ?æ­¥é›² ?
             const btn = document.querySelector('#moveProblemModal .btn-primary');
-            if (btn) { btn.disabled = true; btn.innerText = "??ç§»å?ä¸?.."; }
+            if (btn) { btn.disabled = true; btn.innerText = "??ç§» ? ?.."; }
             await saveToLocal(true, false); 
             await syncProblemDeltaToCloud(p.id, { catId: targetCatId }); 
-            if (btn) { btn.disabled = false; btn.innerText = "??ç¢ºè?ç§»å?"; }
+            if (btn) { btn.disabled = false; btn.innerText = "??ç¢º ?ç§» ?"; }
             
-            // 3. ?æ–°æ¸²æ??«é¢ (ç§»èµ°å¾Œï?è©²é??ƒå??®å??«é¢æ¶ˆå¤±)
+            // 3. ? æ–°æ¸² ?? é¢ (ç§»èµ°å¾Œ ?è©² ??  ??  ?? é¢æ¶ˆå¤±)
             renderProblemList(); 
         } 
         
@@ -1757,11 +1757,11 @@
         const probBtn = document.getElementById('probSortBtn'); 
         
         if (catBtn) { 
-            catBtn.innerText = isCatSortMode ? "??å®Œæ??’å?" : "??èª¿æ•´?†å?"; 
+            catBtn.innerText = isCatSortMode ? "??å®Œ ??  ?" : "??èª¿æ•´?  ?"; 
             catBtn.className = isCatSortMode ? "btn btn-danger" : "btn btn-outline"; 
         } 
         if (probBtn) { 
-            probBtn.innerText = isProbSortMode ? "??å®Œæ??’å?" : "??èª¿æ•´?†å?"; 
+            probBtn.innerText = isProbSortMode ? "??å®Œ ??  ?" : "??èª¿æ•´?  ?"; 
             probBtn.className = isProbSortMode ? "btn btn-danger" : "btn btn-outline"; 
         } 
     }
@@ -1798,24 +1798,24 @@
         const btn = document.getElementById('modeBtn');
     
         if (currentCompileMode === 'wandbox') {
-            // 1. å¾??²ç«¯ ?‡æ????ªå»º?²ç«¯
+            // 1.  ?? ç«¯ ?  ???? å»º? ç«¯
             currentCompileMode = 'custom';
-            btn.innerHTML = "?? ?ªå»º?²ç«¯";
-            btn.style.color = "#a855f7"; // ç´«è‰² (?€?†ç”¨)
+            btn.innerHTML = "?? ? å»º? ç«¯";
+            btn.style.color = "#a855f7"; // ç´«è‰² (? ? ç”¨)
             btn.style.borderColor = "#a855f7";
 
         } else if (currentCompileMode === 'custom') {
-            // 2. å¾??ªå»º?²ç«¯ ?‡æ????¬æ?
+            // 2.  ?? å»º? ç«¯ ?  ????  ?
             currentCompileMode = 'local';
-            btn.innerHTML = "?? ?¬æ?ç·¨è­¯";
+            btn.innerHTML = "?? ?  ?ç·¨è­¯";
             btn.style.color = "var(--success)"; // ç¶ è‰²
             btn.style.borderColor = "var(--success)";
 
         } else {
-            // 3. å¾??¬æ? ?‡æ????²ç«¯ (Wandbox)
+            // 3.  ??  ? ?  ???? ç«¯ (Wandbox)
             currentCompileMode = 'wandbox';
-            btn.innerHTML = "?ï? ?²ç«¯ç·¨è­¯";
-            btn.style.color = "var(--accent)"; // ?è‰²
+            btn.innerHTML = "?  ? ? ç«¯ç·¨è­¯";
+            btn.style.color = "var(--accent)"; // ? è‰²
             btn.style.borderColor = "var(--accent)";
         }
     }
@@ -1823,36 +1823,36 @@
     function parseContent(text) { 
         if (!text) return ""; 
     
-        // 1. ?ˆå? HTML ?¹æ?ç¬¦è?è½‰ç¾©ï¼Œç¢ºä¿å???
+        // 1. ?  ? HTML ?  ?ç¬¦ ?è½‰ç¾©ï¼Œç¢ºä¿ ???
         let escaped = text.replace(/&/g, "&amp;")
                           .replace(/</g, "&lt;")
                           .replace(/>/g, "&gt;")
                           .replace(/"/g, "&quot;")
                           .replace(/'/g, "&#039;"); 
     
-        // 2. ?•ç?ç²—é?ï¼šåª??**ä¸­é??‰æ?å­?* ?æ?è§¸ç™¼??
-        // æ¸›è? (-) ?‡å–®?‹æ???(*) ? ç‚ºæ²’æ?å°æ?è¦å?ï¼Œæ??Ÿæ¨£è¼¸å‡º
+        // 2. ?  ?ç²— ?ï¼šåª??**ä¸­ ??  ? ?* ?  ?è§¸ç™¼??
+        // æ¸› ? (-) ? å–®?  ???(*) ? ç‚ºæ²’ ?å° ?è¦ ?ï¼Œ ?? æ¨£è¼¸å‡º
         const boldRegex = /\*\*(.+?)\*\*/g;
         let html = escaped.replace(boldRegex, "<strong style='color: #282f3b;'>$1</strong>");
     
-        // 3. ?•ç??–ç?èªæ? ![Alt](URL)
+        // 3. ?  ??  ?èª ? ![Alt](URL)
         const imageRegex = /!\[(.*?)\]\((.*?)\)/g; 
         html = html.replace(imageRegex, (match, alt, url) => { 
             return `<img src="${url}" alt="${alt}">`; 
         }); 
     
-        // 4. ?€å¾Œå? \n ?›è?è½‰æ?ç¶²é?æ¨™ç±¤
+        // 4. ? å¾Œ ? \n ?  ?è½‰ ?ç¶² ?æ¨™ç±¤
         return html.replace(/\n/g, "<br>"); 
     }
 
     function resetCode() { 
-        if (!confirm("?ç½®ç¨‹å?ç¢¼åˆ°?å?æ¨¡æ¿ï¼Ÿé€™å??ƒé??Ÿæœ¬é¡Œç??€?‰æ?æ¡ˆã€?)) return; 
+        if (!confirm("? ç½®ç¨‹ ?ç¢¼åˆ°?  ?æ¨¡æ¿ï¼Ÿé€™ ??  ?? æœ¬é¡Œ ?? ?  ?æ¡ˆ ?)) return; 
         
         const p = db.problems.find(x => x.id === currentProbId); 
         const lang = document.getElementById('langSelect').value;
         
         if (lang === 'cpp') { 
-            // ?¯æ´ç©ºå?ä¸²é???
+            // ? æ´ç©º ?ä¸² ???
             p.code_cpp = (p.tpl_cpp !== undefined) ? p.tpl_cpp : defaultTemplates.cpp; 
             
             if (p.isMultiFile && p.multiFiles) {
@@ -1879,12 +1879,12 @@
     function copyCode() { 
         const code = editor.getValue(); 
         if (!code) { 
-            alert("æ²’æ?ç¨‹å?ç¢¼å¯ä»¥è?è£½ï?"); 
+            alert("æ²’ ?ç¨‹ ?ç¢¼å¯ä»¥ ?è£½ ?"); 
             return; 
         } 
         
         navigator.clipboard.writeText(code).then(() => { 
-            alert("??ç¨‹å?ç¢¼å·²è¤‡è£½?°å‰ªè²¼ç°¿ï¼?); 
+            alert("??ç¨‹ ?ç¢¼å·²è¤‡è£½? å‰ªè²¼ç°¿ ?); 
         }).catch(() => { 
             const ta = document.createElement("textarea"); 
             ta.value = code; 
@@ -1892,7 +1892,7 @@
             ta.select(); 
             document.execCommand("copy"); 
             document.body.removeChild(ta); 
-            alert("??ç¨‹å?ç¢¼å·²è¤‡è£½?°å‰ªè²¼ç°¿ï¼?); 
+            alert("??ç¨‹ ?ç¢¼å·²è¤‡è£½? å‰ªè²¼ç°¿ ?); 
         }); 
     }
     
@@ -1914,7 +1914,7 @@
     async function saveAdminAndBack() { 
         const p = db.problems.find(x => x.id === currentProbId); 
         
-        // --- ?‹å?å¥—ç”¨ UI ä¸Šç??°è¨­å®?---
+        // --- ?  ?å¥—ç”¨ UI ä¸Š ?? è¨­ ?---
         p.title = document.getElementById('editTitle').value; 
         p.desc = document.getElementById('editDesc').value; 
         
@@ -1951,18 +1951,18 @@
         for (let i = 0; i < inputs.length; i++) {
             p.testCases.push({ input: inputs[i].value, output: outputs[i].value }); 
         }
-        // --- å¥—ç”¨?°è¨­å®šç???---
+        // --- å¥—ç”¨? è¨­å®š ???---
 
-        // ?’¡ ?¸å?ä¿®æ­£ï¼šç?å¾…é›²ç«¯å??å??è·³è½?
+        // ?   ?  ?ä¿®æ­£ï¼š ?å¾…é›²ç«¯ ??  ?? è·³ ?
         const btn = document.querySelector('#view-admin .btn-primary');
-        if (btn) { btn.disabled = true; btn.innerText = "???²å?ä¸?.."; }
+        if (btn) { btn.disabled = true; btn.innerText = "???  ? ?.."; }
         await saveToLocal(true, false); 
         
-        // ?? ?œéµä¿®å¾©ï¼šæ?ä¿®æ”¹å¾Œç??´ä»½é¡Œç›®ç´°ç?ï¼ˆå«?˜è¿°?æ¸¬è³‡ï??¨ç??™ä»½??Firebase
-        // ?¿å?ä¸»å?æª”è???1MB å®¹é??åˆ¶?‚ï??æ–°?´ç??ƒè??–åˆ°?Šç??™ä»½è³‡æ?ï¼Œå??´æ?è¿°è??ã€Œè?è¼¸å…¥é¡Œç›®?è¿°...??
+        // ?? ? éµä¿®å¾©ï¼š ?ä¿®æ”¹å¾Œ ?? ä»½é¡Œç›®ç´° ?ï¼ˆå«? è¿°? æ¸¬è³‡ ??  ?? ä»½??Firebase
+        // ?  ?ä¸» ?æª” ???1MB å®¹ ?? åˆ¶?  ?? æ–°?  ??  ?? åˆ°?  ?? ä»½è³‡ ?ï¼Œ ??  ?è¿° ?? ã€Œ ?è¼¸å…¥é¡Œç›®? è¿°...??
         await syncProblemDeltaToCloud(currentProbId, p);
 
-        if (btn) { btn.disabled = false; btn.innerText = "?’¾ ?²å?ä¸¦è???; }
+        if (btn) { btn.disabled = false; btn.innerText = "?   ?  ?ä¸¦ ???; }
         history.back(); 
     }
     
@@ -1974,13 +1974,13 @@
         const text = descArea.value;
     
         if (start !== end) {
-            // å°‡é¸?–ç??‡å??…ä?
+            // å°‡é¸?  ??  ??  ?
             const selectedText = text.substring(start, end);
             descArea.value = text.substring(0, start) + "**" + selectedText + "**" + text.substring(end);
             descArea.selectionStart = start + 2;
             descArea.selectionEnd = end + 2;
         } else {
-            // ?’å…¥ç©ºè?æ³•ä¸¦å®šä?æ¸¸æ?
+            // ? å…¥ç©º ?æ³•ä¸¦å®š ?æ¸¸ ?
             descArea.value = text.substring(0, start) + "****" + text.substring(end);
             descArea.selectionStart = descArea.selectionEnd = start + 2;
         }
@@ -1988,10 +1988,10 @@
     }
     
     function insertImageToDesc() { 
-        const url = prompt("è«‹è¼¸?¥å??‡ç¶²?€ (URL)ï¼?, "https://"); 
+        const url = prompt("è«‹è¼¸?  ?? ç¶²?  (URL) ?, "https://"); 
         if (url) { 
             const descArea = document.getElementById('editDesc'); 
-            descArea.value += `\n\n![?–ç?](${url})\n\n`; 
+            descArea.value += `\n\n![?  ?](${url})\n\n`; 
             descArea.focus(); 
         } 
     }
@@ -2004,13 +2004,13 @@
         if (!file) return; 
         
         if (file.size > 2 * 1024 * 1024) { 
-            alert("? ï? ?–ç??å¤§ï¼å»ºè­°ä½¿??2MB ä»¥ä??„å??‡ï?ä»¥å??è¦½?¨å¡?“ã€?); 
+            alert("?  ? ?  ?? å¤§ï¼å»ºè­°ä½¿??2MB ä»¥ ??  ??  ?ä»¥ ?? è¦½? å¡?  ?); 
         } 
         
         const reader = new FileReader(); 
         reader.onload = function(e) { 
             const descArea = document.getElementById('editDesc'); 
-            descArea.value += `\n\n![?¬åœ°?–ç?](${e.target.result})\n\n`; 
+            descArea.value += `\n\n![? åœ°?  ?](${e.target.result})\n\n`; 
             descArea.focus(); 
             fileInput.value = ''; 
         }; 
@@ -2028,7 +2028,7 @@
         p.modelAnswer = document.getElementById('modelAnswerInput').value; 
         document.getElementById('modelAnswerModal').style.display = 'none'; 
         
-        // ç²¾æ?ä¸Šå‚³å±€?¨ä¿®?¹ï?ä¸¦åªå­?dbData ä¸å? History
+        // ç²¾ ?ä¸Šå‚³å±€? ä¿®?  ?ä¸¦åª ?dbData ä¸ ? History
         saveToLocal(true, false); 
         syncProblemDeltaToCloud(currentProbId, { modelAnswer: p.modelAnswer });
     }
@@ -2036,28 +2036,28 @@
     function copyModelAnswer() { 
         const text = document.getElementById('modelAnswerInput'); 
         if (!text.value.trim()) { 
-            alert("æ²’æ?ç¤ºç?è§???¯ä»¥è¤‡è£½ï¼?); 
+            alert("æ²’ ?ç¤º ? ??? ä»¥è¤‡è£½ ?); 
             return; 
         } 
         text.select(); 
         document.execCommand('copy'); 
-        alert("??ç¤ºç?è§??å·²è?è£½ï?"); 
+        alert("??ç¤º ? ??å·² ?è£½ ?"); 
     }
 
     async function pasteModelAnswer() { 
         try { 
             const text = await navigator.clipboard.readText(); 
             document.getElementById('modelAnswerInput').value = text; 
-            alert("??å·²è²¼ä¸Šè§£ç­”ï?"); 
+            alert("??å·²è²¼ä¸Šè§£ç­” ?"); 
         } catch (err) { 
-            alert("? ï? ?è¦½?¨é˜»?‹æ??¡æ?è®€?–å‰ªè²¼ç°¿ï¼Œè??´æ¥?¨æ?å­—æ?ä¸­æ? Ctrl+V è²¼ä???); 
+            alert("?  ? ? è¦½? é˜»?  ??  ?è®€? å‰ªè²¼ç°¿ï¼Œ ?? æ¥?  ?å­— ?ä¸­ ? Ctrl+V è²¼ ???); 
         } 
     }
 
     async function runCode() {
         const p = db.problems.find(x => x.id === currentProbId); 
         if (!p.testCases || p.testCases.length === 0) { 
-            alert("?¡æ¸¬è³?); 
+            alert("? æ¸¬ ?); 
             return; 
         }
         
@@ -2065,7 +2065,7 @@
         const logs = document.getElementById('outputLogs'); 
         const lang = document.getElementById('langSelect').value; 
         
-        // ?²å??¶å?ç·¨è¼¯?¨å…§?„ç?å¼ç¢¼?°è??¸ä¸­
+        // ?  ??  ?ç·¨è¼¯? å…§?  ?å¼ç¢¼?  ?? ä¸­
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -2075,17 +2075,17 @@
         
         const mainCode = (lang === 'cpp' && p.isMultiFile) ? p.code_cpp : editor.getValue();
 
-        // ?´ç?å¤šæ?æ¡ˆè??™ï?æº–å??³é€çµ¦ç·¨è­¯ä¼ºæ???
+        // ?  ?å¤š ?æ¡ˆ ??  ?æº– ?? é€çµ¦ç·¨è­¯ä¼º ???
         let wandboxCodes = [];
         let localExtraFiles = [];
-        let extraCppFiles = []; // ?ä¿®æ­??‘ç??„é?å¤–ç? .cpp æª”æ??ç¨±ä¾?Wandbox ç·¨è­¯???ä½¿ç”¨
+        let extraCppFiles = []; // ? ä¿® ??  ??  ?å¤– ? .cpp æª” ?? ç¨± ?Wandbox ç·¨è­¯???ä½¿ç”¨
 
         if (lang === 'cpp' && p.isMultiFile && p.multiFiles) {
             p.multiFiles.forEach(f => {
                 wandboxCodes.push({ file: f.name, code: f.code || "" });
                 localExtraFiles.push({ name: f.name, content: f.code || "" });
                 
-                // ?¾å‡º .cpp ??.c çµå°¾?„é?å±¬æ?æ¡?
+                // ? å‡º .cpp ??.c çµå°¾?  ?å±¬ ? ?
                 if (f.name.toLowerCase().endsWith('.cpp') || f.name.toLowerCase().endsWith('.c')) {
                     extraCppFiles.push(f.name);
                 }
@@ -2111,7 +2111,7 @@
                 let inputData = p.testCases[i].input || "";
 
                 if (currentCompileMode === 'wandbox') {
-                    // æ¨¡å? Aï¼šå…¬?±é›²ç«?(Wandbox)
+                    // æ¨¡ ? Aï¼šå…¬? é›² ?(Wandbox)
                     const apiCompiler = lang === 'cpp' ? 'gcc-head' : 'cpython-head';
                     const payload = { compiler: apiCompiler, code: mainCode, stdin: inputData };
                     if (wandboxCodes.length > 0) { 
@@ -2132,24 +2132,24 @@
                     clearTimeout(timeoutId);
                     
                     if (res.compiler_error || res.compiler_message) {
-                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ç·¨è­¯?¯èª¤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.compiler_error || res.compiler_message}</pre></div>`;
+                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ç·¨è­¯? èª¤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.compiler_error || res.compiler_message}</pre></div>`;
                         const stopDiv = document.createElement('div'); 
                         stopDiv.style.textAlign = "center"; 
                         stopDiv.style.padding = "10px"; 
                         stopDiv.style.color = "#aaa"; 
-                        stopDiv.innerHTML = "? ï? ? ç·¨è­¯å¤±?—ï?å·²ç?æ­¢å?çºŒæ¸¬è©¦ã€?; 
+                        stopDiv.innerHTML = "?  ? ? ç·¨è­¯å¤±?  ?å·² ?æ­¢ ?çºŒæ¸¬è©¦ ?; 
                         logs.appendChild(stopDiv);
                         isCompileError = true; 
                         break; 
                     }
                     if (res.status !== "0" && res.program_error) { 
-                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?·è??¯èª¤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.program_error}</pre></div>`; 
+                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?  ?? èª¤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.program_error}</pre></div>`; 
                         continue; 
                     }
                     act = (res.program_message || "").trim();
 
                 } else {
-                    // æ¨¡å? B & Cï¼šä½¿?¨ä???Python Server (?¬æ???Render ?²ç«¯)
+                    // æ¨¡ ? B & Cï¼šä½¿?  ???Python Server (?  ???Render ? ç«¯)
                     try {
                         let filesDict = {};
                         if (lang === 'cpp') {
@@ -2163,7 +2163,7 @@
 
                         const localPayload = { lang: lang, files: filesDict, stdin: inputData };
 
-                        // ?”´ ?œéµé»ï??¹æ?æ¨¡å?æ±ºå??®æ?ç¶²å?
+                        // ?   ? éµé» ??  ?æ¨¡ ?æ±º ??  ?ç¶² ?
                         const apiUrl = (currentCompileMode === 'local') 
                             ? 'http://127.0.0.1:3000/run' 
                             : 'https://python-compiler-sever.onrender.com/run'; 
@@ -2180,12 +2180,12 @@
 
                         if (res.error) {
                             tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ${res.type || "Error"}</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.message || "Unknown Error"}</pre></div>`;
-                            if (res.type === 'ç·¨è­¯?¯èª¤') { 
+                            if (res.type === 'ç·¨è­¯? èª¤') { 
                                 const stopDiv = document.createElement('div'); 
                                 stopDiv.style.textAlign = "center"; 
                                 stopDiv.style.padding = "10px"; 
                                 stopDiv.style.color = "#aaa"; 
-                                stopDiv.innerHTML = "? ï? ? ç·¨è­¯å¤±?—ï?å·²ç?æ­¢å?çºŒæ¸¬è©¦ã€?; 
+                                stopDiv.innerHTML = "?  ? ? ç·¨è­¯å¤±?  ?å·² ?æ­¢ ?çºŒæ¸¬è©¦ ?; 
                                 logs.appendChild(stopDiv); 
                                 isCompileError = true; 
                                 break; 
@@ -2194,43 +2194,43 @@
                         }
                         act = (res.output || "").trim();
                     } catch (err) { 
-                        if (err.name === 'AbortError') throw err; // è®“å?å±?catch ?•ç?è¶…æ?
-                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?¡æ?????³ä¼º?å™¨</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">è«‹ç¢ºèª?${currentCompileMode === 'local' ? '?¬æ?' : '?²ç«¯'} ä¼ºæ??¨æ˜¯?¦å·²?Ÿå???/div>`; 
+                        if (err.name === 'AbortError') throw err; // è®“ ? ?catch ?  ?è¶… ?
+                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?  ????? ä¼º? å™¨</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">è«‹ç¢º ?${currentCompileMode === 'local' ? '?  ?' : '? ç«¯'} ä¼º ?? æ˜¯? å·²?  ???/div>`; 
                         isCompileError = true; 
                         break; 
                     }
                 }
 
-                // --- ?¢å¾©ï¼šå??¬ç”¨ä¾†åˆ¤?·ç?æ¡ˆå??¯ç??è¼¯ ---
+                // --- ? å¾©ï¼š ?? ç”¨ä¾†åˆ¤?  ?æ¡ˆ ??  ?? è¼¯ ---
                 let pass = act.replace(/\r\n/g, "\n") === exp.replace(/\r\n/g, "\n");
                 if (pass) passCount++;
                 
-                let statusHtml = pass ? `<span style="color:var(--success)">??Case ${i+1}: ?šé?æ¸¬è©¦ (Accepted)</span>` : `<span style="color:var(--fail)">??Case ${i+1}: ç­”æ??¯èª¤ (Wrong Answer)</span>`;
+                let statusHtml = pass ? `<span style="color:var(--success)">??Case ${i+1}: ?  ?æ¸¬è©¦ (Accepted)</span>` : `<span style="color:var(--fail)">??Case ${i+1}: ç­” ?? èª¤ (Wrong Answer)</span>`;
                 let actStyle = pass ? "color:#fff; border-left-color:var(--success);" : "color:var(--warning); border-left-color:var(--fail);";
                 
-                tempDiv.innerHTML = `<div class="log-header">${statusHtml}</div><div class="log-details"><div class="log-label">è¼¸å…¥ (Input):</div><div class="log-value">${inputData}</div><div class="log-label">?æ?è¼¸å‡º (Expected):</div><div class="log-value">${exp}</div><div class="log-label">?¨ç?è¼¸å‡º (Actual):</div><div class="log-value" style="${actStyle}">${act || "(?¡è¼¸??"}</div></div>`;
+                tempDiv.innerHTML = `<div class="log-header">${statusHtml}</div><div class="log-details"><div class="log-label">è¼¸å…¥ (Input):</div><div class="log-value">${inputData}</div><div class="log-label">?  ?è¼¸å‡º (Expected):</div><div class="log-value">${exp}</div><div class="log-label">?  ?è¼¸å‡º (Actual):</div><div class="log-value" style="${actStyle}">${act || "(? è¼¸??"}</div></div>`;
 
             } catch(e) { 
                 if (e.name === 'AbortError') {
-                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: ?·è?è¶…æ? (Timeout)</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?·è?è¶…é? 15 ç§’å·²è¢«ç³»çµ±å¼·?¶ä¸­?·ã€?br>?¯èƒ½?Ÿå?ï¼šç?å¼ç¢¼?·å…¥?Œç„¡çª®è¿´?ˆã€æ?ä¼ºæ??¨ç„¡?æ???/div>`; 
+                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: ?  ?è¶… ? (Timeout)</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?  ?è¶… ? 15 ç§’å·²è¢«ç³»çµ±å¼·? ä¸­?  ?br>? èƒ½?  ?ï¼š ?å¼ç¢¼? å…¥? ç„¡çª®è¿´? ã€ ?ä¼º ?? ç„¡?  ???/div>`; 
                 } else {
-                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: ç¶²è·¯????¯èª¤</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?¡æ?????³ç·¨è­¯ä¼º?å™¨ï¼Œè?æª¢æŸ¥ç¶²è·¯?€?‹ã€?/div>`; 
+                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: ç¶²è·¯???? èª¤</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?  ????? ç·¨è­¯ä¼º? å™¨ï¼Œ ?æª¢æŸ¥ç¶²è·¯? ?  ?/div>`; 
                 }
                 isCompileError = true; 
                 break; 
             }
-        } // for è¿´å?çµæ?
+        } // for è¿´ ?çµ ?
 
         let finalStatus = "";
         if (isCompileError) { 
-            finalStatus = `<span style="color:var(--fail)">??ç·¨è­¯?–é€??å¤±æ?</span>`; 
+            finalStatus = `<span style="color:var(--fail)">??ç·¨è­¯?  ??å¤± ?</span>`; 
         } else if (passCount === p.testCases.length) { 
-            finalStatus = `<span style="color:var(--success)">???¨æ•¸?šé? (${passCount}/${p.testCases.length})</span>`; 
+            finalStatus = `<span style="color:var(--success)">??? æ•¸?  ? (${passCount}/${p.testCases.length})</span>`; 
         } else { 
-            finalStatus = `<span style="color:var(--warning)">? ï? ?¨å??šé? (${passCount}/${p.testCases.length})</span>`; 
+            finalStatus = `<span style="color:var(--warning)">?  ? ?  ??  ? (${passCount}/${p.testCases.length})</span>`; 
         }
 
-        // å°‡æ??‰æ?æ¡ˆç??§å®¹?´å?å­˜å…¥æ­·å²ç´€?„ï??¹ä¾¿?é ­æª¢è?
+        // å°‡ ??  ?æ¡ˆ ?? å®¹?  ?å­˜å…¥æ­·å²ç´€?  ?? ä¾¿? é ­æª¢ ?
         let fullCodeForHistory = mainCode;
         if (lang === 'cpp' && p.isMultiFile && p.multiFiles) {
             fullCodeForHistory = `// === main.cpp ===\n${mainCode}\n`;
@@ -2251,26 +2251,26 @@
             executionHistories[currentProbId].pop();
         }
         
-        // ?ä¿®æ­?ï¼šä??ä??³æ•´?‹é?åº«ï??…æ›´?°æœ¬æ©?LocalStorage ?‡é›²ç«¯å??¨ç?ç¨‹å?ç¢¼è?æ­·å²ç´€?„ã€?
+        // ? ä¿® ?ï¼š ??  ?? æ•´?  ?åº« ?? æ›´? æœ¬ ?LocalStorage ? é›²ç«¯ ??  ?ç¨‹ ?ç¢¼ ?æ­·å²ç´€?  ?
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
-        localStorage.setItem('oj_v15_data', JSON.stringify(db)); // ?…æ›´?°æœ¬æ©Ÿé?åº«æš«å­?
+        localStorage.setItem('oj_v15_data', JSON.stringify(db)); // ? æ›´? æœ¬æ©Ÿ ?åº«æš« ?
 
         if (currentUser) {
             try {
-                // ?ä¿®?¹ã€‘ï??…å?æ­·å²ç´€?„å?æ­¥åˆ°?²ç«¯ï¼Œä??å??Œä?ç­”ç?å¼ç¢¼?å¯«??customProblems
+                // ? ä¿®? ã€‘ ??  ?æ­·å²ç´€?  ?æ­¥åˆ°? ç«¯ï¼Œ ??  ??  ?ç­” ?å¼ç¢¼? å¯«??customProblems
                 await personalDb.collection('users').doc(currentUser.uid).set({
                      historyData: historyString,
                      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
             } catch(e) {
-                console.error("?²ç«¯æ­·å²ç´€?„å?æª”å¤±??", e);
+                console.error("? ç«¯æ­·å²ç´€?  ?æª”å¤±??", e);
             }
         }
 
         btn.disabled = false; 
-        btn.innerText = "?¶ï? ?·è?";
+        btn.innerText = "?  ? ?  ?";
     }
 
     function openHistoryModal() {
@@ -2280,7 +2280,7 @@
         listDiv.innerHTML = "";
         
         if (histList.length === 0) { 
-            listDiv.innerHTML = "<div style='color:#666; text-align:center; padding:30px; font-size:1.1rem;'>å°šç„¡?·è?ç´€??/div>"; 
+            listDiv.innerHTML = "<div style='color:#666; text-align:center; padding:30px; font-size:1.1rem;'>å°šç„¡?  ?ç´€??/div>"; 
         } else { 
             histList.forEach((hist, idx) => { 
                 const item = document.createElement('div'); 
@@ -2299,10 +2299,10 @@
     }
 
     function clearProblemHistory() { 
-        if (!confirm("ç¢ºå?è¦æ?ç©ºé€™é??„æ??‰æ­·?²åŸ·è¡Œç??„å?ï¼Ÿæ­¤?•ä??¡æ?å¾©å???)) return; 
+        if (!confirm("ç¢º ?è¦ ?ç©ºé€™ ??  ?? æ­·? åŸ·è¡Œ ??  ?ï¼Ÿæ­¤?  ??  ?å¾© ???)) return; 
         delete executionHistories[currentProbId]; 
         
-        // ?…æ›´?°æ­·?²ç??„ï?ä¸å½±?¿é?åº«ä¸»é«?
+        // ? æ›´? æ­·?  ??  ?ä¸å½±?  ?åº«ä¸» ?
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
         if (currentUser) {
@@ -2317,7 +2317,7 @@
     async function clearCategoryHistory() {
         if (!currentCatId) return;
 
-        //å¾æœ¬?°æš«å­˜é??°è??–ä?æ¬¡æ??°ç???
+        //å¾æœ¬? æš«å­˜ ??  ??  ?æ¬¡ ??  ???
         const freshHistory = localStorage.getItem('oj_v15_history');
         if (freshHistory) {
             try { 
@@ -2325,19 +2325,19 @@
             } catch(e) {}
         }
 
-        // ?–å??®å??†é??„å?ç¨±ä»¥é¡¯ç¤º?¨æ?ç¤ºè??¯ä¸­
+        // ?  ??  ??  ??  ?ç¨±ä»¥é¡¯ç¤º?  ?ç¤º ?? ä¸­
         const cat = db.categories.find(c => c.id === currentCatId);
-        const catName = cat ? cat.name : "æ­¤å?é¡?;
+        const catName = cat ? cat.name : "æ­¤ ? ?;
 
-        if (!confirm(`? ï? è­¦å?ï¼šç¢ºå®šè?æ¸…ç©º??{catName}?å…§?€?‰é??®ç??æ­·?²åŸ·è¡Œç??„ã€‘å?ï¼Ÿ\næ­¤å?ä½œç„¡æ³•å¾©?Ÿï?`)) return;
+        if (!confirm(`?  ? è­¦ ?ï¼šç¢ºå®š ?æ¸…ç©º??{catName}? å…§? ?  ??  ?? æ­·? åŸ·è¡Œ ?? ã€‘ ?ï¼Ÿ\næ­¤ ?ä½œç„¡æ³•å¾©?  ?`)) return;
 
-        // ?¾å‡º?™å€‹å?é¡ä??„æ??‰é???
+        // ? å‡º? å€‹ ?é¡ ??  ??  ???
         const catProblems = db.problems.filter(p => p.catId === currentCatId);
         let deletedCount = 0;
 
-        // ?ªé™¤?™ä?é¡Œç›®??executionHistories ä¸­ç?ç´€??
+        // ? é™¤?  ?é¡Œç›®??executionHistories ä¸­ ?ç´€??
         catProblems.forEach(p => {
-            // ? ä??·åº¦?¤æ–·ï¼Œç¢ºä¿è£¡?¢ç??„æ?ç´€?„æ?ç®—æ•¸
+            // ?  ?? åº¦? æ–·ï¼Œç¢ºä¿è£¡?  ??  ?ç´€?  ?ç®—æ•¸
             if (executionHistories[p.id] && executionHistories[p.id].length > 0) {
                 delete executionHistories[p.id];
                 deletedCount++;
@@ -2345,27 +2345,27 @@
         });
 
         if (deletedCount === 0) {
-            alert("?¬å?é¡ç›®?æ??‰ä»»ä½•æ­·?²åŸ·è¡Œç??„å¯ä»¥æ?ç©ºã€?);
+            alert("?  ?é¡ç›®?  ?? ä»»ä½•æ­·? åŸ·è¡Œ ?? å¯ä»¥ ?ç©º ?);
             return;
         }
 
-        // ?´æ–°?¬åœ°ç«¯ç??²å?ç´€??
+        // ? æ–°? åœ°ç«¯ ??  ?ç´€??
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
 
-        // ?Œæ­¥?´æ–°??Firebase ?²ç«¯
+        // ? æ­¥? æ–°??Firebase ? ç«¯
         if (currentUser) {
             try {
                 await personalDb.collection('users').doc(currentUser.uid).set({
                     historyData: historyString
                 }, { merge: true });
-                alert(`??å·²æ??Ÿæ?ç©ºæœ¬?†é?ä¸?${deletedCount} é¡Œç??·è?ç´€?„ï?`);
+                alert(`??å·² ??  ?ç©ºæœ¬?  ? ?${deletedCount} é¡Œ ??  ?ç´€?  ?`);
             } catch (e) {
-                console.error("?²ç«¯æ¸…é™¤æ­·å²ç´€?„å¤±??, e);
-                alert("? ï? ?¬åœ°ç´€?„å·²æ¸…é™¤ï¼Œä??²ç«¯?Œæ­¥å¤±æ???);
+                console.error("? ç«¯æ¸…é™¤æ­·å²ç´€? å¤±??, e);
+                alert("?  ? ? åœ°ç´€? å·²æ¸…é™¤ï¼Œ ?? ç«¯? æ­¥å¤± ???);
             }
         } else {
-            alert(`??å·²æ??Ÿæ?ç©ºæœ¬?†é?ä¸?${deletedCount} é¡Œç??·è?ç´€?„ï?`);
+            alert(`??å·² ??  ?ç©ºæœ¬?  ? ?${deletedCount} é¡Œ ??  ?ç´€?  ?`);
         }
     }    
 
@@ -2373,7 +2373,7 @@
         const p = db.problems.find(x => x.id === currentProbId); 
         const lang = document.getElementById('langSelect').value; 
         
-        // ç¢ºä??®å?ç·¨è¼¯?¨å…§å®¹æ?å­˜åˆ°è®Šæ•¸è£?
+        // ç¢º ??  ?ç·¨è¼¯? å…§å®¹ ?å­˜åˆ°è®Šæ•¸ ?
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -2381,7 +2381,7 @@
             p['code_' + lang] = editor.getValue();
         }
 
-        // ?ä¿®æ­?ï¼šè? AI ?½æ??–æ??‰æ?æ¡ˆå…§å®¹ã€?
+        // ? ä¿® ?ï¼š ? AI ?  ??  ??  ?æ¡ˆå…§å®¹ ?
         let fullCode = "";
         if (lang === 'cpp' && p.isMultiFile) {
             fullCode = `// === main.cpp ===\n${p.code_cpp || ""}\n`;
@@ -2395,11 +2395,11 @@
         }
         
         if (!fullCode || fullCode.trim() === "") { 
-            alert("ç¨‹å?ç¢¼ç‚ºç©ºï??¡æ??†æ???); 
+            alert("ç¨‹ ?ç¢¼ç‚ºç©º ??  ??  ???); 
             return; 
         }
         
-        document.getElementById('aiPromptOutput').value = `è«‹æ?ä»»ç?å¼è¨­è¨ˆåŠ©?™ï?å¹«æ?æª¢æŸ¥ä»¥ä?ç¨‹å?ç¢¼ç??è¼¯?¯å¦æ­?¢ºï¼Œä¸¦çµ¦ä?ä¿®æ­£å»ºè­°ï¼ˆè??¨ç?é«”ä¸­?‡å?ç­”ï?ï¼š\n\n?é??®å?ç¨±ã€‘ï?${p.title}\n?é??®æ?è¿°ã€‘ï?\n${p.desc}\n\n?æ??„ç?å¼ç¢¼?‘ï?\n\`\`\`${lang}\n${fullCode}\n\`\`\``; 
+        document.getElementById('aiPromptOutput').value = `è«‹ ?ä»» ?å¼è¨­è¨ˆåŠ©?  ?å¹« ?æª¢æŸ¥ä»¥ ?ç¨‹ ?ç¢¼ ?? è¼¯? å¦ ?  ï¼Œä¸¦çµ¦ ?ä¿®æ­£å»ºè­°ï¼ˆ ??  ?é«”ä¸­?  ?ç­” ?ï¼š\n\n?  ??  ?ç¨±ã€‘ ?${p.title}\n?  ??  ?è¿°ã€‘ ?\n${p.desc}\n\n?  ??  ?å¼ç¢¼?  ?\n\`\`\`${lang}\n${fullCode}\n\`\`\``; 
         document.getElementById('aiHelperModal').style.display = 'flex';
     }
 
@@ -2407,7 +2407,7 @@
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
-        alert("???§å®¹å·²è?è£½ï?"); 
+        alert("??? å®¹å·² ?è£½ ?"); 
         document.getElementById('aiHelperModal').style.display = 'none'; 
     }
 
@@ -2415,7 +2415,7 @@
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
-        alert("?? ?§å®¹å·²è?è£½ï?\n?³å??ºæ‚¨?“é? Gemini??); 
+        alert("?? ? å®¹å·² ?è£½ ?\n?  ?? æ‚¨?  ? Gemini??); 
         window.open('https://gemini.google.com/app', '_blank'); 
         document.getElementById('aiHelperModal').style.display = 'none'; 
     }
@@ -2434,7 +2434,7 @@
     
     function downloadBackup() { 
         const date = new Date().toISOString().slice(0, 10); 
-        let filename = prompt("è«‹è¼¸?¥æ?æ¡ˆå?ç¨?(?¡é??¯æ???:", `oj_backup_${date}`); 
+        let filename = prompt("è«‹è¼¸?  ?æ¡ˆ ? ?(?  ??  ???:", `oj_backup_${date}`); 
         if (!filename) return; 
         
         if (!filename.endsWith(".txt") && !filename.endsWith(".json")) { 
@@ -2467,7 +2467,7 @@
                     JSON.parse(content); 
                     content = btoa(encodeURIComponent(content)); 
                 } catch(err) { 
-                    alert("æª”æ??¼å??¯èª¤"); 
+                    alert("æª” ??  ?? èª¤"); 
                     return; 
                 } 
             } 
@@ -2486,7 +2486,7 @@
     function copyBackupCode() { 
         document.getElementById('backupStr').select(); 
         document.execCommand('copy'); 
-        alert("å·²è?è£?); 
+        alert("å·² ? ?); 
     }
 
     async function execRestore() { 
@@ -2496,15 +2496,15 @@
                 const catCount = data.categories.length || 0;
                 const probCount = data.problems.length || 0;
                 
-                if (!confirm(`? ï? æº–å??„å?é¡Œåº« ? ï?\n\n?¨å³å°‡åŒ¯?¥ç??™ä»½æª”å??«ï?\n- ${catCount} ?‹å?é¡\n- ${probCount} ?“é??®\n\n?è­¦?Šã€‘æ­¤?ä?å°‡æ??Œå??¨è??‹ã€æ‚¨?®å??„æœ¬?°é?åº«è??™ï?\nç¢ºå?è¦ç¹¼çºŒé??Ÿå?ï¼Ÿ`)) {
+                if (!confirm(`?  ? æº– ??  ?é¡Œåº« ?  ?\n\n? å³å°‡åŒ¯?  ?? ä»½æª” ??  ?\n- ${catCount} ?  ?é¡\n- ${probCount} ?  ?? \n\n? è­¦? ã€‘æ­¤?  ?å°‡ ??  ??  ?? ã€æ‚¨?  ?? æœ¬?  ?åº« ??  ?\nç¢º ?è¦ç¹¼çºŒ ??  ?ï¼Ÿ`)) {
                     return;
                 }
 
-                let defaultName = pendingRestoreFileName || "?ªè??„å?é¡Œåº«"; 
-                let finalName = prompt("è«‹ç‚º?™å€‹é??Ÿç?é¡Œåº«?½å?ï¼?, defaultName); 
+                let defaultName = pendingRestoreFileName || "?  ??  ?é¡Œåº«"; 
+                let finalName = prompt("è«‹ç‚º? å€‹ ??  ?é¡Œåº«?  ? ?, defaultName); 
                 
                 if (finalName === null) return; 
-                if (finalName.trim() === "") finalName = "?ªè??„å?é¡Œåº«"; 
+                if (finalName.trim() === "") finalName = "?  ??  ?é¡Œåº«"; 
                 
                 const preservedCustomBanks = db.customBanks || [];
                 db.categories = data.categories;
@@ -2512,7 +2512,7 @@
                 db.version = data.version || "";
                 db.customBanks = preservedCustomBanks;
 
-                // å¦‚æ??¨è‡ªè¨‚é?åº«ä¸­?„å?ï¼Œé?ä¾¿æ›´?°è©²?ªè?é¡Œåº«?ç¨±
+                // å¦‚ ?? è‡ªè¨‚ ?åº«ä¸­?  ?ï¼Œ ?ä¾¿æ›´? è©²?  ?é¡Œåº«? ç¨±
                 const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
                 if (isCustom) {
                     const customId = currentBankUrl.replace("local_custom_", "");
@@ -2522,7 +2522,7 @@
                         db.customBanks[bankIdx].categories = JSON.parse(JSON.stringify(db.categories));
                         db.customBanks[bankIdx].problems = JSON.parse(JSON.stringify(db.problems));
                         
-                        // ?’¡ å¼·åˆ¶å°‡é??Ÿç?é¡Œåº«å¯«å…¥å­é???
+                        // ?   å¼·åˆ¶å°‡ ??  ?é¡Œåº«å¯«å…¥å­ ???
                         if (currentUser && personalDb) {
                             try {
                                 personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(customId).set(db.customBanks[bankIdx]);
@@ -2530,18 +2530,18 @@
                         }
                     }
                 } else if (currentUser && personalDb) {
-                    // ?? ?å??è¨­é¡Œåº«?„é??Ÿä¿®å¾©ï?å¿…é?å°‡é??Ÿé€²ä??„é??®è??†é?ï¼Œæ‰¹æ¬¡å?æ­¥åˆ° Firebase ?„ç¨ç«‹ä??ªç®±
+                    // ?? ?  ?? è¨­é¡Œåº«?  ?? ä¿®å¾© ?å¿… ?å°‡ ?? é€² ??  ??  ??  ?ï¼Œæ‰¹æ¬¡ ?æ­¥åˆ° Firebase ? ç¨ç«‹ ?? ç®±
                     let payload = {};
                     let customCatUpdates = {};
                     let customProbUpdates = {};
 
-                    // 1. ?“å??²ç«¯?¾æ?è³‡æ?ï¼Œæ‰¾?ºã€Œå¹½?ˆæ?æ¡ˆã€ï??Ÿæœ¬?¨é›²ç«¯ï?ä½†é??Ÿæ?è£¡æ??‰ç?é¡Œç›®/?†é?ï¼‰ä¸¦æ¨™è??ºåˆª??
+                    // 1. ?  ?? ç«¯?  ?è³‡ ?ï¼Œæ‰¾? ã€Œå¹½?  ?æ¡ˆã€ ?? æœ¬? é›²ç«¯ ?ä½† ??  ?è£¡ ??  ?é¡Œç›®/?  ?ï¼‰ä¸¦æ¨™ ?? åˆª??
                     try {
                         const docSnap = await personalDb.collection('users').doc(currentUser.uid).get();
                         if (docSnap.exists) {
                             const data = docSnap.data();
                             
-                            // æ¸…ç?å¹½é??†é?
+                            // æ¸… ?å¹½ ??  ?
                             if (data.customCategories) {
                                 Object.values(data.customCategories).forEach(cc => {
                                     if (cc && cc.bankUrl === currentBankUrl) {
@@ -2552,7 +2552,7 @@
                                 });
                             }
                             
-                            // æ¸…ç?å¹½é?é¡Œç›®ï¼šå??œé??®ç??†é?å±¬æ–¼?¶å?é¡Œåº«ï¼Œä??„å?æª”è£¡æ²’é€™é?ï¼Œå°±æ®ºæ?
+                            // æ¸… ?å¹½ ?é¡Œç›®ï¼š ??  ??  ??  ?å±¬æ–¼?  ?é¡Œåº«ï¼Œ ??  ?æª”è£¡æ²’é€™ ?ï¼Œå°±æ®º ?
                             const currentCatIds = db.categories.map(c => c.id);
                             if (data.customProblems) {
                                 Object.values(data.customProblems).forEach(cp => {
@@ -2564,9 +2564,9 @@
                                 });
                             }
                         }
-                    } catch(e) { console.warn("?¡æ??“å??²ç«¯å¹½é?æª”æ?", e); }
+                    } catch(e) { console.warn("?  ??  ?? ç«¯å¹½ ?æª” ?", e); }
 
-                    // 2. å°‡é??Ÿé€²ä??„æ??‰é??®ç´°ç¯€ï¼ˆå«ä½œç?ç´€?„è??ªè?ä¿®æ”¹ï¼‰è?å¯«å??¨ç?ä¿éšªç®?
+                    // 2. å°‡ ?? é€² ??  ??  ?? ç´°ç¯€ï¼ˆå«ä½œ ?ç´€?  ??  ?ä¿®æ”¹ï¼‰ ?å¯« ??  ?ä¿éšª ?
                     db.categories.forEach(c => {
                         if (c.isUserAdded) customCatUpdates[c.id] = c; 
                     });
@@ -2578,27 +2578,27 @@
                     if (Object.keys(customCatUpdates).length > 0) payload.customCategories = customCatUpdates;
                     if (Object.keys(customProbUpdates).length > 0) payload.customProblems = customProbUpdates;
 
-                    // 3. ?¹æ¬¡å¯«å…¥ Firebase (?…å«?°å??‡åˆª?¤ç??‡ä»¤)
+                    // 3. ? æ¬¡å¯«å…¥ Firebase (? å«?  ?? åˆª?  ?? ä»¤)
                     if (Object.keys(payload).length > 0) {
                         try {
                             await personalDb.collection('users').doc(currentUser.uid).set(payload, { merge: true });
-                        } catch(e) { console.warn("?¨ç?ä¿éšªç®±æ‰¹æ¬¡é??Ÿå¤±??, e); }
+                        } catch(e) { console.warn("?  ?ä¿éšªç®±æ‰¹æ¬¡ ?? å¤±??, e); }
                     }
                 }
                 
                 currentBankName = finalName;
                 localStorage.setItem('oj_v15_bank_name', finalName); 
                 
-                // ç­‰å?å­˜æ??‡é›²ç«¯å?æ­¥å???
+                // ç­‰ ?å­˜ ?? é›²ç«¯ ?æ­¥ ???
                 await saveToLocal(true, true); 
                 
-                alert("?„å??å?ï¼Œä¸¦å·²å?æ­¥è‡³?²ç«¯ï¼?);
+                alert("?  ??  ?ï¼Œä¸¦å·² ?æ­¥è‡³? ç«¯ ?);
                 
-                // ?’¡ ?–æ? window.location.reload()ï¼Œæ”¹?ºç›´?¥æ›´??UI
+                // ?   ?  ? window.location.reload()ï¼Œæ”¹? ç›´? æ›´??UI
                 document.getElementById('backupModal').style.display = 'none';
                 
                 const nameEl = document.getElementById('currentBankName');
-                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?®å?é¡Œåº«: ` + currentBankName;
+                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?é¡Œåº«: ` + currentBankName;
                 
                 currentCatId = null;
                 renderCategoryList();
@@ -2607,18 +2607,18 @@
                 throw new Error(); 
             } 
         } catch(e) { 
-            alert("ä»?¢¼?¡æ??–æ ¼å¼éŒ¯èª?); 
+            alert(" ?  ?  ?? æ ¼å¼éŒ¯ ?); 
         } 
     }
 
-    // ================= ä¸‹è?ç¨‹å?ç¢¼å???=================
+    // ================= ä¸‹ ?ç¨‹ ?ç¢¼ ???=================
     function downloadCode() {
         const p = db.problems.find(x => x.id === currentProbId);
         if (!p) return;
 
         const lang = document.getElementById('langSelect').value;
 
-        // 1. ç¢ºä??¶å?ç·¨è¼¯?¨å…§?„ç?å¼ç¢¼?‰å³?‚å??¥è??¸ä¸­
+        // 1. ç¢º ??  ?ç·¨è¼¯? å…§?  ?å¼ç¢¼? å³?  ??  ?? ä¸­
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -2626,29 +2626,29 @@
             p['code_' + lang] = editor.getValue();
         }
 
-        // 2. æº–å?æª”å??ç¶´ï¼ˆé?æ¿¾æ?ä¸å?æ³•ç?æª”æ?å­—å?ï¼?
+        // 2. æº– ?æª” ?? ç¶´ï¼ˆ ?æ¿¾ ?ä¸ ?æ³• ?æª” ?å­— ? ?
         const safeTitle = p.title.replace(/[\/\?<>\\:\*\|":\s]/g, "_");
 
         if (lang === 'cpp' && p.isMultiFile) {
-            // --- ?•ç?å¤šæ?æ¡ˆæ???(ZIP) ---
+            // --- ?  ?å¤š ?æ¡ˆ ???(ZIP) ---
             if (typeof JSZip === 'undefined') {
-                alert("? ï? ?ªè???JSZip ?½å?åº«ï??¡æ??²è??“å???);
+                alert("?  ? ?  ???JSZip ?  ?åº« ??  ??  ??  ???);
                 return;
             }
         
             const zip = new JSZip();
         
-            // ?¾å…¥ main.cpp
+            // ? å…¥ main.cpp
             zip.file("main.cpp", p.code_cpp || "");
         
-            // ?¾å…¥?¶ä?æ¨™é ­æª”è?å¯¦ä?æª?(.h / .cpp)
+            // ? å…¥?  ?æ¨™é ­æª” ?å¯¦ ? ?(.h / .cpp)
             if (p.multiFiles) {
                 p.multiFiles.forEach(f => {
                     zip.file(f.name, f.code || "");
                 });
             }
         
-            // ?¢ç?å£“ç¸®æª”ä¸¦è§¸ç™¼ä¸‹è?
+            // ?  ?å£“ç¸®æª”ä¸¦è§¸ç™¼ä¸‹ ?
             zip.generateAsync({type: "blob"}).then(function(content) {
                 const url = window.URL.createObjectURL(content);
                 const a = document.createElement('a');
@@ -2662,7 +2662,7 @@
             });
         
         } else {
-            // --- ?•ç??®ä?æª”æ?ä¸‹è? ---
+            // --- ?  ??  ?æª” ?ä¸‹ ? ---
             let content = lang === 'cpp' ? (p.code_cpp || "") : (p.code_python || "");
             let ext = lang === 'cpp' ? '.cpp' : '.py';
             let filename = `${safeTitle}${ext}`;
@@ -2680,7 +2680,7 @@
         }
     }
 
-// ============= ä¸Šå‚³ç¨‹å?ç¢¼å???============
+// ============= ä¸Šå‚³ç¨‹ ?ç¢¼ ???============
 
     async function handleCodeUpload(input) {
 	const files = input.files;
@@ -2691,23 +2691,23 @@
 
 	const lang = document.getElementById('langSelect').value;
     
-	// è®Šæ•¸æº–å?ï¼šç”¨ä¾†è??„ä??³é?ç¨‹ç??€??
+	// è®Šæ•¸æº– ?ï¼šç”¨ä¾† ??  ??  ?ç¨‹ ?? ??
 	let successCount = 0;
 	let failMessages = [];
 	let needRenderTabs = false;
 
-	// ?•ç??®ä? ZIP å£“ç¸®æª”ç??è¼¯ (ç¶­æ??Ÿæœ¬?„é˜²?†è?è§??ç¸®æ???
+	// ?  ??  ? ZIP å£“ç¸®æª” ?? è¼¯ (ç¶­ ?? æœ¬? é˜²?  ? ??ç¸® ???
 	if (files.length === 1 && files[0].name.toLowerCase().endsWith('.zip')) {
 	const file = files[0];
 	if (lang !== 'cpp' || !p.isMultiFile) {
-	alert("? ï? ?®å??„é??®æ?èªè?æ¨¡å?ä¸æ”¯?´å?æª”æ?ï¼è?ä¸Šå‚³?®ä? .cpp ??.py æª”æ???);
+	alert("?  ? ?  ??  ??  ?èª ?æ¨¡ ?ä¸æ”¯?  ?æª” ?ï¼ ?ä¸Šå‚³?  ? .cpp ??.py æª” ???);
 	    input.value = ''; return;
 	}
 	if (typeof JSZip === 'undefined') {
-	    alert("? ï? ?ªè???JSZip ?½å?åº«ï??¡æ?è®€?–å?ç¸®æ???);
+	    alert("?  ? ?  ???JSZip ?  ?åº« ??  ?è®€?  ?ç¸® ???);
 	    input.value = ''; return;
 	}
-	if (!confirm("? ï? ä¸Šå‚³å°ˆæ?å°‡æ?è¦†è??¨ç›®?åœ¨?™å€‹é??®ç??€?‰ç?å¼ç¢¼ï¼Œç¢ºå®šè?ç¹¼ç??ï?")) {
+	if (!confirm("?  ? ä¸Šå‚³å°ˆ ?å°‡ ?è¦† ?? ç›®? åœ¨? å€‹ ??  ?? ?  ?å¼ç¢¼ï¼Œç¢ºå®š ?ç¹¼ ??  ?")) {
 	    input.value = ''; return;
 	}
 
@@ -2735,7 +2735,7 @@
 	    await Promise.all(promises);
 
 	    if (!hasMain) {
-		alert("? ï? å£“ç¸®æª”å…§?¾ä???main.cppï¼Œç„¡æ³•è??¥å?æ¡ˆï?");
+		alert("?  ? å£“ç¸®æª”å…§?  ???main.cppï¼Œç„¡æ³• ??  ?æ¡ˆ ?");
 		input.value = ''; return;
 	    }
 
@@ -2750,18 +2750,18 @@
 	    currentFileIndex = -1;
 	    editor.setValue(p.code_cpp, -1);
 	    renderWorkspaceTabs();
-	    alert("??ZIP å°ˆæ?ä¸Šå‚³ä¸¦è§£?æ??Ÿï?");
+	    alert("??ZIP å°ˆ ?ä¸Šå‚³ä¸¦è§£?  ??  ?");
 
 	} catch (e) {
 	    console.error(e);
-	    alert("? ï? è®€??ZIP æª”æ?å¤±æ?ï¼? + e.message);
+	    alert("?  ? è®€??ZIP æª” ?å¤± ? ? + e.message);
 	}
 	input.value = '';
 	return;
     }
 
-    // ?•ç?å¤šå€‹ç¨ç«‹æ?æ¡ˆä??³ç??è¼¯ (å¦? main.cpp, Rectangle.cpp, Rectangle.h)
-      // å°?FileReader ?…è???Promiseï¼Œæ–¹ä¾¿ç”¨ await å¾ªå??•ç?
+    // ?  ?å¤šå€‹ç¨ç«‹ ?æ¡ˆ ??  ?? è¼¯ ( ? main.cpp, Rectangle.cpp, Rectangle.h)
+      //  ?FileReader ?  ???Promiseï¼Œæ–¹ä¾¿ç”¨ await å¾ª ??  ?
       const readFileAsync = (file) => {
 	return new Promise((resolve, reject) => {
 	    const reader = new FileReader();
@@ -2771,24 +2771,24 @@
 	});
     };
 
-      // å¾ªå?æª¢æŸ¥ä¸¦è??–æ??‹é¸?–ç?æª”æ?
+      // å¾ª ?æª¢æŸ¥ä¸¦ ??  ?? é¸?  ?æª” ?
       for (let i = 0; i < files.length; i++) {
 	const file = files[i];
 	const extension = file.name.split('.').pop().toLowerCase();
 
-	// ?²å?æª¢æŸ¥ 1ï¼šè?è¨€ä¸ç¬¦
+	// ?  ?æª¢æŸ¥ 1ï¼š ?è¨€ä¸ç¬¦
 	if (lang === 'python' && extension !== 'py') {
-	    failMessages.push(`??[${file.name}] Python æ¨¡å??ªèƒ½ä¸Šå‚³ .py æª”æ??‚`);
+	    failMessages.push(`??[${file.name}] Python æ¨¡ ?? èƒ½ä¸Šå‚³ .py æª” ?? `);
 	    continue;
 	}
 	if (lang === 'cpp' && (extension === 'py' || extension === 'zip')) {
-	    failMessages.push(`??[${file.name}] æª”æ??¼å??¯èª¤?‚`);
+	    failMessages.push(`??[${file.name}] æª” ??  ?? èª¤? `);
 	    continue;
 	}
         
-	// ?²å?æª¢æŸ¥ 2ï¼šå–®æª”æ¨¡å¼å»?³ä? .h ?–å??‹æ?æ¡?
+	// ?  ?æª¢æŸ¥ 2ï¼šå–®æª”æ¨¡å¼å»?  ? .h ?  ??  ? ?
 	if (!p.isMultiFile && (extension === 'h' || files.length > 1)) {
-	    alert("? ï? ?®å??ºå–®ä¸€æª”æ?æ¨¡å?ï¼Œç„¡æ³•ä??³æ??­æ??–å??‹æ?æ¡ˆï?è«‹å??‹å?å¤šæ?æ¡ˆæ”¯?´ã€?);
+	    alert("?  ? ?  ?? å–®ä¸€æª” ?æ¨¡ ?ï¼Œç„¡æ³• ??  ??  ??  ??  ?æ¡ˆ ?è«‹ ??  ?å¤š ?æ¡ˆæ”¯?  ?);
 	    input.value = ''; return;
 	}
 
@@ -2808,33 +2808,33 @@
 		needRenderTabs = true;
 		if (currentFileIndex === targetIdx) editor.setValue(content, -1);
 	    } else {
-		failMessages.push(`? ï? [${file.name}] é¡Œç›®?ªè¨­å®šæ­¤æª”æ??†é?ï¼Œå·²?¥é??‚`);
+		failMessages.push(`?  ? [${file.name}] é¡Œç›®? è¨­å®šæ­¤æª” ??  ?ï¼Œå·²?  ?? `);
 	    }
 	}
      } else {
-	// ?®ä?æª”æ?æ¨¡å??„è???
+	// ?  ?æª” ?æ¨¡ ??  ???
 	if (lang === 'cpp') p.code_cpp = content;
 	else p.code_python = content;
 	editor.setValue(content, -1);
 	successCount++;
     }
         } catch (error) {
-            failMessages.push(`??[${file.name}] è®€?–å¤±?—ã€‚`);
+            failMessages.push(`??[${file.name}] è®€? å¤±? ã€‚`);
         }
     }
 
-    // æª”æ??½è??†å?å¾Œï?çµ±æ•´ä¸¦é¡¯ç¤ºç???
+    // æª” ??  ??  ?å¾Œ ?çµ±æ•´ä¸¦é¡¯ç¤º ???
     if (needRenderTabs) renderWorkspaceTabs();
 
     if (failMessages.length === 0 && successCount > 0) {
-	alert(`???å?è¼‰å…¥ ${successCount} ?‹æ?æ¡ˆï?`);
+	alert(`???  ?è¼‰å…¥ ${successCount} ?  ?æ¡ˆ ?`);
     } else if (failMessages.length > 0) {
-	let msg = `è¼‰å…¥å®Œæ?ï¼Œä??‰éƒ¨?†ç?æ³ï?\n???å?: ${successCount} ?‹æ?æ¡ˆ\n\n`;
+	let msg = `è¼‰å…¥å®Œ ?ï¼Œ ?? éƒ¨?  ?æ³ ?\n???  ?: ${successCount} ?  ?æ¡ˆ\n\n`;
 	msg += failMessages.join('\n');
 	alert(msg);
     }
 
-    // æ¸…é™¤ input ?€??
+    // æ¸…é™¤ input ? ??
     input.value = '';
 }
 
