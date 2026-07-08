@@ -19,7 +19,7 @@ function initAdmin() {
     
     if (!probIdStr) {
         alert("找不到題目 ID，返回大廳");
-        window.location.href = '/categories';
+        window.location.href = 'dashboard.html';
         return;
     }
     
@@ -28,7 +28,7 @@ function initAdmin() {
     
     if (!p) {
         alert("找不到此題目，可能已被刪除");
-        window.location.href = '/categories';
+        window.location.href = 'dashboard.html';
         return;
     }
 
@@ -37,7 +37,7 @@ function initAdmin() {
 }
 
 function goToWorkspace() {
-    window.open('/workspace.html?probId=' + adminProbId + '&fromAdmin=1', '_blank');
+    window.open('workspace.html?probId=' + adminProbId + '&fromAdmin=1', '_blank');
 }
 
 function renderAdmin() {
