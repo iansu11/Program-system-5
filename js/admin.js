@@ -7,8 +7,6 @@ const defaultTemplates = { cpp: '#include <iostream>\nusing namespace std;\n\nin
 let adminProbId = null;
 let adminTempTemplates = { cpp: '', python: '' };
 let currentAdminLang = 'cpp';
-let adminMultiFiles = [];
-let adminCurrentFileIndex = -1;
 
 function autoResize(textarea) {
     if (!textarea) return;
