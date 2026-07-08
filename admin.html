@@ -1,426 +1,291 @@
-const defaultTemplates = { cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}', python: '# your code here\n' };
-
-// ==========================================
-// 題庫後台管理邏輯 (js/admin.js)
-// ==========================================
-
-let adminProbId = null;
-let adminTempTemplates = { cpp: '', python: '' };
-let currentAdminLang = 'cpp';
-
-function autoResize(textarea) {
-    if (!textarea) return;
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-}
-
-function initAdmin() {
-    const path = window.location.pathname;
-    const urlParams = new URLSearchParams(window.location.search);
-    let probIdStr = null;
-    if (urlParams.has('probId')) {
-        probIdStr = urlParams.get('probId');
-    } else {
-        const match = path.match(/^\/admin\/([a-zA-Z0-9_-]+)$/);
-        probIdStr = match ? match[1] : null;
-    }
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>題目編輯後台 - 解題系統 V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
     
-    if (!probIdStr) {
-        alert("找不到題目 ID，返回大廳");
-        window.location.href = '/categories';
-        return;
-    }
-    
-    adminProbId = probIdStr;
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    
-    if (!p) {
-        alert("找不到此題目，可能已被刪除");
-        window.location.href = '/categories';
-        return;
-    }
-
-    document.getElementById('view-admin').style.display = 'flex';
-    renderAdmin();
-    initAdminResizer();
-}
-
-function goToWorkspace() {
-    window.open('/workspace/' + adminProbId + '&fromAdmin=1', '_blank');
-}
-
-function renderAdmin() {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    if (!p) return;
-    
-    document.getElementById('editTitle').value = p.title || "";
-    document.getElementById('editDesc').value = p.desc || "";
-    
-    adminTempTemplates.cpp = (p.tpl_cpp !== undefined) ? p.tpl_cpp : (p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp); 
-    adminTempTemplates.python = (p.tpl_python !== undefined) ? p.tpl_python : defaultTemplates.python;
-    document.getElementById('adminLangSelect').value = 'cpp'; 
-    currentAdminLang = 'cpp';
-    
-    adminCurrentFileIndex = -1;
-    adminMultiFiles = p.multiFiles ? JSON.parse(JSON.stringify(p.multiFiles)) : [];
-    
-    const multiFileCheck = document.getElementById('adminEnableMultiFile');
-    if (multiFileCheck) multiFileCheck.checked = !!p.isMultiFile;
-    
-    document.getElementById('editTemplate').value = adminTempTemplates.cpp;
-
-    toggleAdminMultiFile();
-
-    const c = document.getElementById('adminTestCases'); 
-    if (c) {
-        c.innerHTML = ''; 
-        (p.testCases || []).forEach(tc => addTestCaseUI(tc.input, tc.output)); 
-        setTimeout(() => { 
-            document.querySelectorAll('#adminTestCases textarea').forEach(ta => autoResize(ta)); 
-        }, 0);
-    }
-}
-
-function changeAdminLang() {
-    if (adminCurrentFileIndex === -1) { 
-        adminTempTemplates[currentAdminLang] = document.getElementById('editTemplate').value; 
-    }
-    
-    const newLang = document.getElementById('adminLangSelect').value;
-    currentAdminLang = newLang;
-    
-    const tabsContainer = document.getElementById('adminEditorTabs');
-    const multiFileCheck = document.getElementById('adminEnableMultiFile');
-    if (tabsContainer && multiFileCheck) {
-        tabsContainer.style.display = (multiFileCheck.checked && newLang === 'cpp') ? 'flex' : 'none';
-    }
-    
-    switchAdminFile(-1); // Switch back to main template view for the new language
-}
-
-async function saveAdminAndBack() { 
-    const p = db.problems.find(x => String(x.id) === String(adminProbId)); 
-    
-    // --- 開始套用 UI 上的新設定 ---
-    p.title = document.getElementById('editTitle').value; 
-    p.desc = document.getElementById('editDesc').value; 
-    
-    if (adminCurrentFileIndex === -1) { 
-        adminTempTemplates[currentAdminLang] = document.getElementById('editTemplate').value; 
-    } else { 
-        adminMultiFiles[adminCurrentFileIndex].tpl = document.getElementById('editTemplate').value; 
-    }
-    
-    p.tpl_cpp = adminTempTemplates.cpp; 
-    p.tpl_python = adminTempTemplates.python;
-
-    if (p.code_cpp === undefined || p.code_cpp === defaultTemplates.cpp) {
-        p.code_cpp = p.tpl_cpp;
-    }
-    if (p.code_python === undefined || p.code_python === defaultTemplates.python) {
-        p.code_python = p.tpl_python;
-    }
-
-    const multiFileCheck = document.getElementById('adminEnableMultiFile');
-    p.isMultiFile = multiFileCheck ? multiFileCheck.checked : false;
-    p.multiFiles = JSON.parse(JSON.stringify(adminMultiFiles)); 
-    
-    if (p.multiFiles) { 
-        p.multiFiles.forEach((f, idx) => { 
-            if (f.code === undefined || f.code === "") {
-                f.code = f.tpl !== undefined ? f.tpl : "";
-            }
-        }); 
-    }
-
-    const inputs = document.querySelectorAll('.tc-input'); 
-    const outputs = document.querySelectorAll('.tc-output'); 
-    p.testCases = []; 
-    for (let i = 0; i < inputs.length; i++) {
-        p.testCases.push({ input: inputs[i].value, output: outputs[i].value }); 
-    }
-    
-    // --- 套用新設定結束 ---
-
-    const btn = document.querySelector('#view-admin .btn-primary');
-    if (btn) { btn.disabled = true; btn.innerText = "⏳ 儲存中..."; }
-    await saveToLocal(true, false); 
-    
-    if (typeof syncProblemDeltaToCloud === 'function') {
-        await syncProblemDeltaToCloud(adminProbId, p);
-    }
-
-    if (btn) { btn.disabled = false; btn.innerText = "💾 儲存並返回"; }
-    window.location.href = '/workspace/' + adminProbId;
-}
-
-function insertBoldToDesc() {
-    const descArea = document.getElementById('editDesc');
-    const start = descArea.selectionStart;
-    const end = descArea.selectionEnd;
-    const text = descArea.value;
-
-    if (start !== end) {
-        const selectedText = text.substring(start, end);
-        descArea.value = text.substring(0, start) + "**" + selectedText + "**" + text.substring(end);
-        descArea.selectionStart = start + 2;
-        descArea.selectionEnd = end + 2;
-    } else {
-        descArea.value = text.substring(0, start) + "****" + text.substring(end);
-        descArea.selectionStart = descArea.selectionEnd = start + 2;
-    }
-    descArea.focus();
-}
-
-function insertImageToDesc() { 
-    const url = prompt("請輸入圖片網址 (URL)：", "https://"); 
-    if (url) { 
-        const descArea = document.getElementById('editDesc'); 
-        descArea.value += `\n\n![圖片](${url})\n\n`; 
-        descArea.focus(); 
-    } 
-}
-
-function insertImageURL() { insertImageToDesc(); }
-
-function handleLocalImageUpload() { 
-    const fileInput = document.getElementById('localImgInput'); 
-    const file = fileInput.files[0]; 
-    if (!file) return; 
-    
-    if (file.size > 2 * 1024 * 1024) { 
-        alert("⚠️ 圖片過大！建議使用 2MB 以下的圖片，以免瀏覽器卡頓。"); 
-    } 
-    
-    const reader = new FileReader(); 
-    reader.onload = function(e) { 
-        const descArea = document.getElementById('editDesc'); 
-        descArea.value += `\n\n![本地圖片](${e.target.result})\n\n`; 
-        descArea.focus(); 
-        fileInput.value = ''; 
-    }; 
-    reader.readAsDataURL(file); 
-}
-
-function addTestCaseUI(input='', output='') { 
-    const div = document.createElement('div'); 
-    div.className = 'tc-item'; 
-    div.innerHTML = `<button class="btn btn-outline" style="float:right; border:none; padding:0 5px;" onclick="this.parentElement.remove()">✕</button><div style="display:flex; gap:10px; margin-top:5px;"><textarea class="tc-input" rows="1" oninput="autoResize(this)" style="flex:1" placeholder="Input">${input}</textarea><textarea class="tc-output" rows="1" oninput="autoResize(this)" style="flex:1" placeholder="Output">${output}</textarea></div>`; 
-    document.getElementById('adminTestCases').appendChild(div); 
-    
-    if (input || output) { 
-        const tas = div.querySelectorAll('textarea'); 
-        tas.forEach(ta => autoResize(ta)); 
-    } 
-}
-
-function toggleAdminMultiFile() {
-    const multiFileCheck = document.getElementById('adminEnableMultiFile');
-    const isEnabled = multiFileCheck ? multiFileCheck.checked : false;
-    const tabsContainer = document.getElementById('adminEditorTabs');
-    if (tabsContainer) {
-        tabsContainer.style.display = (isEnabled && currentAdminLang === 'cpp') ? 'flex' : 'none';
-    }
-    
-    if (isEnabled && adminMultiFiles.length === 0) {
-        adminMultiFiles.push({ name: "Class.cpp", tpl: "\n" });
-        adminMultiFiles.push({ name: "Class.h", tpl: "\n" });
-    }
-    
-    if (!isEnabled || currentAdminLang !== 'cpp') { 
-        switchAdminFile(-1); 
-    } else { 
-        renderAdminTabs(); 
-    }
-}
-
-function renderAdminTabs() {
-    const tabsContainer = document.getElementById('adminEditorTabs');
-    if (!tabsContainer) return;
-    
-    let html = `<div class="editor-tab ${adminCurrentFileIndex === -1 ? 'active' : ''}" onclick="switchAdminFile(-1)">main.cpp</div>`;
-    
-    adminMultiFiles.forEach((f, idx) => {
-        html += `<div class="editor-tab ${adminCurrentFileIndex === idx ? 'active' : ''}" onclick="switchAdminFile(${idx})">
-                    ${f.name} 
-                    <span class="tab-icon" title="重新命名" onclick="renameAdminFile(event, ${idx})"><i class="fa-solid fa-pen"></i></span> 
-                    <span class="tab-icon" title="移除" onclick="removeAdminFile(event, ${idx})">❌</span>
-                 </div>`;
-    });
-    
-    html += `<div class="editor-tab" style="color:var(--success);" onclick="addAdminFile()">+ 新增檔案</div>`;
-    tabsContainer.innerHTML = html;
-}
-
-function switchAdminFile(idx) {
-    if (adminCurrentFileIndex === -1) { 
-        adminTempTemplates[currentAdminLang] = document.getElementById('editTemplate').value; 
-    } else if (adminMultiFiles[adminCurrentFileIndex]) { 
-        adminMultiFiles[adminCurrentFileIndex].tpl = document.getElementById('editTemplate').value; 
-    }
-    
-    adminCurrentFileIndex = idx;
-    
-    if (adminCurrentFileIndex === -1) { 
-        document.getElementById('editTemplate').value = adminTempTemplates[currentAdminLang] || ""; 
-    } else { 
-        document.getElementById('editTemplate').value = adminMultiFiles[adminCurrentFileIndex].tpl || ""; 
-    }
-    
-    renderAdminTabs();
-}
-
-function addAdminFile() {
-    const name = prompt("請輸入新增檔案名稱 (例如 Rectangle.cpp):", "NewClass.cpp");
-    if (name && name.trim() !== "") {
-        adminMultiFiles.push({ name: name.trim(), tpl: "// " + name.trim() + "\n" });
-        switchAdminFile(adminMultiFiles.length - 1);
-    }
-}
-
-function renameAdminFile(e, idx) {
-    e.stopPropagation();
-    const newName = prompt("重新命名:", adminMultiFiles[idx].name);
-    if (newName && newName.trim() !== "") {
-        adminMultiFiles[idx].name = newName.trim();
-        renderAdminTabs();
-    }
-}
-
-function removeAdminFile(e, idx) {
-    e.stopPropagation();
-    if (confirm("確定刪除此檔案？")) {
-        const wasCurrentTab = (adminCurrentFileIndex === idx);
-        if (adminCurrentFileIndex > idx) adminCurrentFileIndex--; 
-        
-        adminMultiFiles.splice(idx, 1); 
-
-        if (wasCurrentTab) {
-            adminCurrentFileIndex = -1;
-            document.getElementById('editTemplate').value = adminTempTemplates[currentAdminLang] || ""; 
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <style>
+        #view-admin { 
+            display: none; 
+            height: 100%; 
+            flex-direction: column; 
+            background: var(--bg-page-light); 
         }
-        renderAdminTabs(); 
-    }
-}
 
-function initAdminResizer() {
-    const handle = document.getElementById('adminDragHandle'); 
-    const bottomArea = document.getElementById('adminRowBottom');
-    
-    if (!handle || !bottomArea) return;
-
-    handle.addEventListener('mousedown', function(e) {
-        e.preventDefault(); 
-        document.body.classList.add('resizing');
-        const startHeight = bottomArea.offsetHeight; 
-        bottomArea.style.flex = 'none'; 
-        bottomArea.style.height = startHeight + 'px'; 
-        const startY = e.clientY;
-        
-        function doDrag(e) { 
-            const deltaY = startY - e.clientY; 
-            let newHeight = startHeight + deltaY; 
-            if (newHeight < 100) newHeight = 100; 
-            bottomArea.style.height = newHeight + 'px'; 
+        .admin-toolbar { 
+            height: 50px; 
+            background: var(--bg-header-blue); 
+            border-bottom: 1px solid rgba(0,0,0,0.1); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 20px; 
+            flex-shrink: 0; 
+            color: white; 
         }
-        function stopDrag() { 
-            document.removeEventListener('mousemove', doDrag); 
-            document.removeEventListener('mouseup', stopDrag); 
-            document.body.classList.remove('resizing'); 
-        }
+
+        .admin-content-wrapper { display: flex; flex: 1; overflow: hidden; }
         
-        document.addEventListener('mousemove', doDrag); 
-        document.addEventListener('mouseup', stopDrag);
-    });
-}
+        .admin-col-left { 
+            flex: 0 0 35%; 
+            max-width: 35%; 
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid #ccc; 
+            padding: 25px; 
+            background: var(--bg-pane-light); 
+            color: var(--text-pane-light); 
+            overflow-y: auto; 
+            box-sizing: border-box; 
+        }
 
-function doAdminDrag(e) { 
-    const bottomArea = document.getElementById('adminRowBottom');
-    if (!bottomArea) return;
-    const deltaY = window.adminDragStartY - e.clientY; 
-    let newHeight = window.adminDragStartHeight + deltaY; 
-    if (newHeight < 100) newHeight = 100; 
-    bottomArea.style.height = newHeight + 'px'; 
-}
+        .admin-col-left input, 
+        .admin-col-left textarea { background: var(--bg-pane-light); color: #333; border: 1px solid #999; }
+        
+        .admin-col-left input:focus, 
+        .admin-col-left textarea:focus { background: #e8e8e8; outline: 2px solid var(--accent); }
+        
+        .admin-col-right { flex: 1; display: flex; flex-direction: column; background: #1a1a1a; min-width: 0; color: #e0e0e0; }
+        .admin-row-top { flex: 2; display: flex; flex-direction: column; padding: 20px; background: #1e1e1e; min-height: 100px; }
+        .admin-row-bottom { flex: 1; display: flex; flex-direction: column; padding: 0; background: #151515; min-height: 100px; overflow: hidden; }
+        
+        .admin-header-row { 
+            position: sticky; 
+            top: 0; 
+            background: #151515; 
+            z-index: 5; 
+            padding: 8px 20px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
 
-function stopAdminDrag() { 
-    document.removeEventListener('mousemove', doAdminDrag); 
-    document.removeEventListener('mouseup', stopAdminDrag); 
-    document.body.classList.remove('resizing'); 
-}
+        #adminTestCases { padding: 20px; padding-bottom: 40px; overflow-y: auto; flex: 1; }
+        .admin-label { color: #555; font-size: 0.9rem; margin-bottom: 5px; display: block; font-weight: 600; }
+        .admin-col-right textarea { background: #252526; color: #fff; border: 1px solid #444; }
+        
+        .admin-col-right .tc-item { 
+            background: #1e1e1e; 
+            border: 1px solid #333; 
+            border-left: 3px solid var(--warning); 
+            padding: 10px; 
+            margin-bottom: 8px; 
+            border-radius: 4px; 
+        }
 
-function openModelAnswerUI() {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    if (!p) return;
-    if (p.testCases && p.testCases.length > 0) {
-        document.getElementById('modelAnswerInput').value = p.testCases[0].output || "";
-    } else {
-        document.getElementById('modelAnswerInput').value = "";
-    }
-    const modal = document.getElementById('modelAnswerModal');
-    if (modal) modal.style.display = 'flex';
-}
+        .admin-col-right .tc-item textarea { 
+            background: #151515; 
+            border: 1px solid #444; 
+            min-height: 38px; 
+            max-height: 180px; 
+            resize: vertical; 
+            overflow-y: auto; 
+        }
 
-function saveModelAnswerFromModal() {
-    const modalInput = document.getElementById('modelAnswerInput').value;
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.7); 
+            z-index: 999; 
+            justify-content: center; 
+            align-items: center; 
+            backdrop-filter: blur(3px); 
+        }
+
+        .modal-box { 
+            background: #1e1e1e; 
+            color: #e0e0e0; 
+            padding: 25px; 
+            width: 400px; 
+            border-radius: 12px; 
+            border: 1px solid #333; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+        }
+
+        .modal-box textarea, .modal-box input { background: #121212; color: #fff; border: 1px solid #444; }
+        .modal-box .btn-outline { border-color: #555; color: #ccc; }
+        .modal-box .btn-outline:hover { background: #333; color: #fff; }
+
+        .hist-item { padding: 12px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.2s; }
+        .hist-item:hover { background: #2a2a2a; }
+        .hist-item.active { border-left: 3px solid var(--accent); background: #222; }
+
+        #updateToast { 
+            display: none; 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+            color: white; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            z-index: 9999; 
+            align-items: center; 
+            gap: 15px; 
+            animation: slideIn 0.4s ease-out forwards; 
+        }
+
+        @keyframes slideIn { 
+            from { transform: translateX(100%); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+    </style>
+</head>
+<body style="background-color: var(--bg-page-light); color: #333; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
     
-    // update test cases UI list if empty, else update first output
-    const inputs = document.querySelectorAll('.tc-input'); 
-    const outputs = document.querySelectorAll('.tc-output'); 
-    
-    if (inputs.length === 0) {
-        addTestCaseUI("", modalInput);
-    } else {
-        outputs[0].value = modalInput;
-    }
-    
-    const modal = document.getElementById('modelAnswerModal');
-    if (modal) modal.style.display = 'none';
-}
+<div id="view-admin">
+    <div class="admin-toolbar">
+        <h2 style="margin:0;">⚙️ 題目設定</h2>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-outline header-btn" onclick="openHistoryModal()">📜 執行紀錄</button>
+            <button class="btn btn-warning" onclick="openModelAnswerUI()">🔑 示範解答</button>
+            <button class="btn btn-primary" onclick="saveAdminAndBack()">💾 儲存並返回</button>
+        </div>
+    </div>
+    <div class="admin-content-wrapper">
+        <div class="admin-col-left">
+            <h3 style="margin-top:0; color:var(--accent);">基本資訊</h3>
+            <label class="admin-label">題目名稱</label>
+            <input type="text" id="editTitle" style="margin-bottom:20px;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <label class="admin-label" style="margin:0;">題目描述 </label>
+                <div>
+                    <input type="file" id="localImgInput" accept="image/*" style="display:none" onchange="handleLocalImageUpload()">
+                    <button class="btn btn-outline btn-sm" style="border-color:#999;" onclick="insertBoldToDesc()">𝐁 粗體</button>
+                    <button class="btn btn-outline btn-sm" style="border-color:#999;" onclick="insertImageURL()">🔗 連結</button>
+                    <button class="btn btn-outline btn-sm" style="border-color:#999;" onclick="document.getElementById('localImgInput').click()"><i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> 上傳</button>
+                </div>
+            </div>
+            
+            <textarea id="editDesc" style="flex:1; resize:none;" placeholder="在此輸入題目內容。支援圖片語法 ![Alt](URL)。\n直接輸入星號圖形 (***) 或減號 (---) 即可顯示，不會自動變成列表或線條。"></textarea>
+        </div>
+        <div class="admin-col-right">
+            <div class="admin-row-top" id="adminRowTop">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <label class="admin-label" style="color:var(--success); margin:0;">Code Template (預設程式碼)</label>
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <label style="color:#bbb; font-size:0.9rem; display:flex; align-items:center; gap:5px; cursor:pointer;">
+                            <input type="checkbox" id="adminEnableMultiFile" onchange="toggleAdminMultiFile()"> 啟用多檔案 (OOP)
+                        </label>
+                        <select id="adminLangSelect" style="padding:2px 5px; height:auto;" onchange="changeAdminLang()">
+                            <option value="cpp">編輯 C++ 模板</option>
+                            <option value="python">編輯 Python 3 模板</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="editor-tabs" id="adminEditorTabs" style="display:none; margin-bottom:5px; border-radius:4px;"></div>
+                <textarea id="editTemplate" style="flex:1; resize:none; font-family:'Consolas',monospace;" spellcheck="false" placeholder="// 設定該語言的預設代碼..."></textarea>
+            </div>
+            <div class="resizer-bar" id="adminDragHandle"><div class="resizer-icon"></div></div>
+            <div class="admin-row-bottom" id="adminRowBottom">
+                <div class="admin-header-row">
+                    <span class="admin-label" style="color:#aaa; margin:0;">測試資料 (每行代表一筆輸入/輸出)</span>
+                    <button class="btn btn-outline btn-sm" onclick="addTestCaseUI()">+ 新增</button>
+                </div>
+                <div id="adminTestCases"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-function openHistoryModal() {
-    const modal = document.getElementById('historyModal');
-    if (modal) modal.style.display = 'flex';
-}
+<div id="updateToast">
+    <span style="font-weight: bold; font-size: 1.1rem;">🚀 發現題庫有新版本！</span>
+    <button class="btn" style="background: white; color: #059669;" onclick="applyUpdate()">立即同步</button>
+</div>
 
-function clearProblemHistory() {
-    if (confirm('確定清空此題紀錄？')) {
-        const list = document.getElementById('historyList');
-        if (list) list.innerHTML = '';
-        const codeView = document.getElementById('historyCodeView');
-        if (codeView) codeView.value = '';
-    }
-}
+<div id="backupModal" class="modal">
+    <div class="modal-box" style="width:500px;">
+        <h3>📦 資料備份/還原 (V72 雲端版)</h3>
+        <textarea id="backupStr" style="width:100%; height:100px; margin-bottom:10px;" placeholder="Backup Code (Base64)..."></textarea>
+        
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:15px;">
+             <input type="file" id="backupFileInput" accept=".txt,.json" style="display:none" onchange="handleBackupFile(this)">
+             <button class="btn btn-outline btn-sm" onclick="document.getElementById('backupFileInput').click()"><i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> 選擇檔案</button>
+             <button class="btn btn-success btn-sm" onclick="downloadBackup()">💾 下載檔案</button>
+        </div>
 
-function copyModelAnswer() {
-    const input = document.getElementById('modelAnswerInput');
-    if (input && input.value) {
-        navigator.clipboard.writeText(input.value);
-        alert('已複製示範解答');
-    }
-}
+        <div style="display:flex; justify-content:space-between; border-top:1px solid #333; padding-top:15px;">
+            <button class="btn btn-outline" onclick="document.getElementById('backupModal').style.display='none'">關閉</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary" onclick="copyBackupCode()">📋 複製代碼</button>
+                <button class="btn btn-danger" onclick="execRestore()">⚠️ 開始還原</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-function pasteModelAnswer() {
-    navigator.clipboard.readText().then(clipText => {
-        const input = document.getElementById('modelAnswerInput');
-        if (input) input.value = clipText;
-    });
-}
+<div id="modelAnswerModal" class="modal">
+    <div class="modal-box" style="width:600px; max-width:90%; height:500px;">
+        <h3>🔑 設定示範解答 (Model Answer)</h3>
+        <textarea id="modelAnswerInput" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#d4d4d4; border:1px solid #333; padding:10px;" placeholder="#include <iostream>..." spellcheck="false"></textarea>
+        <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" onclick="document.getElementById('modelAnswerModal').style.display='none'">取消</button>
+                <button class="btn btn-copy" onclick="copyModelAnswer()">📋 複製解答</button>
+                <button class="btn btn-paste" onclick="pasteModelAnswer()">📋 貼上解答</button>
+                <button class="btn btn-primary" onclick="saveModelAnswerFromModal()">✅ 暫存設定</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-function copyBackupCode() {
-    const backupStr = document.getElementById('backupStr');
-    if (backupStr && backupStr.value) {
-        navigator.clipboard.writeText(backupStr.value);
-        alert('已複製備份代碼');
-    }
-}
+<div id="aiHelperModal" class="modal">
+    <div class="modal-box" style="width:600px; max-width:90%; height:550px;">
+        <h3 style="display:flex; align-items:center; gap:10px; color:var(--ai-color); margin-top:0;">
+            🤖 AI 程式碼診斷 (傳送門)
+        </h3>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:-5px;">
+            系統已自動生成提問內容。您可以選擇僅複製文字，或複製並開啟新分頁。
+        </p>
+        <textarea id="aiPromptOutput" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#d4d4d4; border:1px solid #333; padding:10px; font-size:0.9rem;" readonly></textarea>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+            <button class="btn btn-outline" onclick="document.getElementById('aiHelperModal').style.display='none'">關閉</button>
+            <button class="btn btn-primary" onclick="copyPromptOnly()">📋 僅複製</button>
+            <button class="btn btn-ai" onclick="copyPromptAndOpenGemini()">🚀 複製並前往 Gemini</button>
+        </div>
+    </div>
+</div>
 
-function execRestore() {
-    alert('此功能需要在 workspace 中執行');
-}
+<div id="historyModal" class="modal">
+    <div class="modal-box" style="width:800px; max-width:95%; height:600px;">
+        <h3 style="margin-top:0;">📜 歷史執行紀錄</h3>
+        <p style="color:#aaa; font-size:0.9rem; margin-top:-5px; margin-bottom:10px;">此處保留您每次點擊「執行測試」的紀錄（最多保留最新 30 筆）。</p>
+        
+        <div style="display:flex; flex:1; gap:15px; overflow:hidden;">
+            <div style="flex:1; overflow-y:auto; background:#121212; border:1px solid #333; border-radius:6px; min-width:200px;" id="historyList"></div>
+            <div style="flex:2; display:flex; flex-direction:column;">
+                <div style="color:#aaa; font-size:0.9rem; margin-bottom:5px;">當時執行的程式碼：</div>
+                <textarea id="historyCodeView" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#ccc; border:1px solid #333; padding:10px;" readonly></textarea>
+            </div>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-top:15px; flex-shrink:0;">
+            <button class="btn btn-danger" onclick="clearProblemHistory()"><i class="fa-solid fa-trash"></i> 清空此題紀錄</button>
+            <button class="btn btn-outline" onclick="document.getElementById('historyModal').style.display='none'">關閉</button>
+        </div>
+    </div>
+</div>
 
-if (window.isDbLoaded) {
-    initAdmin();
-} else {
-    window.addEventListener('dbLoaded', initAdmin);
-}
+    <script src="/js/config.js?v=13"></script>
+    <script src="/js/db.js?v=13"></script>
+    <script src="/js/admin.js?v=13"></script>
+    <script src="/js/auth.js?v=13"></script>
+</body>
+</html>
