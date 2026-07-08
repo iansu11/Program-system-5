@@ -8,8 +8,14 @@ let adminProbId = null;
 
 function initAdmin() {
     const path = window.location.pathname;
-    const match = path.match(/^\/admin\/([a-zA-Z0-9_-]+)$/);
-    const probIdStr = match ? match[1] : null;
+    const urlParams = new URLSearchParams(window.location.search);
+    let probIdStr = null;
+    if (urlParams.has('probId')) {
+        probIdStr = urlParams.get('probId');
+    } else {
+        const match = path.match(/^\/admin\/([a-zA-Z0-9_-]+)$/);
+        probIdStr = match ? match[1] : null;
+    }
     
     if (!probIdStr) {
         alert("找不到題目 ID，返回大廳");
@@ -30,8 +36,8 @@ function initAdmin() {
     renderAdmin();
 }
 
-function goBackToWorkspace() {
-    window.location.href = '/workspace.html?probId=' + adminProbId;
+function goToWorkspace() {
+    window.open('/workspace.html?probId=' + adminProbId + '&fromAdmin=1', '_blank');
 }
 
 function renderAdmin() {
