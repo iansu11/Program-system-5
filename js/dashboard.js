@@ -27,7 +27,7 @@ function handleRouteChange() {
     const urlParams = new URLSearchParams(window.location.search);
 
     // Normalize paths
-    if (path === '/' || path === '/categories') {
+    if (path === '/' || path === '/dashboard.html') {
         path = '/source-selector';
     }
 
@@ -82,7 +82,7 @@ window.addEventListener('popstate', handleRouteChange);
 
 function initDashboard() {
     const path = window.location.pathname;
-    if (path === '/' || path === '/categories') {
+    if (path === '/' || path === '/dashboard.html') {
         navigateTo('/source-selector');
     } else {
         handleRouteChange();
@@ -96,7 +96,7 @@ if (window.isDbLoaded) {
 }
 
 function openDefaultBank() {
-    currentBankUrl = "https://raw.githubusercontent.com/iansu11/Program-system-image/refs/heads/main/db.json";
+    currentBankUrl = "/db.json";
     currentBankName = "官方預設題庫";
     localStorage.setItem('oj_v15_bank_url', currentBankUrl);
     localStorage.setItem('oj_v15_bank_name', currentBankName);
@@ -176,7 +176,7 @@ function renderCategoryList() {
         `;
         div.onclick = () => {
             if (!isCatSortMode) {
-                navigateTo('/categories' + cat.id + '/problems');
+                navigateTo('/categories/' + cat.id + '/problems');
             }
         };
         list.appendChild(div);
