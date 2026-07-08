@@ -11,6 +11,141 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <style>
+        #view-admin { 
+            display: none; 
+            height: 100%; 
+            flex-direction: column; 
+            background: var(--bg-page-light); 
+        }
+
+        .admin-toolbar { 
+            height: 50px; 
+            background: var(--bg-header-blue); 
+            border-bottom: 1px solid rgba(0,0,0,0.1); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 20px; 
+            flex-shrink: 0; 
+            color: white; 
+        }
+
+        .admin-content-wrapper { display: flex; flex: 1; overflow: hidden; }
+        
+        .admin-col-left { 
+            flex: 0 0 35%; 
+            max-width: 35%; 
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid #ccc; 
+            padding: 25px; 
+            background: var(--bg-pane-light); 
+            color: var(--text-pane-light); 
+            overflow-y: auto; 
+            box-sizing: border-box; 
+        }
+
+        .admin-col-left input, 
+        .admin-col-left textarea { background: var(--bg-pane-light); color: #333; border: 1px solid #999; }
+        
+        .admin-col-left input:focus, 
+        .admin-col-left textarea:focus { background: #e8e8e8; outline: 2px solid var(--accent); }
+        
+        .admin-col-right { flex: 1; display: flex; flex-direction: column; background: #1a1a1a; min-width: 0; color: #e0e0e0; }
+        .admin-row-top { flex: 2; display: flex; flex-direction: column; padding: 20px; background: #1e1e1e; min-height: 100px; }
+        .admin-row-bottom { flex: 1; display: flex; flex-direction: column; padding: 0; background: #151515; min-height: 100px; overflow: hidden; }
+        
+        .admin-header-row { 
+            position: sticky; 
+            top: 0; 
+            background: #151515; 
+            z-index: 5; 
+            padding: 8px 20px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        #adminTestCases { padding: 20px; padding-bottom: 40px; overflow-y: auto; flex: 1; }
+        .admin-label { color: #555; font-size: 0.9rem; margin-bottom: 5px; display: block; font-weight: 600; }
+        .admin-col-right textarea { background: #252526; color: #fff; border: 1px solid #444; }
+        
+        .admin-col-right .tc-item { 
+            background: #1e1e1e; 
+            border: 1px solid #333; 
+            border-left: 3px solid var(--warning); 
+            padding: 10px; 
+            margin-bottom: 8px; 
+            border-radius: 4px; 
+        }
+
+        .admin-col-right .tc-item textarea { 
+            background: #151515; 
+            border: 1px solid #444; 
+            min-height: 38px; 
+            max-height: 180px; 
+            resize: vertical; 
+            overflow-y: auto; 
+        }
+
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.7); 
+            z-index: 999; 
+            justify-content: center; 
+            align-items: center; 
+            backdrop-filter: blur(3px); 
+        }
+
+        .modal-box { 
+            background: #1e1e1e; 
+            color: #e0e0e0; 
+            padding: 25px; 
+            width: 400px; 
+            border-radius: 12px; 
+            border: 1px solid #333; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+        }
+
+        .modal-box textarea, .modal-box input { background: #121212; color: #fff; border: 1px solid #444; }
+        .modal-box .btn-outline { border-color: #555; color: #ccc; }
+        .modal-box .btn-outline:hover { background: #333; color: #fff; }
+
+        .hist-item { padding: 12px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.2s; }
+        .hist-item:hover { background: #2a2a2a; }
+        .hist-item.active { border-left: 3px solid var(--accent); background: #222; }
+
+        #updateToast { 
+            display: none; 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+            color: white; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            z-index: 9999; 
+            align-items: center; 
+            gap: 15px; 
+            animation: slideIn 0.4s ease-out forwards; 
+        }
+
+        @keyframes slideIn { 
+            from { transform: translateX(100%); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+    </style>
 </head>
 <body style="background-color: var(--bg-page-light); color: #333; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
     
