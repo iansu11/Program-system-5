@@ -1,12 +1,12 @@
 
     // =========================================================
-    // 0. Eager Load (?��?載入) & 變數�??
+    // 0. Eager Load (?  ?載入) & 變數 ??
     // =========================================================
     let db = { 
 	categories: [], 
 	problems: [], 
 	version: "",
-	customBanks: [] //存放使用?�自訂�??�?��?�?
+	customBanks: [] //存放使用? 自訂 ?? ?  ? ?
     };
 
     let executionHistories = {}; 
@@ -16,11 +16,11 @@
     let pendingUpdateDb = null;
     let hasCloudDbData = false;
     let authInitialized = false;
-    let isBankSortMode = false; // ?�制?��?題庫?��?模�??��???
+    let isBankSortMode = false; // ? 制?  ?題庫?  ?模 ??  ???
 
-    // V60: 多�?案支?��??�?��???
-    let currentFileIndex = -1; // -1 �?�� main�? 以�?�?�� extraFiles ??index
-    let adminMultiFiles = [];  // 後台設�?專用?�暫存物�?
+    // V60: 多 ?案支?  ?? ?  ???
+    let currentFileIndex = -1; // -1  ?   main ? 以 ? ?   extraFiles ??index
+    let adminMultiFiles = [];  // 後台設 ?專用? 暫存物 ?
     let adminCurrentFileIndex = -1; 
 
     const localData = localStorage.getItem('oj_v15_data');
@@ -44,16 +44,16 @@
     if (localBankUrl) currentBankUrl = localBankUrl;
 
     // ==========================================
-    // 1. ?�雲端核心設�?(Master-Tenant ?��?)
+    // 1. ? 雲端核心設 ?(Master-Tenant ?  ?)
     // ==========================================
     const masterConfig = {
-	apiKey: "AIzaSyA3xQLjtZ95UzGJIpo2QmhKb4HEeifWhdI",
-    authDomain: "program-system-2-ca5a8.firebaseapp.com",
-    projectId: "program-system-2-ca5a8",
-    storageBucket: "program-system-2-ca5a8.firebasestorage.app",
-    messagingSenderId: "382670100845",
-    appId: "1:382670100845:web:0d05e40672e18c6a5ce264",
-    measurementId: "G-CNV16D9EFV"
+	apiKey: "AIzaSyCfmxMbNAnKE6t8rOk6nv7zNXUkheqGkoo",
+    	authDomain: "program-system-3.firebaseapp.com",
+    	projectId: "program-system-3",
+    	storageBucket: "program-system-3.firebasestorage.app",
+    	messagingSenderId: "494972479318",
+    	appId: "1:494972479318:web:ac4e7fd68b88339afe18f7",
+    	measurementId: "G-0TDMYYMXH9"
     };
 
 
@@ -62,13 +62,13 @@
     const masterDb = firebase.firestore();
     let currentUser = null;
 
-    // [?�戶端] 使用?��?專屬 Firebase (之�??��??��?)
+    // [? 戶端] 使用?  ?專屬 Firebase (之 ??  ??  ?)
     let personalApp = null;
     let personalDb = null;
     
 
     // ==========================================
-    // 2. 帳�?系統
+    // 2. 帳 ?系統
     // ==========================================
     
     let isLoginMode = true;
@@ -81,41 +81,41 @@
         document.getElementById('tabRegister').style.borderBottomColor = !isLoginMode ? 'var(--accent)' : 'transparent';
         
         document.getElementById('registerConfigArea').style.display = isLoginMode ? 'none' : 'block';
-        document.getElementById('actionBtn').innerText = isLoginMode ? '?�入系統' : '註�?並�?定雲�?;
+        document.getElementById('actionBtn').innerText = isLoginMode ? '? 入系統' : '註 ?並 ?定雲 ?;
         document.getElementById('actionBtn').className = isLoginMode ? 'btn btn-success' : 'btn btn-primary';
     }
         
     async function handleAuthAction() {
         const email = document.getElementById('emailInput').value.trim();
         const pwd = document.getElementById('passwordInput').value;
-        if (!email || !pwd) { alert("請輸?�電子郵件�?密碼�?); return; }
+        if (!email || !pwd) { alert("請輸? 電子郵件 ?密碼 ?); return; }
 
         const actionBtn = document.getElementById('actionBtn');
         const originalText = actionBtn.innerText;
-        actionBtn.innerText = isLoginMode ? '?�入�?..' : '?��?�?..';
+        actionBtn.innerText = isLoginMode ? '? 入 ?..' : '?  ? ?..';
         actionBtn.disabled = true;
 
         if (isLoginMode) {
             masterAuth.signInWithEmailAndPassword(email, pwd).catch(err => {
-                alert("?�入失�?�? + err.message);
+                alert("? 入失 ? ? + err.message);
                 actionBtn.innerText = originalText;
                 actionBtn.disabled = false;
             });
         } else {
-            if (pwd.length < 6) { alert("密碼太短�?); return; }
+            if (pwd.length < 6) { alert("密碼太短 ?); return; }
             const configStr = document.getElementById('registerConfigInput').value.trim();
-            if (!configStr) { alert("請貼�?Firebase ?�鑰�?); return; }
+            if (!configStr) { alert("請貼 ?Firebase ? 鑰 ?); return; }
             
-            try { JSON.parse(configStr); } catch(e) { alert("??JSON ?��??�誤�?); return; }
+            try { JSON.parse(configStr); } catch(e) { alert("??JSON ?  ?? 誤 ?); return; }
 
             try {
                 const userCredential = await masterAuth.createUserWithEmailAndPassword(email, pwd);
                 await masterDb.collection('userSettings').doc(userCredential.user.uid).set({
                     firebaseConfig: configStr
                 });
-                alert("??註�??��?並�?定雲端�?");
+                alert("??註 ??  ?並 ?定雲端 ?");
             } catch(err) { 
-                alert("註�?失�?�? + err.message); 
+                alert("註 ?失 ? ? + err.message); 
                 actionBtn.innerText = originalText;
                 actionBtn.disabled = false;
             }
@@ -123,7 +123,7 @@
     }
 
     function logout() {
-        if (confirm("確�?要登?��?�?)) {
+        if (confirm("確 ?要登?  ? ?)) {
             masterAuth.signOut().then(() => {
                 localStorage.removeItem('oj_v15_data');
                 localStorage.removeItem('oj_v15_history');
@@ -141,7 +141,7 @@
             document.getElementById('user-name').innerText = user.email;
             
             try {
-                // ??Master ?��? JSON ?�鑰
+                // ??Master ?  ? JSON ? 鑰
                 let userConfigStr = localStorage.getItem('oj_v15_firebaseConfig');
                 try {
                     const doc = await masterDb.collection('userSettings').doc(user.uid).get();
@@ -150,13 +150,13 @@
                         localStorage.setItem('oj_v15_firebaseConfig', userConfigStr);
                     }
                 } catch (netErr) {
-                    console.warn("?��?從雲端�?得�??��?將�?試使?�本?�快?��?", netErr);
+                    console.warn("?  ?從雲端 ?得 ??  ?將 ?試使? 本? 快?  ?", netErr);
                 }
 
                 if (userConfigStr) {
                     const userConfig = JSON.parse(userConfigStr);
                     
-                    // ?��??�人?�端
+                    // ?  ?? 人? 端
                     if (personalApp) await personalApp.delete();
 		    personalApp = firebase.initializeApp(userConfig, "PersonalCloud");
                     await personalApp.auth().signInAnonymously();
@@ -179,18 +179,18 @@
                     }
 
 		    if (!window.location.hash || window.location.hash === '#/login') {
-			window.location.hash = '/source-selector'; // ?�入後若?��?定目標�??�登?��?，�?跳�??��?源選?�器
+			window.location.hash = '/source-selector'; // ? 入後若?  ?定目標 ?? 登?  ?， ?跳 ??  ?源選? 器
 		    }
 		    handleHashChange();
 		
                 } else {
-                    alert("?��??��?定�??��?系統將無法�?步您?�雲端進度�?);
-                    // 移除?��??�出，�??�使?�者�?要�?
+                    alert("?  ??  ?定 ??  ?系統將無法 ?步您? 雲端進度 ?);
+                    // 移除?  ?? 出， ?? 使? 者 ?要 ?
                 }
             } catch (err) {
                 console.error(err);
-                // 移除?��??�出，改?��?�?
-                alert("????�人?�端失�?，可?�是網路不穩！�??�新?��??��?後�?試�?);
+                // 移除?  ?? 出，改?  ? ?
+                alert("???? 人? 端失 ?，可? 是網路不穩！ ?? 新?  ??  ?後 ?試 ?);
             }
         } else {
             currentUser = null;
@@ -199,16 +199,16 @@
             const actionBtn = document.getElementById('actionBtn');
             if (actionBtn) {
                 actionBtn.disabled = false;
-                actionBtn.innerText = isLoginMode ? '?�入系統' : '註�?並�?定雲�?;
+                actionBtn.innerText = isLoginMode ? '? 入系統' : '註 ?並 ?定雲 ?;
             }
 
             window.location.hash = '/login';
-	    handleHashChange(); //確�??�登?��?立刻顯示?�入??
+	    handleHashChange(); //確 ?? 登?  ?立刻顯示? 入??
         }
     });
     
     // ==========================================
-    // 3. ?�端資�??�步 & ?��??�新機制
+    // 3. ? 端資 ?? 步 & ?  ?? 新機制
     // ==========================================
     
     async function loadUserDataFromCloud(isBackground = false) {
@@ -218,11 +218,11 @@
             if (docSnap.exists) {
                 const data = docSnap.data();
 
-                // 載入?��?題庫清單 (?�是資�??�庫)
+                // 載入?  ?題庫清單 (? 是資 ?? 庫)
                 if (data.userCustomBanks) {
                     const parsedBanks = JSON.parse(data.userCustomBanks);
                     try {
-                        // ?�� ?��?修正：�?子�??��??��??��? customBanks 資�?，�???1MB ?�制
+                        // ?   ?  ?修正： ?子 ??  ??  ??  ? customBanks 資 ?， ???1MB ? 制
                         const customBanksSnap = await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').get();
                         if (!customBanksSnap.empty) {
                             const fullBanksMap = {};
@@ -235,7 +235,7 @@
                             db.customBanks = parsedBanks;
                         }
                     } catch(e) {
-                        console.error("載入?��?題庫?�容失�?�?, e);
+                        console.error("載入?  ?題庫? 容失 ? ?, e);
                         db.customBanks = parsedBanks;
                     }
                 }
@@ -243,7 +243,7 @@
                 const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
 
                 if (!isCustom) {
-                    // ?��?設�?庫模式】�?讀?��??�進度
+                    // ?  ?設 ?庫模式】 ?讀?  ?? 進度
                     const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
                     if (safeKey && data.bankProgress && data.bankProgress[safeKey]) {
                         const prog = JSON.parse(data.bankProgress[safeKey]);
@@ -252,10 +252,10 @@
                         db.version = prog.version || "";
                     }
                     
-                    // ?? ?��??�失?�自訂�?類�?如�? bankProgress 存�?失�?，�? customCategories ?��?�?
+                    // ?? ?  ?? 失? 自訂 ?類 ?如 ? bankProgress 存 ?失 ?， ? customCategories ?  ? ?
                     if (data.customCategories) {
                         Object.values(data.customCategories).forEach(cc => {
-                            // 確�??�屬?�這個�?庫�??��??��?
+                            // 確 ?? 屬? 這個 ?庫 ??  ??  ?
                             if (cc && cc.id && cc.bankUrl === currentBankUrl) {
                                 const existingC = db.categories.find(c => c.id == cc.id);
                                 if (existingC) {
@@ -267,15 +267,15 @@
                         });
                     }
 
-                    // ?? ?��??�失?�自訂�??��?如�? bankProgress 存�?失�?（�?如容?��?表�?，�? customProblems ?��?�?
+                    // ?? ?  ?? 失? 自訂 ??  ?如 ? bankProgress 存 ?失 ?（ ?如容?  ?表 ?， ? customProblems ?  ? ?
                     if (data.customProblems) {
                         Object.values(data.customProblems).forEach(cp => {
                             if (cp && cp.id) {
                                 const existingP = db.problems.find(p => p.id == cp.id);
                                 if (existingP) {
-                                    Object.assign(existingP, cp); // ?�併修改
+                                    Object.assign(existingP, cp); // ? 併修改
                                 } else {
-                                    // 確�??��?屬於?��?題庫 (檢查?��??�否存在)
+                                    // 確 ??  ?屬於?  ?題庫 (檢查?  ?? 否存在)
                                     if (db.categories.some(c => c.id == cp.catId)) {
                                         db.problems.push(cp);
                                     }
@@ -284,12 +284,12 @@
                         });
                     }
                 } else {
-                    // ?�自訂�?庫模式】�??��? ID �?customBanks ?�庫中�?活�???
+                    // ? 自訂 ?庫模式】 ??  ? ID  ?customBanks ? 庫中 ?活 ???
                     const customId = currentBankUrl.replace("local_custom_", "");
                     const targetBank = db.customBanks.find(b => b.id === customId);
                     if (targetBank) {
-                        // ?�� ?��?修正：�??�是?�景載入，�?對�?要�??�目?�正?�編輯�??��?題庫?�容�?
-                        // ?�為?�地 localStorage ?��??��??��??�鮮?��??�端?�可?�是上次?��?存�??��?資�?
+                        // ?   ?  ?修正： ?? 是? 景載入， ?對 ?要 ?? 目? 正? 編輯 ??  ?題庫? 容 ?
+                        // ? 為? 地 localStorage ?  ??  ??  ?? 鮮?  ?? 端? 可? 是上次?  ?存 ??  ?資 ?
                         if (!isBackground) {
                             db.categories = JSON.parse(JSON.stringify(targetBank.categories || []));
                             db.problems = JSON.parse(JSON.stringify(targetBank.problems || []));
@@ -300,7 +300,7 @@
                 
                 if (data.historyData) executionHistories = JSON.parse(data.historyData);
 
-                // ?�新?�地快�?，確保�?次�??�整?�拿?��?也是對�?
+                // ? 新? 地快 ?，確保 ?次 ?? 整? 拿?  ?也是對 ?
                 localStorage.setItem('oj_v15_data', JSON.stringify(db));
                 localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
             }
@@ -308,13 +308,13 @@
             if (!isBackground) checkUrlAndLoad();
             checkForUpdates();
         } catch (e) { 
-            console.error("讀?�雲端失?��?", e); 
+            console.error("讀? 雲端失?  ?", e); 
         }
     }
     
 
     async function checkForUpdates() {
-        // ?���??�護 1：�??�是?��?題庫，�?對�??��?GitHub ?�新請�?
+        // ?   ?? 護 1： ?? 是?  ?題庫， ?對 ??  ?GitHub ? 新請 ?
         if (!currentBankUrl || currentBankUrl.startsWith("local_custom_")) return; 
         
         const checkUrl = currentBankUrl; 
@@ -323,7 +323,7 @@
             if (res.ok) {
                 const newDb = await res.json();
                 if (newDb.version && newDb.version !== db.version) {
-                    // ?���??�護 2：�?上網?�標籤
+                    // ?   ?? 護 2： ?上網? 標籤
                     newDb._sourceUrl = checkUrl; 
                     pendingUpdateDb = newDb;
                     if (currentView === 'view-categories') { 
@@ -332,7 +332,7 @@
                 }
             }
         } catch (e) { 
-            console.error("檢查?�新失�?", e); 
+            console.error("檢查? 新失 ?", e); 
         }
     }
     
@@ -346,23 +346,23 @@
 
         const newDb = pendingUpdateDb;
         
-        // ?�� 海�?安檢：強?�淨?��? GitHub 下�??��???JSON，�??��?小�?殘�??�自訂�?�?
+        // ?   海 ?安檢：強? 淨?  ? GitHub 下 ??  ???JSON， ??  ?小 ?殘 ?? 自訂 ? ?
         (newDb.categories || []).forEach(c => delete c.isUserAdded);
         (newDb.problems || []).forEach(p => delete p.isUserAdded);
         
-        // 確�????存在，避??.some() ?�出?�誤導致?�個�?程中??
+        // 確 ????存在，避??.some() ? 出? 誤導致? 個 ?程中??
         newDb.categories = newDb.categories || [];
         newDb.problems = newDb.problems || [];
         
-        // 1. 精�??�出?��??�容：只要�??�於?�地/?�端，�??��??��??��??��??�中?��?，�?律�??�自訂擴??
+        // 1. 精 ?? 出?  ?? 容：只要 ?? 於? 地/? 端， ??  ??  ??  ??  ?? 中?  ?， ?律 ?? 自訂擴??
         const userAddedCategories = db.categories.filter(oldC => !newDb.categories.some(newC => newC.id === oldC.id));
         const userAddedProblems = db.problems.filter(oldP => !newDb.problems.some(newP => newP.id === oldP.id));
         
-        // 賦�??�死?��?，�?系統?��??��??�自訂擴?��?並�?許使?�者刪??(?�含被�??��?汰�??��???
+        // 賦 ?? 死?  ?， ?系統?  ??  ?? 自訂擴?  ?並 ?許使? 者刪??(? 含被 ??  ?汰 ??  ???
         userAddedCategories.forEach(c => c.isUserAdded = true);
         userAddedProblems.forEach(p => p.isUserAdded = true);
 
-        // 2. 清除 Firebase ?�客製�?紀?��?確�?官方題庫覆�?
+        // 2. 清除 Firebase ? 客製 ?紀?  ?確 ?官方題庫覆 ?
         if (currentUser && personalDb) {
             let customUpdates = {};
             newDb.problems.forEach(p => {
@@ -375,7 +375,7 @@
             } catch(e) {}
         }
 
-        // ?�� ?�步保�?程�?碼�?答進度，避?��??�更?��?，自己寫?��?式碼不�?
+        // ?   ? 步保 ?程 ?碼 ?答進度，避?  ?? 更?  ?，自己寫?  ?式碼不 ?
         newDb.problems.forEach(newP => {
             const oldP = db.problems.find(p => p.id === newP.id);
             if (oldP) {
@@ -387,7 +387,7 @@
             }
         });
 
-        // 3. 組�?：全?��??��?�?+ 你�??��??��?
+        // 3. 組 ?：全?  ??  ? ?+ 你 ??  ??  ?
         newDb.categories = [...newDb.categories, ...userAddedCategories];
         newDb.problems = [...newDb.problems, ...userAddedProblems];
         
@@ -395,12 +395,12 @@
         db = newDb; 
         db.customBanks = preservedCustomBanks;
 
-        // ?? 強制?�端覆�?存�?
+        // ?? 強制? 端覆 ?存 ?
         await saveToLocal(true, false);
         
         document.getElementById('updateToast').style.display = 'none'; 
         pendingUpdateDb = null;
-        alert("??題庫已�??��?步至?�?��??��?\n?�設題目已全?�更?��??��?作�?紀?��??��?題目也已安全保�???); 
+        alert("??題庫已 ??  ?步至? ?  ??  ?\n? 設題目已全? 更?  ??  ?作 ?紀?  ??  ?題目也已安全保 ???); 
         renderCategoryList();
     }
     
@@ -415,7 +415,7 @@
    
 
     async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) { 
-        // 1. 如�??�自訂�?庫�??��??��?編輯?�容?�填??customBanks ???�?
+        // 1. 如 ?? 自訂 ?庫 ??  ??  ?編輯? 容? 填??customBanks ??? ?
         const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
         if (isCustom) {
             const customId = currentBankUrl.replace("local_custom_", "");
@@ -424,7 +424,7 @@
                 db.customBanks[bankIdx].categories = JSON.parse(JSON.stringify(db.categories));
                 db.customBanks[bankIdx].problems = JSON.parse(JSON.stringify(db.problems));
                 
-                // ?�� ?��??�個特定�? custom bank ?�獨立�? subcollection
+                // ?   ?  ?? 個特定 ? custom bank ? 獨立 ? subcollection
                 if (syncDbToCloud && currentUser && personalDb) {
                     try {
                         personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(customId).set(db.customBanks[bankIdx]);
@@ -433,28 +433,28 @@
             }
         }
 
-        // 2. ?�地端�??��?�?(?�為保險)
+        // 2. ? 地端 ??  ? ?(? 為保險)
         localStorage.setItem('oj_v15_data', JSON.stringify(db)); 
         localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
         if (currentUser) localStorage.setItem('oj_v15_uid', currentUser.uid);
 
         if (!syncDbToCloud && !syncHistoryToCloud) return; 
 
-        // 3. ?�端?�離?��?
-        if (currentUser && personalDb) { // 確�? personalDb 存在
+        // 3. ? 端? 離?  ?
+        if (currentUser && personalDb) { // 確 ? personalDb 存在
             try {
                 let updatePayload = {
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // ?��?：根?�當?�環境選?�儲存�?�?
+                // ?  ?：根? 當? 環境選? 儲存 ? ?
                 if (syncDbToCloud) {
-                    // ?�� 輕�???userCustomBanks，只存基?��?訊以維�??��??��??��?�?��主�?�?1MB ?�制
+                    // ?   輕 ???userCustomBanks，只存基?  ?訊以維 ??  ??  ??  ? ?  主 ? ?1MB ? 制
                     const lightweightBanks = (db.customBanks || []).map(b => ({ id: b.id, name: b.name, version: b.version }));
                     updatePayload.userCustomBanks = JSON.stringify(lightweightBanks);
                     
                     if (!isCustom) {
-                        // ?�移�?70-5 �?��?��?輯】�??�用網�??��??��?安全??Key
+                        // ? 移 ?70-5  ?  ?  ?輯】 ?? 用網 ??  ??  ?安全??Key
                         const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
                         
                         updatePayload.bankProgress = {
@@ -465,9 +465,9 @@
                             })
                         };
                         
-                        // ?��??��??�到?�外層
+                        // ?  ??  ?? 到? 外層
                         updatePayload.bankVersions = {
-                            [safeKey]: db.version || "?��???
+                            [safeKey]: db.version || "?  ???
                         };
                     }
                 }
@@ -476,43 +476,43 @@
                     updatePayload.historyData = JSON.stringify(executionHistories);
                 }
 
-                // 寫入?�人?��??�庫
+                // 寫入? 人?  ?? 庫
                 await personalDb.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
-                console.log("???�端?�離?��??��?");
+                console.log("??? 端? 離?  ??  ?");
             } catch (e) { 
-                console.error("?�端?�步失�?�?, e); 
+                console.error("? 端? 步失 ? ?, e); 
             }
         }
     }
 
 
-    // ?��??��??��??�更?�函??
+    // ?  ??  ??  ?? 更? 函??
     async function syncProblemDeltaToCloud(probId, diff) {
         if (!currentUser) return;
         
-        // ?���??��??�護：�??�是?��?題庫，�??��??��? saveToLocal 已�??��?存好了�??�裡?�接?��?，避?�浪費雲端空??
+        // ?   ??  ?? 護： ?? 是?  ?題庫， ??  ??  ? saveToLocal 已 ??  ?存好了 ?? 裡? 接?  ?，避? 浪費雲端空??
         const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
         if (isCustom) return; 
 
         let payload = { customProblems: {} };
         
         if (diff === null) {
-            // ?�入 null �?��要�??��?從雲端刪??
+            // ? 入 null  ?  要 ??  ?從雲端刪??
             payload.customProblems[probId] = firebase.firestore.FieldValue.delete();
         } else {
-            // ?��??��?修改?��?位」更??
+            // ?  ??  ?修改?  ?位」更??
             payload.customProblems[probId] = diff;
          }
         
         try {
             await personalDb.collection('users').doc(currentUser.uid).set(payload, { merge: true });
-            console.log(`題目 ${probId} 已�??�更?�至?�端`, diff);
+            console.log(`題目 ${probId} 已 ?? 更? 至? 端`, diff);
         } catch(e) {
-            console.error("?�端局?�更?�失?��?", e);
+            console.error("? 端局? 更? 失?  ?", e);
         }
     }
     
-    // ?�� ?��?：�?步自訂�?類至?�端 (�?�� 1MB 容�??�制導致?�自訂�?類遺失�?�?
+    // ?   ?  ?： ?步自訂 ?類至? 端 ( ?   1MB 容 ?? 制導致? 自訂 ?類遺失 ? ?
     async function syncCategoryDeltaToCloud(catId, diff) {
         if (!currentUser) return;
         
@@ -529,19 +529,19 @@
         
         try {
             await personalDb.collection('users').doc(currentUser.uid).set(payload, { merge: true });
-            console.log(`?��? ${catId} ?�端?�步完�?`, diff);
+            console.log(`?  ? ${catId} ? 端? 步完 ?`, diff);
         } catch(e) {
-            console.error(`?��? ${catId} ?�端?�步失�?：`, e);
+            console.error(`?  ? ${catId} ? 端? 步失 ?：`, e);
         }
     }
     
     
     // ==========================================
-    // 4. �??系統?��??�輯
+    // 4.  ??系統?  ?? 輯
     // ==========================================
     let currentCatId = null;
     let currentProbId = null;
-    let currentCompileMode = 'wandbox'; // ?��?三段式�???
+    let currentCompileMode = 'wandbox'; // ?  ?三段式 ???
     let pendingRestoreFileName = ""; 
     
     const defaultTemplates = {
@@ -571,20 +571,20 @@
 	
 	
 	
-	// ===== ?��?：登??註�?欄�???Enter 快捷??=====
+	// ===== ?  ?：登??註 ?欄 ???Enter 快捷??=====
 	const emailInput = document.getElementById('emailInput');
 	const passwordInput = document.getElementById('passwordInput');
     
 	if (emailInput && passwordInput) {
-	    // Email 欄�??��? Enter，焦點跳?��?碼�?�?
+	    // Email 欄 ??  ? Enter，焦點跳?  ?碼 ? ?
 	    emailInput.addEventListener('keydown', function(e) {
 		if (e.key === 'Enter') {
-		    e.preventDefault(); // ?��?觸發網�??�設?��?行�??�交行為
+		    e.preventDefault(); // ?  ?觸發網 ?? 設?  ?行 ?? 交行為
 		    passwordInput.focus();
 		}
 	    });
         
-	    // 密碼欄�??��? Enter，直?�執行登??註�?流�?
+	    // 密碼欄 ??  ? Enter，直? 執行登??註 ?流 ?
 	    passwordInput.addEventListener('keydown', function(e) {
 		if (e.key === 'Enter') {
 		    e.preventDefault();
@@ -600,24 +600,24 @@
     function handleHashChange() {
         if (!authInitialized) return;
 
-        // 1. ?��?路�?
+        // 1. ?  ?路 ?
         const hash = window.location.hash || '#/source-selector'; 
         const [path, queryString] = hash.substring(1).split('?');
         const params = new URLSearchParams(queryString || '');
 
-        // 2. ?�優?�】公?��??�判?��?讓�?學�?網�??�畫?��??��?步�?不被?�入?�輯?�截
+        // 2. ? 優? 】公?  ?? 判?  ?讓 ?學 ?網 ?? 畫?  ??  ?步 ?不被? 入? 輯? 截
         if (path === '/firebase-tutorial') {
             showView('view-firebase-tutorial');
             return; 
         }
 
-        // 3. ?��??�?�】登?�檢?��??��??�「�??��??��??�未?�入?��?存�?
+        // 3. ?  ?? ? 】登? 檢?  ??  ?? 「 ??  ??  ?? 未? 入?  ?存 ?
         if (!currentUser) {
             showView('view-login');
             return;
         }
 
-        // 4. ?��?人�??�】路徑判??
+        // 4. ?  ?人 ?? 】路徑判??
         if (path === '/login' || path === '') {
             window.location.hash = '/source-selector';
             return;
@@ -628,7 +628,7 @@
             if (nameEl) nameEl.innerText = currentUser.email;
             
             const emailEl = document.getElementById('sourceSelectorUserEmail');
-            if (emailEl) emailEl.innerText = "?��??�入�? + currentUser.email;
+            if (emailEl) emailEl.innerText = "?  ?? 入 ? + currentUser.email;
             
             showView('view-source-selector');
         } 
@@ -642,10 +642,10 @@
         else if (path === '/categories') {
             currentCatId = null;
             
-            //確�??�新?��?後�?標�??�顯示目?��??�中?��?庫�?�?
+            //確 ?? 新?  ?後 ?標 ?? 顯示目?  ?? 中?  ?庫 ? ?
             if (currentBankName) {
                 const nameEl = document.getElementById('currentBankName');
-                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?��?題庫: ` + currentBankName;
+                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?題庫: ` + currentBankName;
             }
             
             renderCategoryList();
@@ -671,29 +671,29 @@
                 _goToAdminInternal();
             }
         } else {
-            // ?�設跳�?大廳，避?�未?�路徑�??�白?�面
+            // ? 設跳 ?大廳，避? 未? 路徑 ?? 白? 面
             showView('view-portal');
         }
     }
 
     
-    //?��??��?題庫?��?模�?
+    //?  ??  ?題庫?  ?模 ?
     function toggleBankSortMode() {
         isBankSortMode = !isBankSortMode;
         const btn = document.getElementById('bankSortBtn');
         if (btn) {
-            btn.innerText = isBankSortMode ? "??完�??��?" : "??調整?��?";
+            btn.innerText = isBankSortMode ? "??完 ??  ?" : "??調整?  ?";
             btn.className = isBankSortMode ? "btn btn-danger" : "btn btn-outline";
             if (!isBankSortMode) {
-                // 結�??��??�恢復白?�樣�?
+                // 結 ??  ?? 恢復白? 樣 ?
                 btn.style.color = "white";
                 btn.style.borderColor = "white";
             }
         }
-        renderCustomPortal(); // ?�新渲�??�表以�??�模�?
+        renderCustomPortal(); // ? 新渲 ?? 表以 ?? 模 ?
     }
     
-    //?��??��?題庫?��?序�??�輯 (?��??��??�能)
+    //?  ??  ?題庫?  ?序 ?? 輯 (?  ??  ?? 能)
     function saveBankOrder() {
         const cards = document.querySelectorAll('#customBankList .bank-btn');
         const newOrder = [];
@@ -705,7 +705,7 @@
         saveToLocal(true, false); 
     }
     
-    // 渲�??��?題庫清單
+    // 渲 ??  ?題庫清單
     function renderCustomPortal() {
         const container = document.getElementById('customBankList');
         container.innerHTML = '';
@@ -720,45 +720,45 @@
             const card = document.createElement('div');
             card.className = 'bank-btn';
             card.style.position = 'relative';
-            card.style.padding = '40px 20px'; // ?�大?��?題庫?��?高度
+            card.style.padding = '40px 20px'; // ? 大?  ?題庫?  ?高度
             card.setAttribute('draggable', isBankSortMode);
-            card.dataset.idx = idx; // 紀?��?始索�?(保�?�?onclick 使用)
-            card.dataset.id = bank.id; // 紀?�唯一 ID (?��???
+            card.dataset.idx = idx; // 紀?  ?始索 ?(保 ? ?onclick 使用)
+            card.dataset.id = bank.id; // 紀? 唯一 ID (?  ???
             
-            // ?��?模�?下�?顯示?��??��?，�??��?模�?顯示?��??�刪??
+            // ?  ?模 ?下 ?顯示?  ??  ?， ??  ?模 ?顯示?  ?? 刪??
             const actionsHtml = isBankSortMode ? '' : `
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;">
-                    <button class="prob-btn-icon" style="color: #1e3a8a; background: rgba(0,0,0,0.05);" onclick="renameCustomBank(event, ${idx})" title="?��?"><i class="fa-solid fa-pen"></i></button>
-                    <button class="prob-btn-icon" style="color: #ef4444; background: rgba(0,0,0,0.05);" onclick="deleteCustomBank(event, ${idx})" title="?�除">??/button>
+                    <button class="prob-btn-icon" style="color: #1e3a8a; background: rgba(0,0,0,0.05);" onclick="renameCustomBank(event, ${idx})" title="?  ?"><i class="fa-solid fa-pen"></i></button>
+                    <button class="prob-btn-icon" style="color: #ef4444; background: rgba(0,0,0,0.05);" onclick="deleteCustomBank(event, ${idx})" title="? 除">??/button>
                 </div>
             `;
 
             card.innerHTML = `
                 <div onclick="if(!isBankSortMode) loadCustomBank(${idx})" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; text-align:left; padding-left: 5px; cursor: ${isBankSortMode ? 'grab' : 'pointer'};">
                     <span style="font-size:1.5rem;"><i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ${bank.name}</span>
-                    <span class="bank-desc" style="color: inherit;">${bank.problems ? bank.problems.length : 0} �?/span>
+                    <span class="bank-desc" style="color: inherit;">${bank.problems ? bank.problems.length : 0}  ?/span>
                 </div>
                 <div class="bank-actions">
-                    <button class="btn btn-outline btn-sm" style="background: white; color: #333; padding: 4px 8px; font-size: 0.85rem; border-color: #ccc;" onclick="renameCustomBank(event, ${idx})" title="?��?"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-outline btn-sm" style="background: white; color: #f44747; border-color: #f44747; padding: 4px 8px; font-size: 0.85rem;" onclick="deleteCustomBank(event, ${idx})" title="?�除"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn btn-outline btn-sm" style="background: white; color: #333; padding: 4px 8px; font-size: 0.85rem; border-color: #ccc;" onclick="renameCustomBank(event, ${idx})" title="?  ?"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-outline btn-sm" style="background: white; color: #f44747; border-color: #f44747; padding: 4px 8px; font-size: 0.85rem;" onclick="deleteCustomBank(event, ${idx})" title="? 除"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `;
             container.appendChild(card);
         });
 
-        // 如�??��?序模式�??��??�曳?�能
+        // 如 ??  ?序模式 ??  ?? 曳? 能
         if (isBankSortMode) {
             enableDragSort('customBankList', 'bank-btn', saveBankOrder);
         }
     }
     
 
-    // ?��??��?題庫
+    // ?  ??  ?題庫
     async function addCustomBank() {
-    	const name = prompt("請輸?�自訂�?庫�?稱�?");
+    	const name = prompt("請輸? 自訂 ?庫 ?稱 ?");
     	if (!name) return;
 	
-	// ?��?機制，�??��?資�?沒�??�個陣?��?就幫它建一?�空??
+	// ?  ?機制， ??  ?資 ?沒 ?? 個陣?  ?就幫它建一? 空??
 	if (!db.customBanks) {
 	    db.customBanks = [];
 	}
@@ -773,43 +773,43 @@
     	db.customBanks.push(newBank);
     
         const btn = document.querySelector('#view-custom-portal .btn-success');
-        if (btn) { btn.disabled = true; btn.innerText = "??建�?�?.."; }
-        await saveToLocal(true, false); // ?�步?�使?�者雲�?
+        if (btn) { btn.disabled = true; btn.innerText = "??建 ? ?.."; }
+        await saveToLocal(true, false); // ? 步? 使? 者雲 ?
         
-        // ?�� ?�步寫入子�???
+        // ?   ? 步寫入子 ???
         if (currentUser && personalDb) {
             try {
                 await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(newBank.id).set(newBank);
             } catch(e) {}
         }
         
-        if (btn) { btn.disabled = false; btn.innerText = "+ ?��?題庫"; }
+        if (btn) { btn.disabled = false; btn.innerText = "+ ?  ?題庫"; }
         renderCustomPortal();
     }
     
-    //?��??�能
+    //?  ?? 能
     async function renameCustomBank(e, idx) {
-        e.stopPropagation(); // ?�止觸發?�入題庫?��??��?�?
+        e.stopPropagation(); // ? 止觸發? 入題庫?  ??  ? ?
         const oldName = db.customBanks[idx].name;
-        const newName = prompt("請輸?�新?��?庫�?稱�?", oldName);
+        const newName = prompt("請輸? 新?  ?庫 ?稱 ?", oldName);
         
         if (newName && newName.trim() !== "" && newName !== oldName) {
             db.customBanks[idx].name = newName.trim();
             
-            // ?�� 如�??�改?�是?��?�?��使用?��?庫�??�步?�新?�稱
+            // ?   如 ?? 改? 是?  ? ?  使用?  ?庫 ?? 步? 新? 稱
             if (currentBankUrl === "local_custom_" + db.customBanks[idx].id) {
                 currentBankName = newName.trim();
                 localStorage.setItem('oj_v15_bank_name', currentBankName);
                 const bankNameEl = document.getElementById('currentBankName');
-                if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?��?題庫: ` + currentBankName;
+                if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?題庫: ` + currentBankName;
             }
             
             const btn = e.target;
             const originalText = btn.innerText;
             if (btn) { btn.disabled = true; btn.innerText = "??; }
-            await saveToLocal(true, false); // ?�步?�雲端�??�地
+            await saveToLocal(true, false); // ? 步? 雲端 ?? 地
             
-            // ?�� ?�步?��??��?
+            // ?   ? 步?  ??  ?
             if (currentUser && personalDb) {
                 try {
                     await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(db.customBanks[idx].id).set({ name: newName.trim() }, { merge: true });
@@ -817,13 +817,13 @@
             }
             
             if (btn) { btn.disabled = false; btn.innerText = originalText; }
-            renderCustomPortal();    // 立即?�新渲�??�面
+            renderCustomPortal();    // 立即? 新渲 ?? 面
         }
     }
     
-    // 載入?��??�自訂�?庫內容到系統主�?   
+    // 載入?  ?? 自訂 ?庫內容到系統主 ?   
     async function loadCustomBank(idx) {
-        // ?? UI ?��?：�??��??�中?�畫並�?定全?��??��??�止?��?點�?
+        // ?? UI ?  ?： ??  ?? 中? 畫並 ?定全?  ??  ?? 止?  ?點 ?
         const container = document.getElementById('customBankList');
         const cards = container.querySelectorAll('.bank-btn');
         let clickedCard = null;
@@ -834,7 +834,7 @@
                 clickedCard = card.querySelector('div[onclick]');
                 if (clickedCard) {
                     originalContent = clickedCard.innerHTML;
-                    clickedCard.innerHTML = `<span style="font-size:1.5rem; font-weight:bold;">??載入�?..</span><span class="bank-desc" style="color: inherit;">?��?並�??��?�?/span>`;
+                    clickedCard.innerHTML = `<span style="font-size:1.5rem; font-weight:bold;">??載入 ?..</span><span class="bank-desc" style="color: inherit;">?  ?並 ??  ? ?/span>`;
                 }
             }
             card.style.pointerEvents = 'none';
@@ -842,10 +842,10 @@
         });
 
         try {
-            // ?��?一下目?�在?��??�西
+            // ?  ?一下目? 在?  ?? 西
             await saveToLocal(true, false);
 
-        // ?���??�護 4：強?��?空�?待中?�更?��??��?�?
+        // ?   ?? 護 4：強?  ?空 ?待中? 更?  ??  ? ?
         pendingUpdateDb = null;
         const toast = document.getElementById('updateToast');
         if (toast) toast.style.display = 'none';
@@ -854,28 +854,28 @@
         currentBankName = selected.name;
         currentBankUrl = "local_custom_" + selected.id;
 
-        // 徹�??��?資�?主�?
+        // 徹 ??  ?資 ?主 ?
         db.categories = JSON.parse(JSON.stringify(selected.categories || []));
         db.problems = JSON.parse(JSON.stringify(selected.problems || []));
         db.version = selected.version;
 
-        // ?�� ?��?修正：�??��?題庫資�?後�?立刻寫入 localStorage ??data
-        // ?��?如�?使用?�此?��?�?F5，�?讀?�到?�新網�??��??��?題庫?�容?��?導致資�??��?�?
+        // ?   ?  ?修正： ??  ?題庫資 ?後 ?立刻寫入 localStorage ??data
+        // ?  ?如 ?使用? 此?  ? ?F5， ?讀? 到? 新網 ??  ??  ?題庫? 容?  ?導致資 ??  ? ?
         localStorage.setItem('oj_v15_data', JSON.stringify(db));
 
         localStorage.setItem('oj_v15_bank_name', currentBankName);
         localStorage.setItem('oj_v15_bank_url', currentBankUrl);
         
         const bankNameEl = document.getElementById('currentBankName');
-        if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?��?題庫: ` + currentBankName;
+        if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?題庫: ` + currentBankName;
         
         window.location.hash = '/categories';
         
         } catch (e) {
-            console.error("?��?題庫?��??�誤", e);
-            alert("?��?題庫?�發?�錯誤�?");
+            console.error("?  ?題庫?  ?? 誤", e);
+            alert("?  ?題庫? 發? 錯誤 ?");
         } finally {
-            // ?? ?�復?��??�??
+            // ?? ? 復?  ?? ??
             cards.forEach(card => {
                 card.style.pointerEvents = 'auto';
                 card.style.opacity = '1';
@@ -886,10 +886,10 @@
         }
     } 
 
-    // ?�除?��?題庫
+    // ? 除?  ?題庫
     async function deleteCustomBank(e, idx) {
         e.stopPropagation();
-        if (confirm(`確�?要刪?�自訂�?庫�?{db.customBanks[idx].name}?��?？此?��??��?復�??�`)) {
+        if (confirm(`確 ?要刪? 自訂 ?庫 ?{db.customBanks[idx].name}?  ?？此?  ??  ?復 ?? `)) {
             db.customBanks.splice(idx, 1);
             const btn = e.target;
             if (btn) { btn.disabled = true; btn.innerText = "??; }
@@ -900,13 +900,13 @@
        
     
     async function fetchAndLoadBank(jsonUrl, displayName, forceReset = false) {
-        if (!currentUser) { alert("請�??�入帳�?�?); return; }
+        if (!currentUser) { alert("請 ?? 入帳 ? ?); return; }
 
         pendingUpdateDb = null;
         const toast = document.getElementById('updateToast');
         if (toast) toast.style.display = 'none'; 
         
-        // ?? UI ?��?：�??��??�中?�畫並�?定全?��???
+        // ?? UI ?  ?： ??  ?? 中? 畫並 ?定全?  ???
         const buttons = document.querySelectorAll('.bank-btn');
         let clickedBtn = null;
         let originalContent = "";
@@ -914,40 +914,40 @@
             if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(jsonUrl)) {
                 clickedBtn = btn;
                 originalContent = btn.innerHTML;
-                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">??載入�?..</span><span class="bank-desc">?�步?�端資�?</span>`;
+                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">??載入 ?..</span><span class="bank-desc">? 步? 端資 ?</span>`;
             }
             btn.style.pointerEvents = 'none';
             btn.style.opacity = '0.6';
         });
 
         try {
-            // ?? ?�能?��?：平行�?下�? GitHub 題庫??Firebase ?�端?�度，�??��??�以上�?等�??��?
+            // ?? ? 能?  ?：平行 ?下 ? GitHub 題庫??Firebase ? 端? 度， ??  ?? 以上 ?等 ??  ?
             const fetchPromise = fetch(jsonUrl).then(res => {
-                if (!res.ok) throw new Error("伺�??��??��??��?" + res.status);
+                if (!res.ok) throw new Error("伺 ??  ??  ??  ?" + res.status);
                 return res.json();
             });
             const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get() : Promise.resolve(null);
             
             const [newDb, docSnap] = await Promise.all([fetchPromise, dbPromise]);
             
-            // ?�� 海�?安檢：強?�淨?��? GitHub 下�??��???JSON，�??��?小�?殘�??�自訂�?�?
+            // ?   海 ?安檢：強? 淨?  ? GitHub 下 ??  ???JSON， ??  ?小 ?殘 ?? 自訂 ? ?
             (newDb.categories || []).forEach(c => delete c.isUserAdded);
             (newDb.problems || []).forEach(p => delete p.isUserAdded);
             
-            // 確�????存在，避??.some() ?�出?�誤導致?�個�?程中??
+            // 確 ????存在，避??.some() ? 出? 誤導致? 個 ?程中??
             newDb.categories = newDb.categories || [];
             newDb.problems = newDb.problems || [];
             
             let shouldSyncDb = forceReset;
 
-            // --- 1. �?Firebase ?��?你在?�份題庫?�「雲端歷?��?檔�?---
+            // --- 1.  ?Firebase ?  ?你在? 份題庫? 「雲端歷?  ?檔 ?---
             let savedCategories = [];
             let savedProblems = [];
             const safeKey = jsonUrl.replace(/[\.\#\$\[\]]/g, '_');
 
             if (personalDb) {
                 try {
-                    // docSnap 已�??��??�透�? Promise.all ?��?�?
+                    // docSnap 已 ??  ?? 透 ? Promise.all ?  ? ?
                     if (docSnap && docSnap.exists) {
                         const data = docSnap.data();
                         if (data.bankProgress && data.bankProgress[safeKey]) {
@@ -956,10 +956,10 @@
                             savedProblems = prog.problems || [];
                         }
                         
-                        // ?? ?��??�失?�自訂�?類�?如�? bankProgress 存�?失�?，�? customCategories ?��?份中?��?�?
+                        // ?? ?  ?? 失? 自訂 ?類 ?如 ? bankProgress 存 ?失 ?， ? customCategories ?  ?份中?  ? ?
                         if (data.customCategories) {
                             Object.values(data.customCategories).forEach(cc => {
-                                // 檢查?�否屬於?��?�?��載入?��?�?(jsonUrl)
+                                // 檢查? 否屬於?  ? ?  載入?  ? ?(jsonUrl)
                                 if (cc && cc.id && cc.bankUrl === jsonUrl) {
                                     const existingC = savedCategories.find(c => c.id == cc.id);
                                     if (existingC) {
@@ -971,7 +971,7 @@
                             });
                         }
 
-                        // ?? ?��??�失?�自訂�??��?如�? bankProgress 存�?失�?，�? customProblems ?��?份中?��?�?
+                        // ?? ?  ?? 失? 自訂 ??  ?如 ? bankProgress 存 ?失 ?， ? customProblems ?  ?份中?  ? ?
                         if (data.customProblems) {
                             Object.values(data.customProblems).forEach(cp => {
                                 if (cp && cp.id) {
@@ -979,7 +979,7 @@
                                     if (existingP) {
                                         Object.assign(existingP, cp);
                                     } else {
-                                        // 確�??��?屬於?��?題庫 (?��??��??��??��??�地存�?�?
+                                        // 確 ??  ?屬於?  ?題庫 (?  ??  ??  ??  ?? 地存 ? ?
                                         const isForThisBank = newDb.categories.some(c => c.id == cp.catId) || savedCategories.some(c => c.id == cp.catId);
                                         if (isForThisBank) {
                                             savedProblems.push(cp);
@@ -989,25 +989,25 @@
                             });
                         }
                     }
-                } catch (e) { console.error("讀?�目標�?庫進度失�?", e); }
+                } catch (e) { console.error("讀? 目標 ?庫進度失 ?", e); }
             }
 
-            // --- 2. 絕�??��??�離：只要雲端�?，�? GitHub ?�?��??��??��?，統統�??�「自訂擴?��?---
+            // --- 2. 絕 ??  ?? 離：只要雲端 ?， ? GitHub ? ?  ??  ??  ?，統統 ?? 「自訂擴?  ?---
             const userAddedCategories = savedCategories.filter(oldC => !newDb.categories.some(newC => newC.id === oldC.id));
             const userAddedProblems = savedProblems.filter(oldP => !newDb.problems.some(newP => newP.id === oldP.id));
             
-            // 賦�??�死?��?，�?系統?��??��??�自訂擴?��?並�?許使?�者刪??(?�含被�??��?汰�??��???
+            // 賦 ?? 死?  ?， ?系統?  ??  ?? 自訂擴?  ?並 ?許使? 者刪??(? 含被 ??  ?汰 ??  ???
             userAddedCategories.forEach(c => c.isUserAdded = true);
             userAddedProblems.forEach(p => p.isUserAdded = true);
 
-            // --- 3. ?��??�設題庫?�併 (?? ?�裡就是你�??��??�鍵�? ---
+            // --- 3. ?  ?? 設題庫? 併 (?? ? 裡就是你 ??  ?? 鍵 ? ---
             const bankVersions = JSON.parse(localStorage.getItem('oj_v15_bank_versions') || '{}');
             const lastSyncedVersion = bankVersions[jsonUrl];
             const isUpdate = (!forceReset && newDb.version && lastSyncedVersion !== undefined && newDb.version !== lastSyncedVersion);
 
             if (forceReset || isUpdate) {
                 shouldSyncDb = true; 
-                // ?�強?��??�模式】�??�新?�本?��??��??��?庫�??��?修改?��?述�??��??��?式碼
+                // ? 強?  ?? 模式】 ?? 新? 本?  ??  ??  ?庫 ??  ?修改?  ?述 ??  ??  ?式碼
                 if (currentUser && personalDb && isUpdate) {
                     let customUpdates = {};
                     newDb.problems.forEach(p => { customUpdates[p.id] = firebase.firestore.FieldValue.delete(); });
@@ -1025,7 +1025,7 @@
                     }
                 });
             } else {
-                // ?��?��??��??�模式】無?��??��?完整保�?你�?官方題目?��?任�?修改 (?�含標�??��?述、測�?
+                // ?  ?  ??  ?? 模式】無?  ??  ?完整保 ?你 ?官方題目?  ?任 ?修改 (? 含標 ??  ?述、測 ?
                 newDb.categories = newDb.categories.map(newC => {
                     const oldC = savedCategories.find(c => c.id === newC.id);
                     return oldC ? Object.assign({}, newC, oldC) : newC;
@@ -1036,10 +1036,10 @@
                 });
             }
 
-            // --- 4. 完�?組�?：�??��? + ?��??��? ---
+            // --- 4. 完 ?組 ?： ??  ? + ?  ??  ? ---
             db.categories = [...newDb.categories, ...userAddedCategories];
             db.problems = [...newDb.problems, ...userAddedProblems];
-            db.version = newDb.version || (userAddedProblems.length > 0 ? "保�??�度?? : ""); 
+            db.version = newDb.version || (userAddedProblems.length > 0 ? "保 ?? 度?? : ""); 
 
             const preservedCustomBanks = db.customBanks || [];
             db.customBanks = preservedCustomBanks;
@@ -1052,16 +1052,16 @@
             localStorage.setItem('oj_v15_bank_url', currentBankUrl);
             
             const bankNameEl = document.getElementById('currentBankName');
-            if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?��?題庫: ` + currentBankName;
+            if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?題庫: ` + currentBankName;
                 
             saveToLocal(shouldSyncDb, false);      
             window.location.hash = '/categories';
             checkForUpdates();
 
         } catch (err) { 
-            alert("載入失�?！�?確�? GitHub 檔�??�否存在\n\n詳細?�誤�? + err.message); 
+            alert("載入失 ?！ ?確 ? GitHub 檔 ?? 否存在\n\n詳細? 誤 ? + err.message); 
         } finally {
-            // ?? ?�復?��??�?��??��??��??�失?�都�???��?
+            // ?? ? 復?  ?? ?  ??  ??  ?? 失? 都 ???  ?
             buttons.forEach(btn => {
                 btn.style.pointerEvents = 'auto';
                 btn.style.opacity = '1';
@@ -1081,19 +1081,19 @@
 
     async function resetCurrentBank() { 
         if (!currentBankUrl) { 
-            alert("?��??�空?��??��??��??�新載入??); 
+            alert("?  ?? 空?  ??  ??  ?? 新載入??); 
             return; 
         } 
-        if (confirm("?��? 警�?：這�??��??�「�?設�?庫」�??�?�自訂設定�?�?��，並?�新下�??�?��?庫�?\n(?�自行新增�?題目?��?類�??�被安全保�?，執行�??��?不�?消失)")) { 
-            // 將�??��?輯交??fetchAndLoadBank ?��?對�??��?
+        if (confirm("?  ? 警 ?：這 ??  ?? 「 ?設 ?庫」 ?? ? 自訂設定 ? ?  ，並? 新下 ?? ?  ?庫 ?\n(? 自行新增 ?題目?  ?類 ?? 被安全保 ?，執行 ??  ?不 ?消失)")) { 
+            // 將 ??  ?輯交??fetchAndLoadBank ?  ?對 ??  ?
             fetchAndLoadBank(currentBankUrl, currentBankName, true); 
         } 
     }
     
     function hardResetAll() { 
-        if (confirm("?��? 警�?：這�??��??��??��??��?讓系統�??�「�??�空?�」�??��?確�??��?")) { 
+        if (confirm("?  ? 警 ?：這 ??  ??  ??  ??  ?讓系統 ?? 「 ?? 空? 」 ??  ?確 ??  ?")) { 
             db = { categories: [], problems: [], version: "" }; 
-            currentBankName = "?��??��?�?(空白)"; 
+            currentBankName = "?  ??  ? ?(空白)"; 
             currentBankUrl = ""; 
             localStorage.setItem('oj_v15_bank_name', currentBankName); 
             localStorage.removeItem('oj_v15_bank_url'); 
@@ -1227,7 +1227,7 @@
         window.location.hash = '/problem-list?catId=' + id;
     }
 
-    // === V60: Workspace ?��?繪製?��???===
+    // === V60: Workspace ?  ?繪製?  ???===
     function renderWorkspaceTabs() {
         const p = db.problems.find(x => x.id === currentProbId);
         const tabsContainer = document.getElementById('wsEditorTabs');
@@ -1272,11 +1272,11 @@
         const p = db.problems.find(x => x.id === id);
         if (!p) return;
         
-        // 確�?空�?串模?��??�被覆�?
+        // 確 ?空 ?串模?  ?? 被覆 ?
         if (p.tpl_cpp === undefined) p.tpl_cpp = p.templateCode !== undefined ? p.templateCode : defaultTemplates.cpp;
         if (p.tpl_python === undefined) p.tpl_python = defaultTemplates.python;
         
-        // 確�? multiFiles ??code 屬性�???
+        // 確 ? multiFiles ??code 屬性 ???
         if (p.isMultiFile && p.multiFiles) {
             p.multiFiles.forEach(f => { 
                 if (f.code === undefined) f.code = f.tpl !== undefined ? f.tpl : ""; 
@@ -1284,7 +1284,7 @@
         }
         
         if (!fromAdmin) { 
-                // 修正：只要是?�新?�入作�??�（�??��??��?，�?律強?��?置為?��?設模?��?
+                // 修正：只要是? 新? 入作 ?? （ ??  ??  ?， ?律強?  ?置為?  ?設模?  ?
         p.code_cpp = p.tpl_cpp; 
                         p.code_python = p.tpl_python; 
                         if (p.isMultiFile && p.multiFiles) { 
@@ -1299,7 +1299,7 @@
         const lang = p.lastLang || 'cpp'; 
         document.getElementById('langSelect').value = lang; 
         
-        currentFileIndex = -1; // ?�入題庫?��?設顯�?main
+        currentFileIndex = -1; // ? 入題庫?  ?設顯 ?main
         renderWorkspaceTabs();
 
         if (lang === 'cpp') { 
@@ -1310,7 +1310,7 @@
             editor.setValue(p.code_python !== undefined ? p.code_python : p.tpl_python, -1); 
         }
         
-        document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等�??��?...</div>';
+        document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等 ??  ?...</div>';
         showView('view-workspace');
     }
 
@@ -1318,7 +1318,7 @@
         const lang = document.getElementById('langSelect').value;
         const p = db.problems.find(x => x.id === currentProbId);
         
-        // 保�? Workspace 編輯?�目?��??�??
+        // 保 ? Workspace 編輯? 目?  ?? ??
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -1329,7 +1329,7 @@
         window.location.hash = '/admin?probId=' + currentProbId;
     }
 
-    // === V60: Admin 多�?案�??�繪製�??��? ===
+    // === V60: Admin 多 ?案 ?? 繪製 ??  ? ===
     function toggleAdminMultiFile() {
         const isEnabled = document.getElementById('adminEnableMultiFile').checked;
         document.getElementById('adminEditorTabs').style.display = (isEnabled && currentAdminLang === 'cpp') ? 'flex' : 'none';
@@ -1340,7 +1340,7 @@
         }
         
         if (!isEnabled || currentAdminLang !== 'cpp') { 
-            switchAdminFile(-1); // ?��??��??��? main ?�覽
+            switchAdminFile(-1); // ?  ??  ??  ? main ? 覽
         } else { 
             renderAdminTabs(); 
         }
@@ -1353,12 +1353,12 @@
         adminMultiFiles.forEach((f, idx) => {
             html += `<div class="editor-tab ${adminCurrentFileIndex === idx ? 'active' : ''}" onclick="switchAdminFile(${idx})">
                         ${f.name} 
-                        <span class="tab-icon" title="?�新?��?" onclick="renameAdminFile(event, ${idx})"><i class="fa-solid fa-pen"></i></span> 
+                        <span class="tab-icon" title="? 新?  ?" onclick="renameAdminFile(event, ${idx})"><i class="fa-solid fa-pen"></i></span> 
                         <span class="tab-icon" title="移除" onclick="removeAdminFile(event, ${idx})">??/span>
                      </div>`;
         });
         
-        html += `<div class="editor-tab" style="color:var(--success);" onclick="addAdminFile()">+ ?��?檔�?</div>`;
+        html += `<div class="editor-tab" style="color:var(--success);" onclick="addAdminFile()">+ ?  ?檔 ?</div>`;
         tabsContainer.innerHTML = html;
     }
 
@@ -1383,7 +1383,7 @@
     }
 
     function addAdminFile() {
-        const name = prompt("請輸?�新增�?案�?�?(例�? Rectangle.cpp):", "NewClass.cpp");
+        const name = prompt("請輸? 新增 ?案 ? ?(例 ? Rectangle.cpp):", "NewClass.cpp");
         if (name && name.trim() !== "") {
             adminMultiFiles.push({ name: name.trim(), tpl: "// " + name.trim() + "\n" });
             switchAdminFile(adminMultiFiles.length - 1);
@@ -1392,7 +1392,7 @@
 
     function renameAdminFile(e, idx) {
         e.stopPropagation();
-        const newName = prompt("?�新?��?:", adminMultiFiles[idx].name);
+        const newName = prompt("? 新?  ?:", adminMultiFiles[idx].name);
         if (newName && newName.trim() !== "") {
             adminMultiFiles[idx].name = newName.trim();
             renderAdminTabs();
@@ -1401,17 +1401,17 @@
     
     function removeAdminFile(e, idx) {
         e.stopPropagation();
-        if (confirm("確�??�除此�?案�?")) {
+        if (confirm("確 ?? 除此 ?案 ?")) {
             const wasCurrentTab = (adminCurrentFileIndex === idx);
             if (adminCurrentFileIndex > idx) adminCurrentFileIndex--; 
             
-            adminMultiFiles.splice(idx, 1); //?��?資�????移除
+            adminMultiFiles.splice(idx, 1); //?  ?資 ????移除
 
             if (wasCurrentTab) {
                 adminCurrentFileIndex = -1;
                 document.getElementById('editTemplate').value = adminTempTemplates[currentAdminLang] || ""; 
             }
-            renderAdminTabs(); //?�渲?��?次�??��??�??
+            renderAdminTabs(); //? 渲?  ?次 ??  ?? ??
         }
     }
     
@@ -1426,7 +1426,7 @@
         document.getElementById('adminLangSelect').value = 'cpp'; 
         currentAdminLang = 'cpp';
         
-        // ?��???Admin ?��?檔�?設�?
+        // ?  ???Admin ?  ?檔 ?設 ?
         adminCurrentFileIndex = -1;
         adminMultiFiles = p.multiFiles ? JSON.parse(JSON.stringify(p.multiFiles)) : [];
         document.getElementById('adminEnableMultiFile').checked = !!p.isMultiFile;
@@ -1507,7 +1507,7 @@
             card.setAttribute('draggable', isCatSortMode); 
             card.dataset.id = cat.id;
             
-            card.innerHTML = `<div class="cat-title">${cat.name}</div><div class="cat-count">${probCount} �?/div><div class="cat-actions"><button class="btn btn-outline btn-sm" onclick="editCategory(event, '${cat.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-sm" onclick="deleteCategory(event, '${cat.id}')" style="color:#f44747; border-color:#f44747;"><i class="fa-solid fa-trash"></i></button></div>`;
+            card.innerHTML = `<div class="cat-title">${cat.name}</div><div class="cat-count">${probCount}  ?/div><div class="cat-actions"><button class="btn btn-outline btn-sm" onclick="editCategory(event, '${cat.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-sm" onclick="deleteCategory(event, '${cat.id}')" style="color:#f44747; border-color:#f44747;"><i class="fa-solid fa-trash"></i></button></div>`;
             card.onclick = (e) => { 
                 if (!isCatSortMode && !e.target.closest('button')) openCategory(cat.id); 
             };
@@ -1534,16 +1534,16 @@
     
     async function createCategory() { 
         if (isCatSortMode) return; 
-        const name = prompt("?��?類�?稱�?"); 
+        const name = prompt("?  ?類 ?稱 ?"); 
         if (!name) return; 
-        // ?�� ?��? isUserAdded 標籤，並綁�? bankUrl 供跨裝置?�份辨�?
+        // ?   ?  ? isUserAdded 標籤，並綁 ? bankUrl 供跨裝置? 份辨 ?
         const newCat = { id: Date.now().toString(), name: name, isUserAdded: true, bankUrl: currentBankUrl };
         db.categories.push(newCat); 
         const btn = document.querySelector('#view-categories .btn-primary');
-        if (btn) { btn.disabled = true; btn.innerText = "???��?�?.."; }
+        if (btn) { btn.disabled = true; btn.innerText = "???  ? ?.."; }
         await saveToLocal(true, false); 
         await syncCategoryDeltaToCloud(newCat.id, newCat);
-        if (btn) { btn.disabled = false; btn.innerText = "+ ?��??��?"; }
+        if (btn) { btn.disabled = false; btn.innerText = "+ ?  ??  ?"; }
         renderCategoryList(); 
     }
     
@@ -1551,7 +1551,7 @@
     async function editCategory(e, id) { 
         e.stopPropagation(); 
         const cat = db.categories.find(c => c.id === id); 
-        const newName = prompt("修改?��??�稱�?, cat.name); 
+        const newName = prompt("修改?  ?? 稱 ?, cat.name); 
         if (newName) { 
             cat.name = newName; 
             await saveToLocal(true, false); 
@@ -1562,7 +1562,7 @@
 
     async function deleteCategory(e, id) { 
         e.stopPropagation(); 
-        if (!confirm("確�??�除？�?下�?題目也�?一併刪?��?)) return; 
+        if (!confirm("確 ?? 除？ ?下 ?題目也 ?一併刪?  ?)) return; 
         
         const problemsToDelete = db.problems.filter(p => p.catId === id);
         
@@ -1571,7 +1571,7 @@
         
         await saveToLocal(true, false); 
         
-        // ?�端?�步?�除?��??�其題目
+        // ? 端? 步? 除?  ?? 其題目
         await syncCategoryDeltaToCloud(id, null);
         for (const p of problemsToDelete) {
             await syncProblemDeltaToCloud(p.id, null);
@@ -1588,7 +1588,7 @@
 
     function renderProblemList() {
         const cat = db.categories.find(c => c.id === currentCatId); 
-        document.getElementById('currentCatTitle').innerText = cat ? cat.name : "?��?題庫";
+        document.getElementById('currentCatTitle').innerText = cat ? cat.name : "?  ?題庫";
         const container = document.getElementById('probListContainer');
         
         if (isProbSortMode) { 
@@ -1627,9 +1627,9 @@
                 
                 const isCustomBank = currentBankUrl && currentBankUrl.startsWith("local_custom_");
                 const canDelete = isCustomBank || p.isUserAdded;
-                const delBtnHtml = canDelete ? `<button class="prob-btn-icon prob-del-btn" onclick="deleteProblemInList(event, '${p.id}')" title="?�除題目"><i class="fa-solid fa-trash"></i></button>` : '';
+                const delBtnHtml = canDelete ? `<button class="prob-btn-icon prob-del-btn" onclick="deleteProblemInList(event, '${p.id}')" title="? 除題目"><i class="fa-solid fa-trash"></i></button>` : '';
                 
-                item.innerHTML = `<div style="flex:1; overflow:hidden;"><div class="prob-title">${p.title}</div><div class="prob-desc-preview">${p.desc.substring(0, 50)}...</div></div><div class="prob-actions"><button class="prob-btn-icon prob-edit-btn" onclick="openMoveModal(event, '${p.id}')" title="移�??��?">?��</button><button class="prob-btn-icon prob-edit-btn" onclick="editProblemInList(event, '${p.id}')" title="修改題目"><i class="fa-solid fa-pen"></i></button>${delBtnHtml}</div>`;
+                item.innerHTML = `<div style="flex:1; overflow:hidden;"><div class="prob-title">${p.title}</div><div class="prob-desc-preview">${p.desc.substring(0, 50)}...</div></div><div class="prob-actions"><button class="prob-btn-icon prob-edit-btn" onclick="openMoveModal(event, '${p.id}')" title="移 ??  ?">?  </button><button class="prob-btn-icon prob-edit-btn" onclick="editProblemInList(event, '${p.id}')" title="修改題目"><i class="fa-solid fa-pen"></i></button>${delBtnHtml}</div>`;
                 currentContainer.appendChild(item);
             });
         }
@@ -1650,13 +1650,13 @@
         
     async function createProblemInCat() { 
         if (isProbSortMode) return; 
-        const title = prompt("題目?�稱�?); 
+        const title = prompt("題目? 稱 ?); 
         if (title) { 
             const newProb = { 
                 id: Date.now().toString(), 
                 catId: currentCatId, 
                 title: title, 
-                desc: "請輸?��??��?�?..", 
+                desc: "請輸?  ??  ? ?..", 
                 tpl_cpp: defaultTemplates.cpp, 
                 tpl_python: defaultTemplates.python, 
                 code_cpp: defaultTemplates.cpp, 
@@ -1664,15 +1664,15 @@
                 testCases: [{ input: "1 2", output: "3" }], 
                 lastLang: 'cpp', 
                 isMultiFile: false,
-                isUserAdded: true // ?�� ?��??�死?��?標籤
+                isUserAdded: true // ?   ?  ?? 死?  ?標籤
             };
             db.problems.push(newProb); 
             
             const btn = document.querySelector('#view-problem-list .btn-primary');
-            if (btn) { btn.disabled = true; btn.innerText = "???��?�?.."; }
+            if (btn) { btn.disabled = true; btn.innerText = "???  ? ?.."; }
             await saveToLocal(true, false); 
             await syncProblemDeltaToCloud(newProb.id, newProb); 
-            if (btn) { btn.disabled = false; btn.innerText = "+ ?��?題目"; }
+            if (btn) { btn.disabled = false; btn.innerText = "+ ?  ?題目"; }
             renderProblemList(); 
         } 
     }
@@ -1682,23 +1682,23 @@
     function editProblemInList(e, id) { 
         e.stopPropagation(); 
         currentProbId = id; 
-        // 修正：直?�跳�?hash，避??goToAdmin 讀?�到 editor ?��??��???
+        // 修正：直? 跳 ?hash，避??goToAdmin 讀? 到 editor ?  ??  ???
         window.location.hash = '/admin?probId=' + id; 
     }
     
 
     async function deleteProblemInList(e, id) { 
         e.stopPropagation(); 
-        if (confirm("確�??�除�?)) { 
+        if (confirm("確 ?? 除 ?)) { 
             db.problems = db.problems.filter(p => p.id !== id); 
             
             await saveToLocal(true, false); 
-            await syncProblemDeltaToCloud(id, null); // ?��? null，觸?�雲端獨立刪?�該�?
+            await syncProblemDeltaToCloud(id, null); // ?  ? null，觸? 雲端獨立刪? 該 ?
             renderProblemList(); 
         } 
     }
 
-// ================= 移�?題目?�能 =================
+// ================= 移 ?題目? 能 =================
     let problemToMoveId = null;
 
     function openMoveModal(e, probId) { 
@@ -1708,14 +1708,14 @@
         const select = document.getElementById('moveCategorySelect'); 
         select.innerHTML = ''; 
         
-        // ?��??��??��?類�??�放?��??�選??
+        // ?  ??  ??  ?類 ?? 放?  ?? 選??
         db.categories.forEach(cat => { 
             const option = document.createElement('option'); 
             option.value = cat.id; 
             option.text = cat.name; 
             if (cat.id === currentCatId) {
-                option.text += " (?��??��?)"; 
-                option.disabled = true; // ?�白，�?讓使?�者移?��??��??��?
+                option.text += " (?  ??  ?)"; 
+                option.disabled = true; // ? 白， ?讓使? 者移?  ??  ??  ?
             }
             select.appendChild(option); 
         }); 
@@ -1734,17 +1734,17 @@
 
         const p = db.problems.find(x => x.id === problemToMoveId); 
         if (p) { 
-            // 1. ?�改題目?��?屬�?�?
+            // 1. ? 改題目?  ?屬 ? ?
             p.catId = targetCatId; 
             
-            // 2. 存�?並�?步雲�?
+            // 2. 存 ?並 ?步雲 ?
             const btn = document.querySelector('#moveProblemModal .btn-primary');
-            if (btn) { btn.disabled = true; btn.innerText = "??移�?�?.."; }
+            if (btn) { btn.disabled = true; btn.innerText = "??移 ? ?.."; }
             await saveToLocal(true, false); 
             await syncProblemDeltaToCloud(p.id, { catId: targetCatId }); 
-            if (btn) { btn.disabled = false; btn.innerText = "??確�?移�?"; }
+            if (btn) { btn.disabled = false; btn.innerText = "??確 ?移 ?"; }
             
-            // 3. ?�新渲�??�面 (移走後�?該�??��??��??�面消失)
+            // 3. ? 新渲 ?? 面 (移走後 ?該 ??  ??  ?? 面消失)
             renderProblemList(); 
         } 
         
@@ -1757,11 +1757,11 @@
         const probBtn = document.getElementById('probSortBtn'); 
         
         if (catBtn) { 
-            catBtn.innerText = isCatSortMode ? "??完�??��?" : "??調整?��?"; 
+            catBtn.innerText = isCatSortMode ? "??完 ??  ?" : "??調整?  ?"; 
             catBtn.className = isCatSortMode ? "btn btn-danger" : "btn btn-outline"; 
         } 
         if (probBtn) { 
-            probBtn.innerText = isProbSortMode ? "??完�??��?" : "??調整?��?"; 
+            probBtn.innerText = isProbSortMode ? "??完 ??  ?" : "??調整?  ?"; 
             probBtn.className = isProbSortMode ? "btn btn-danger" : "btn btn-outline"; 
         } 
     }
@@ -1798,24 +1798,24 @@
         const btn = document.getElementById('modeBtn');
     
         if (currentCompileMode === 'wandbox') {
-            // 1. �??�端 ?��????�建?�端
+            // 1.  ?? 端 ?  ???? 建? 端
             currentCompileMode = 'custom';
-            btn.innerHTML = "?? ?�建?�端";
-            btn.style.color = "#a855f7"; // 紫色 (?�?�用)
+            btn.innerHTML = "?? ? 建? 端";
+            btn.style.color = "#a855f7"; // 紫色 (? ? 用)
             btn.style.borderColor = "#a855f7";
 
         } else if (currentCompileMode === 'custom') {
-            // 2. �??�建?�端 ?��????��?
+            // 2.  ?? 建? 端 ?  ????  ?
             currentCompileMode = 'local';
-            btn.innerHTML = "?? ?��?編譯";
+            btn.innerHTML = "?? ?  ?編譯";
             btn.style.color = "var(--success)"; // 綠色
             btn.style.borderColor = "var(--success)";
 
         } else {
-            // 3. �??��? ?��????�端 (Wandbox)
+            // 3.  ??  ? ?  ???? 端 (Wandbox)
             currentCompileMode = 'wandbox';
-            btn.innerHTML = "?��? ?�端編譯";
-            btn.style.color = "var(--accent)"; // ?�色
+            btn.innerHTML = "?  ? ? 端編譯";
+            btn.style.color = "var(--accent)"; // ? 色
             btn.style.borderColor = "var(--accent)";
         }
     }
@@ -1823,36 +1823,36 @@
     function parseContent(text) { 
         if (!text) return ""; 
     
-        // 1. ?��? HTML ?��?符�?轉義，確保�???
+        // 1. ?  ? HTML ?  ?符 ?轉義，確保 ???
         let escaped = text.replace(/&/g, "&amp;")
                           .replace(/</g, "&lt;")
                           .replace(/>/g, "&gt;")
                           .replace(/"/g, "&quot;")
                           .replace(/'/g, "&#039;"); 
     
-        // 2. ?��?粗�?：只??**中�??��?�?* ?��?觸發??
-        // 減�? (-) ?�單?��???(*) ?�為沒�?對�?規�?，�??�樣輸出
+        // 2. ?  ?粗 ?：只??**中 ??  ? ?* ?  ?觸發??
+        // 減 ? (-) ? 單?  ???(*) ? 為沒 ?對 ?規 ?， ?? 樣輸出
         const boldRegex = /\*\*(.+?)\*\*/g;
         let html = escaped.replace(boldRegex, "<strong style='color: #282f3b;'>$1</strong>");
     
-        // 3. ?��??��?語�? ![Alt](URL)
+        // 3. ?  ??  ?語 ? ![Alt](URL)
         const imageRegex = /!\[(.*?)\]\((.*?)\)/g; 
         html = html.replace(imageRegex, (match, alt, url) => { 
             return `<img src="${url}" alt="${alt}">`; 
         }); 
     
-        // 4. ?�後�? \n ?��?轉�?網�?標籤
+        // 4. ? 後 ? \n ?  ?轉 ?網 ?標籤
         return html.replace(/\n/g, "<br>"); 
     }
 
     function resetCode() { 
-        if (!confirm("?�置程�?碼到?��?模板？這�??��??�本題�??�?��?案�?)) return; 
+        if (!confirm("? 置程 ?碼到?  ?模板？這 ??  ?? 本題 ?? ?  ?案 ?)) return; 
         
         const p = db.problems.find(x => x.id === currentProbId); 
         const lang = document.getElementById('langSelect').value;
         
         if (lang === 'cpp') { 
-            // ?�援空�?串�???
+            // ? 援空 ?串 ???
             p.code_cpp = (p.tpl_cpp !== undefined) ? p.tpl_cpp : defaultTemplates.cpp; 
             
             if (p.isMultiFile && p.multiFiles) {
@@ -1879,12 +1879,12 @@
     function copyCode() { 
         const code = editor.getValue(); 
         if (!code) { 
-            alert("沒�?程�?碼可以�?製�?"); 
+            alert("沒 ?程 ?碼可以 ?製 ?"); 
             return; 
         } 
         
         navigator.clipboard.writeText(code).then(() => { 
-            alert("??程�?碼已複製?�剪貼簿�?); 
+            alert("??程 ?碼已複製? 剪貼簿 ?); 
         }).catch(() => { 
             const ta = document.createElement("textarea"); 
             ta.value = code; 
@@ -1892,7 +1892,7 @@
             ta.select(); 
             document.execCommand("copy"); 
             document.body.removeChild(ta); 
-            alert("??程�?碼已複製?�剪貼簿�?); 
+            alert("??程 ?碼已複製? 剪貼簿 ?); 
         }); 
     }
     
@@ -1914,7 +1914,7 @@
     async function saveAdminAndBack() { 
         const p = db.problems.find(x => x.id === currentProbId); 
         
-        // --- ?��?套用 UI 上�??�設�?---
+        // --- ?  ?套用 UI 上 ?? 設 ?---
         p.title = document.getElementById('editTitle').value; 
         p.desc = document.getElementById('editDesc').value; 
         
@@ -1951,18 +1951,18 @@
         for (let i = 0; i < inputs.length; i++) {
             p.testCases.push({ input: inputs[i].value, output: outputs[i].value }); 
         }
-        // --- 套用?�設定�???---
+        // --- 套用? 設定 ???---
 
-        // ?�� ?��?修正：�?待雲端�??��??�跳�?
+        // ?   ?  ?修正： ?待雲端 ??  ?? 跳 ?
         const btn = document.querySelector('#view-admin .btn-primary');
-        if (btn) { btn.disabled = true; btn.innerText = "???��?�?.."; }
+        if (btn) { btn.disabled = true; btn.innerText = "???  ? ?.."; }
         await saveToLocal(true, false); 
         
-        // ?? ?�鍵修復：�?修改後�??�份題目細�?（含?�述?�測資�??��??�份??Firebase
-        // ?��?主�?檔�???1MB 容�??�制?��??�新?��??��??�到?��??�份資�?，�??��?述�??�「�?輸入題目?�述...??
+        // ?? ? 鍵修復： ?修改後 ?? 份題目細 ?（含? 述? 測資 ??  ?? 份??Firebase
+        // ?  ?主 ?檔 ???1MB 容 ?? 制?  ?? 新?  ??  ?? 到?  ?? 份資 ?， ??  ?述 ?? 「 ?輸入題目? 述...??
         await syncProblemDeltaToCloud(currentProbId, p);
 
-        if (btn) { btn.disabled = false; btn.innerText = "?�� ?��?並�???; }
+        if (btn) { btn.disabled = false; btn.innerText = "?   ?  ?並 ???; }
         history.back(); 
     }
     
@@ -1974,13 +1974,13 @@
         const text = descArea.value;
     
         if (start !== end) {
-            // 將選?��??��??��?
+            // 將選?  ??  ??  ?
             const selectedText = text.substring(start, end);
             descArea.value = text.substring(0, start) + "**" + selectedText + "**" + text.substring(end);
             descArea.selectionStart = start + 2;
             descArea.selectionEnd = end + 2;
         } else {
-            // ?�入空�?法並定�?游�?
+            // ? 入空 ?法並定 ?游 ?
             descArea.value = text.substring(0, start) + "****" + text.substring(end);
             descArea.selectionStart = descArea.selectionEnd = start + 2;
         }
@@ -1988,10 +1988,10 @@
     }
     
     function insertImageToDesc() { 
-        const url = prompt("請輸?��??�網?� (URL)�?, "https://"); 
+        const url = prompt("請輸?  ?? 網?  (URL) ?, "https://"); 
         if (url) { 
             const descArea = document.getElementById('editDesc'); 
-            descArea.value += `\n\n![?��?](${url})\n\n`; 
+            descArea.value += `\n\n![?  ?](${url})\n\n`; 
             descArea.focus(); 
         } 
     }
@@ -2004,13 +2004,13 @@
         if (!file) return; 
         
         if (file.size > 2 * 1024 * 1024) { 
-            alert("?��? ?��??�大！建議使??2MB 以�??��??��?以�??�覽?�卡?��?); 
+            alert("?  ? ?  ?? 大！建議使??2MB 以 ??  ??  ?以 ?? 覽? 卡?  ?); 
         } 
         
         const reader = new FileReader(); 
         reader.onload = function(e) { 
             const descArea = document.getElementById('editDesc'); 
-            descArea.value += `\n\n![?�地?��?](${e.target.result})\n\n`; 
+            descArea.value += `\n\n![? 地?  ?](${e.target.result})\n\n`; 
             descArea.focus(); 
             fileInput.value = ''; 
         }; 
@@ -2028,7 +2028,7 @@
         p.modelAnswer = document.getElementById('modelAnswerInput').value; 
         document.getElementById('modelAnswerModal').style.display = 'none'; 
         
-        // 精�?上傳局?�修?��?並只�?dbData 不�? History
+        // 精 ?上傳局? 修?  ?並只 ?dbData 不 ? History
         saveToLocal(true, false); 
         syncProblemDeltaToCloud(currentProbId, { modelAnswer: p.modelAnswer });
     }
@@ -2036,28 +2036,28 @@
     function copyModelAnswer() { 
         const text = document.getElementById('modelAnswerInput'); 
         if (!text.value.trim()) { 
-            alert("沒�?示�?�???�以複製�?); 
+            alert("沒 ?示 ? ??? 以複製 ?); 
             return; 
         } 
         text.select(); 
         document.execCommand('copy'); 
-        alert("??示�?�??已�?製�?"); 
+        alert("??示 ? ??已 ?製 ?"); 
     }
 
     async function pasteModelAnswer() { 
         try { 
             const text = await navigator.clipboard.readText(); 
             document.getElementById('modelAnswerInput').value = text; 
-            alert("??已貼上解答�?"); 
+            alert("??已貼上解答 ?"); 
         } catch (err) { 
-            alert("?��? ?�覽?�阻?��??��?讀?�剪貼簿，�??�接?��?字�?中�? Ctrl+V 貼�???); 
+            alert("?  ? ? 覽? 阻?  ??  ?讀? 剪貼簿， ?? 接?  ?字 ?中 ? Ctrl+V 貼 ???); 
         } 
     }
 
     async function runCode() {
         const p = db.problems.find(x => x.id === currentProbId); 
         if (!p.testCases || p.testCases.length === 0) { 
-            alert("?�測�?); 
+            alert("? 測 ?); 
             return; 
         }
         
@@ -2065,7 +2065,7 @@
         const logs = document.getElementById('outputLogs'); 
         const lang = document.getElementById('langSelect').value; 
         
-        // ?��??��?編輯?�內?��?式碼?��??�中
+        // ?  ??  ?編輯? 內?  ?式碼?  ?? 中
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -2075,17 +2075,17 @@
         
         const mainCode = (lang === 'cpp' && p.isMultiFile) ? p.code_cpp : editor.getValue();
 
-        // ?��?多�?案�??��?準�??�送給編譯伺�???
+        // ?  ?多 ?案 ??  ?準 ?? 送給編譯伺 ???
         let wandboxCodes = [];
         let localExtraFiles = [];
-        let extraCppFiles = []; // ?�修�??��??��?外�? .cpp 檔�??�稱�?Wandbox 編譯???使用
+        let extraCppFiles = []; // ? 修 ??  ??  ?外 ? .cpp 檔 ?? 稱 ?Wandbox 編譯???使用
 
         if (lang === 'cpp' && p.isMultiFile && p.multiFiles) {
             p.multiFiles.forEach(f => {
                 wandboxCodes.push({ file: f.name, code: f.code || "" });
                 localExtraFiles.push({ name: f.name, content: f.code || "" });
                 
-                // ?�出 .cpp ??.c 結尾?��?屬�?�?
+                // ? 出 .cpp ??.c 結尾?  ?屬 ? ?
                 if (f.name.toLowerCase().endsWith('.cpp') || f.name.toLowerCase().endsWith('.c')) {
                     extraCppFiles.push(f.name);
                 }
@@ -2111,7 +2111,7 @@
                 let inputData = p.testCases[i].input || "";
 
                 if (currentCompileMode === 'wandbox') {
-                    // 模�? A：公?�雲�?(Wandbox)
+                    // 模 ? A：公? 雲 ?(Wandbox)
                     const apiCompiler = lang === 'cpp' ? 'gcc-head' : 'cpython-head';
                     const payload = { compiler: apiCompiler, code: mainCode, stdin: inputData };
                     if (wandboxCodes.length > 0) { 
@@ -2132,24 +2132,24 @@
                     clearTimeout(timeoutId);
                     
                     if (res.compiler_error || res.compiler_message) {
-                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: 編譯?�誤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.compiler_error || res.compiler_message}</pre></div>`;
+                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: 編譯? 誤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.compiler_error || res.compiler_message}</pre></div>`;
                         const stopDiv = document.createElement('div'); 
                         stopDiv.style.textAlign = "center"; 
                         stopDiv.style.padding = "10px"; 
                         stopDiv.style.color = "#aaa"; 
-                        stopDiv.innerHTML = "?��? ?�編譯失?��?已�?止�?續測試�?; 
+                        stopDiv.innerHTML = "?  ? ? 編譯失?  ?已 ?止 ?續測試 ?; 
                         logs.appendChild(stopDiv);
                         isCompileError = true; 
                         break; 
                     }
                     if (res.status !== "0" && res.program_error) { 
-                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?��??�誤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.program_error}</pre></div>`; 
+                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?  ?? 誤</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.program_error}</pre></div>`; 
                         continue; 
                     }
                     act = (res.program_message || "").trim();
 
                 } else {
-                    // 模�? B & C：使?��???Python Server (?��???Render ?�端)
+                    // 模 ? B & C：使?  ???Python Server (?  ???Render ? 端)
                     try {
                         let filesDict = {};
                         if (lang === 'cpp') {
@@ -2163,7 +2163,7 @@
 
                         const localPayload = { lang: lang, files: filesDict, stdin: inputData };
 
-                        // ?�� ?�鍵點�??��?模�?決�??��?網�?
+                        // ?   ? 鍵點 ??  ?模 ?決 ??  ?網 ?
                         const apiUrl = (currentCompileMode === 'local') 
                             ? 'http://127.0.0.1:3000/run' 
                             : 'https://python-compiler-sever.onrender.com/run'; 
@@ -2180,12 +2180,12 @@
 
                         if (res.error) {
                             tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ${res.type || "Error"}</div><div class="log-details"><pre style="color:#f44747; margin:0;">${res.message || "Unknown Error"}</pre></div>`;
-                            if (res.type === '編譯?�誤') { 
+                            if (res.type === '編譯? 誤') { 
                                 const stopDiv = document.createElement('div'); 
                                 stopDiv.style.textAlign = "center"; 
                                 stopDiv.style.padding = "10px"; 
                                 stopDiv.style.color = "#aaa"; 
-                                stopDiv.innerHTML = "?��? ?�編譯失?��?已�?止�?續測試�?; 
+                                stopDiv.innerHTML = "?  ? ? 編譯失?  ?已 ?止 ?續測試 ?; 
                                 logs.appendChild(stopDiv); 
                                 isCompileError = true; 
                                 break; 
@@ -2194,43 +2194,43 @@
                         }
                         act = (res.output || "").trim();
                     } catch (err) { 
-                        if (err.name === 'AbortError') throw err; // 讓�?�?catch ?��?超�?
-                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?��?????�伺?�器</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">請確�?${currentCompileMode === 'local' ? '?��?' : '?�端'} 伺�??�是?�已?��???/div>`; 
+                        if (err.name === 'AbortError') throw err; // 讓 ? ?catch ?  ?超 ?
+                        tempDiv.innerHTML = `<div class="log-header" style="color:var(--fail)">??Case ${i+1}: ?  ????? 伺? 器</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">請確 ?${currentCompileMode === 'local' ? '?  ?' : '? 端'} 伺 ?? 是? 已?  ???/div>`; 
                         isCompileError = true; 
                         break; 
                     }
                 }
 
-                // --- ?�復：�??�用來判?��?案�??��??�輯 ---
+                // --- ? 復： ?? 用來判?  ?案 ??  ?? 輯 ---
                 let pass = act.replace(/\r\n/g, "\n") === exp.replace(/\r\n/g, "\n");
                 if (pass) passCount++;
                 
-                let statusHtml = pass ? `<span style="color:var(--success)">??Case ${i+1}: ?��?測試 (Accepted)</span>` : `<span style="color:var(--fail)">??Case ${i+1}: 答�??�誤 (Wrong Answer)</span>`;
+                let statusHtml = pass ? `<span style="color:var(--success)">??Case ${i+1}: ?  ?測試 (Accepted)</span>` : `<span style="color:var(--fail)">??Case ${i+1}: 答 ?? 誤 (Wrong Answer)</span>`;
                 let actStyle = pass ? "color:#fff; border-left-color:var(--success);" : "color:var(--warning); border-left-color:var(--fail);";
                 
-                tempDiv.innerHTML = `<div class="log-header">${statusHtml}</div><div class="log-details"><div class="log-label">輸入 (Input):</div><div class="log-value">${inputData}</div><div class="log-label">?��?輸出 (Expected):</div><div class="log-value">${exp}</div><div class="log-label">?��?輸出 (Actual):</div><div class="log-value" style="${actStyle}">${act || "(?�輸??"}</div></div>`;
+                tempDiv.innerHTML = `<div class="log-header">${statusHtml}</div><div class="log-details"><div class="log-label">輸入 (Input):</div><div class="log-value">${inputData}</div><div class="log-label">?  ?輸出 (Expected):</div><div class="log-value">${exp}</div><div class="log-label">?  ?輸出 (Actual):</div><div class="log-value" style="${actStyle}">${act || "(? 輸??"}</div></div>`;
 
             } catch(e) { 
                 if (e.name === 'AbortError') {
-                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: ?��?超�? (Timeout)</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?��?超�? 15 秒已被系統強?�中?��?br>?�能?��?：�?式碼?�入?�無窮迴?�」�?伺�??�無?��???/div>`; 
+                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: ?  ?超 ? (Timeout)</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?  ?超 ? 15 秒已被系統強? 中?  ?br>? 能?  ?： ?式碼? 入? 無窮迴? 」 ?伺 ?? 無?  ???/div>`; 
                 } else {
-                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: 網路????�誤</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?��?????�編譯伺?�器，�?檢查網路?�?��?/div>`; 
+                    tempDiv.innerHTML = `<div style="color:var(--fail)">??Case ${i+1}: 網路???? 誤</div><div class="log-details" style="color:#aaa; font-size:0.85rem;">?  ????? 編譯伺? 器， ?檢查網路? ?  ?/div>`; 
                 }
                 isCompileError = true; 
                 break; 
             }
-        } // for 迴�?結�?
+        } // for 迴 ?結 ?
 
         let finalStatus = "";
         if (isCompileError) { 
-            finalStatus = `<span style="color:var(--fail)">??編譯?��??失�?</span>`; 
+            finalStatus = `<span style="color:var(--fail)">??編譯?  ??失 ?</span>`; 
         } else if (passCount === p.testCases.length) { 
-            finalStatus = `<span style="color:var(--success)">???�數?��? (${passCount}/${p.testCases.length})</span>`; 
+            finalStatus = `<span style="color:var(--success)">??? 數?  ? (${passCount}/${p.testCases.length})</span>`; 
         } else { 
-            finalStatus = `<span style="color:var(--warning)">?��? ?��??��? (${passCount}/${p.testCases.length})</span>`; 
+            finalStatus = `<span style="color:var(--warning)">?  ? ?  ??  ? (${passCount}/${p.testCases.length})</span>`; 
         }
 
-        // 將�??��?案�??�容?��?存入歷史紀?��??�便?�頭檢�?
+        // 將 ??  ?案 ?? 容?  ?存入歷史紀?  ?? 便? 頭檢 ?
         let fullCodeForHistory = mainCode;
         if (lang === 'cpp' && p.isMultiFile && p.multiFiles) {
             fullCodeForHistory = `// === main.cpp ===\n${mainCode}\n`;
@@ -2251,26 +2251,26 @@
             executionHistories[currentProbId].pop();
         }
         
-        // ?�修�?：�??��??�整?��?庫�??�更?�本�?LocalStorage ?�雲端�??��?程�?碼�?歷史紀?��?
+        // ? 修 ?： ??  ?? 整?  ?庫 ?? 更? 本 ?LocalStorage ? 雲端 ??  ?程 ?碼 ?歷史紀?  ?
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
-        localStorage.setItem('oj_v15_data', JSON.stringify(db)); // ?�更?�本機�?庫暫�?
+        localStorage.setItem('oj_v15_data', JSON.stringify(db)); // ? 更? 本機 ?庫暫 ?
 
         if (currentUser) {
             try {
-                // ?�修?�】�??��?歷史紀?��?步到?�端，�??��??��?答�?式碼?�寫??customProblems
+                // ? 修? 】 ??  ?歷史紀?  ?步到? 端， ??  ??  ?答 ?式碼? 寫??customProblems
                 await personalDb.collection('users').doc(currentUser.uid).set({
                      historyData: historyString,
                      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
             } catch(e) {
-                console.error("?�端歷史紀?��?檔失??", e);
+                console.error("? 端歷史紀?  ?檔失??", e);
             }
         }
 
         btn.disabled = false; 
-        btn.innerText = "?��? ?��?";
+        btn.innerText = "?  ? ?  ?";
     }
 
     function openHistoryModal() {
@@ -2280,7 +2280,7 @@
         listDiv.innerHTML = "";
         
         if (histList.length === 0) { 
-            listDiv.innerHTML = "<div style='color:#666; text-align:center; padding:30px; font-size:1.1rem;'>尚無?��?紀??/div>"; 
+            listDiv.innerHTML = "<div style='color:#666; text-align:center; padding:30px; font-size:1.1rem;'>尚無?  ?紀??/div>"; 
         } else { 
             histList.forEach((hist, idx) => { 
                 const item = document.createElement('div'); 
@@ -2299,10 +2299,10 @@
     }
 
     function clearProblemHistory() { 
-        if (!confirm("確�?要�?空這�??��??�歷?�執行�??��?？此?��??��?復�???)) return; 
+        if (!confirm("確 ?要 ?空這 ??  ?? 歷? 執行 ??  ?？此?  ??  ?復 ???)) return; 
         delete executionHistories[currentProbId]; 
         
-        // ?�更?�歷?��??��?不影?��?庫主�?
+        // ? 更? 歷?  ??  ?不影?  ?庫主 ?
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
         if (currentUser) {
@@ -2317,7 +2317,7 @@
     async function clearCategoryHistory() {
         if (!currentCatId) return;
 
-        //從本?�暫存�??��??��?次�??��???
+        //從本? 暫存 ??  ??  ?次 ??  ???
         const freshHistory = localStorage.getItem('oj_v15_history');
         if (freshHistory) {
             try { 
@@ -2325,19 +2325,19 @@
             } catch(e) {}
         }
 
-        // ?��??��??��??��?稱以顯示?��?示�??�中
+        // ?  ??  ??  ??  ?稱以顯示?  ?示 ?? 中
         const cat = db.categories.find(c => c.id === currentCatId);
-        const catName = cat ? cat.name : "此�?�?;
+        const catName = cat ? cat.name : "此 ? ?;
 
-        if (!confirm(`?��? 警�?：確定�?清空??{catName}?�內?�?��??��??�歷?�執行�??�】�?？\n此�?作無法復?��?`)) return;
+        if (!confirm(`?  ? 警 ?：確定 ?清空??{catName}? 內? ?  ??  ?? 歷? 執行 ?? 】 ?？\n此 ?作無法復?  ?`)) return;
 
-        // ?�出?�個�?類�??��??��???
+        // ? 出? 個 ?類 ??  ??  ???
         const catProblems = db.problems.filter(p => p.catId === currentCatId);
         let deletedCount = 0;
 
-        // ?�除?��?題目??executionHistories 中�?紀??
+        // ? 除?  ?題目??executionHistories 中 ?紀??
         catProblems.forEach(p => {
-            // ?��??�度?�斷，確保裡?��??��?紀?��?算數
+            // ?  ?? 度? 斷，確保裡?  ??  ?紀?  ?算數
             if (executionHistories[p.id] && executionHistories[p.id].length > 0) {
                 delete executionHistories[p.id];
                 deletedCount++;
@@ -2345,27 +2345,27 @@
         });
 
         if (deletedCount === 0) {
-            alert("?��?類目?��??�任何歷?�執行�??�可以�?空�?);
+            alert("?  ?類目?  ?? 任何歷? 執行 ?? 可以 ?空 ?);
             return;
         }
 
-        // ?�新?�地端�??��?紀??
+        // ? 新? 地端 ??  ?紀??
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
 
-        // ?�步?�新??Firebase ?�端
+        // ? 步? 新??Firebase ? 端
         if (currentUser) {
             try {
                 await personalDb.collection('users').doc(currentUser.uid).set({
                     historyData: historyString
                 }, { merge: true });
-                alert(`??已�??��?空本?��?�?${deletedCount} 題�??��?紀?��?`);
+                alert(`??已 ??  ?空本?  ? ?${deletedCount} 題 ??  ?紀?  ?`);
             } catch (e) {
-                console.error("?�端清除歷史紀?�失??, e);
-                alert("?��? ?�地紀?�已清除，�??�端?�步失�???);
+                console.error("? 端清除歷史紀? 失??, e);
+                alert("?  ? ? 地紀? 已清除， ?? 端? 步失 ???);
             }
         } else {
-            alert(`??已�??��?空本?��?�?${deletedCount} 題�??��?紀?��?`);
+            alert(`??已 ??  ?空本?  ? ?${deletedCount} 題 ??  ?紀?  ?`);
         }
     }    
 
@@ -2373,7 +2373,7 @@
         const p = db.problems.find(x => x.id === currentProbId); 
         const lang = document.getElementById('langSelect').value; 
         
-        // 確�??��?編輯?�內容�?存到變數�?
+        // 確 ??  ?編輯? 內容 ?存到變數 ?
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -2381,7 +2381,7 @@
             p['code_' + lang] = editor.getValue();
         }
 
-        // ?�修�?：�? AI ?��??��??��?案內容�?
+        // ? 修 ?： ? AI ?  ??  ??  ?案內容 ?
         let fullCode = "";
         if (lang === 'cpp' && p.isMultiFile) {
             fullCode = `// === main.cpp ===\n${p.code_cpp || ""}\n`;
@@ -2395,11 +2395,11 @@
         }
         
         if (!fullCode || fullCode.trim() === "") { 
-            alert("程�?碼為空�??��??��???); 
+            alert("程 ?碼為空 ??  ??  ???); 
             return; 
         }
         
-        document.getElementById('aiPromptOutput').value = `請�?任�?式設計助?��?幫�?檢查以�?程�?碼�??�輯?�否�?��，並給�?修正建議（�??��?體中?��?答�?：\n\n?��??��?稱】�?${p.title}\n?��??��?述】�?\n${p.desc}\n\n?��??��?式碼?��?\n\`\`\`${lang}\n${fullCode}\n\`\`\``; 
+        document.getElementById('aiPromptOutput').value = `請 ?任 ?式設計助?  ?幫 ?檢查以 ?程 ?碼 ?? 輯? 否 ?  ，並給 ?修正建議（ ??  ?體中?  ?答 ?：\n\n?  ??  ?稱】 ?${p.title}\n?  ??  ?述】 ?\n${p.desc}\n\n?  ??  ?式碼?  ?\n\`\`\`${lang}\n${fullCode}\n\`\`\``; 
         document.getElementById('aiHelperModal').style.display = 'flex';
     }
 
@@ -2407,7 +2407,7 @@
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
-        alert("???�容已�?製�?"); 
+        alert("??? 容已 ?製 ?"); 
         document.getElementById('aiHelperModal').style.display = 'none'; 
     }
 
@@ -2415,7 +2415,7 @@
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
-        alert("?? ?�容已�?製�?\n?��??�您?��? Gemini??); 
+        alert("?? ? 容已 ?製 ?\n?  ?? 您?  ? Gemini??); 
         window.open('https://gemini.google.com/app', '_blank'); 
         document.getElementById('aiHelperModal').style.display = 'none'; 
     }
@@ -2434,7 +2434,7 @@
     
     function downloadBackup() { 
         const date = new Date().toISOString().slice(0, 10); 
-        let filename = prompt("請輸?��?案�?�?(?��??��???:", `oj_backup_${date}`); 
+        let filename = prompt("請輸?  ?案 ? ?(?  ??  ???:", `oj_backup_${date}`); 
         if (!filename) return; 
         
         if (!filename.endsWith(".txt") && !filename.endsWith(".json")) { 
@@ -2467,7 +2467,7 @@
                     JSON.parse(content); 
                     content = btoa(encodeURIComponent(content)); 
                 } catch(err) { 
-                    alert("檔�??��??�誤"); 
+                    alert("檔 ??  ?? 誤"); 
                     return; 
                 } 
             } 
@@ -2486,7 +2486,7 @@
     function copyBackupCode() { 
         document.getElementById('backupStr').select(); 
         document.execCommand('copy'); 
-        alert("已�?�?); 
+        alert("已 ? ?); 
     }
 
     async function execRestore() { 
@@ -2496,15 +2496,15 @@
                 const catCount = data.categories.length || 0;
                 const probCount = data.problems.length || 0;
                 
-                if (!confirm(`?��? 準�??��?題庫 ?��?\n\n?�即將匯?��??�份檔�??��?\n- ${catCount} ?��?類\n- ${probCount} ?��??�\n\n?�警?�】此?��?將�??��??��??�」您?��??�本?��?庫�??��?\n確�?要繼續�??��?？`)) {
+                if (!confirm(`?  ? 準 ??  ?題庫 ?  ?\n\n? 即將匯?  ?? 份檔 ??  ?\n- ${catCount} ?  ?類\n- ${probCount} ?  ?? \n\n? 警? 】此?  ?將 ??  ??  ?? 」您?  ?? 本?  ?庫 ??  ?\n確 ?要繼續 ??  ?？`)) {
                     return;
                 }
 
-                let defaultName = pendingRestoreFileName || "?��??��?題庫"; 
-                let finalName = prompt("請為?�個�??��?題庫?��?�?, defaultName); 
+                let defaultName = pendingRestoreFileName || "?  ??  ?題庫"; 
+                let finalName = prompt("請為? 個 ??  ?題庫?  ? ?, defaultName); 
                 
                 if (finalName === null) return; 
-                if (finalName.trim() === "") finalName = "?��??��?題庫"; 
+                if (finalName.trim() === "") finalName = "?  ??  ?題庫"; 
                 
                 const preservedCustomBanks = db.customBanks || [];
                 db.categories = data.categories;
@@ -2512,7 +2512,7 @@
                 db.version = data.version || "";
                 db.customBanks = preservedCustomBanks;
 
-                // 如�??�自訂�?庫中?��?，�?便更?�該?��?題庫?�稱
+                // 如 ?? 自訂 ?庫中?  ?， ?便更? 該?  ?題庫? 稱
                 const isCustom = currentBankUrl && currentBankUrl.startsWith("local_custom_");
                 if (isCustom) {
                     const customId = currentBankUrl.replace("local_custom_", "");
@@ -2522,7 +2522,7 @@
                         db.customBanks[bankIdx].categories = JSON.parse(JSON.stringify(db.categories));
                         db.customBanks[bankIdx].problems = JSON.parse(JSON.stringify(db.problems));
                         
-                        // ?�� 強制將�??��?題庫寫入子�???
+                        // ?   強制將 ??  ?題庫寫入子 ???
                         if (currentUser && personalDb) {
                             try {
                                 personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(customId).set(db.customBanks[bankIdx]);
@@ -2530,18 +2530,18 @@
                         }
                     }
                 } else if (currentUser && personalDb) {
-                    // ?? ?��??�設題庫?��??�修復�?必�?將�??�進�??��??��??��?，批次�?步到 Firebase ?�獨立�??�箱
+                    // ?? ?  ?? 設題庫?  ?? 修復 ?必 ?將 ?? 進 ??  ??  ??  ?，批次 ?步到 Firebase ? 獨立 ?? 箱
                     let payload = {};
                     let customCatUpdates = {};
                     let customProbUpdates = {};
 
-                    // 1. ?��??�端?��?資�?，找?�「幽?��?案」�??�本?�雲端�?但�??��?裡�??��?題目/?��?）並標�??�刪??
+                    // 1. ?  ?? 端?  ?資 ?，找? 「幽?  ?案」 ?? 本? 雲端 ?但 ??  ?裡 ??  ?題目/?  ?）並標 ?? 刪??
                     try {
                         const docSnap = await personalDb.collection('users').doc(currentUser.uid).get();
                         if (docSnap.exists) {
                             const data = docSnap.data();
                             
-                            // 清�?幽�??��?
+                            // 清 ?幽 ??  ?
                             if (data.customCategories) {
                                 Object.values(data.customCategories).forEach(cc => {
                                     if (cc && cc.bankUrl === currentBankUrl) {
@@ -2552,7 +2552,7 @@
                                 });
                             }
                             
-                            // 清�?幽�?題目：�??��??��??��?屬於?��?題庫，�??��?檔裡沒這�?，就殺�?
+                            // 清 ?幽 ?題目： ??  ??  ??  ?屬於?  ?題庫， ??  ?檔裡沒這 ?，就殺 ?
                             const currentCatIds = db.categories.map(c => c.id);
                             if (data.customProblems) {
                                 Object.values(data.customProblems).forEach(cp => {
@@ -2564,9 +2564,9 @@
                                 });
                             }
                         }
-                    } catch(e) { console.warn("?��??��??�端幽�?檔�?", e); }
+                    } catch(e) { console.warn("?  ??  ?? 端幽 ?檔 ?", e); }
 
-                    // 2. 將�??�進�??��??��??�細節（含作�?紀?��??��?修改）�?寫�??��?保險�?
+                    // 2. 將 ?? 進 ??  ??  ?? 細節（含作 ?紀?  ??  ?修改） ?寫 ??  ?保險 ?
                     db.categories.forEach(c => {
                         if (c.isUserAdded) customCatUpdates[c.id] = c; 
                     });
@@ -2578,27 +2578,27 @@
                     if (Object.keys(customCatUpdates).length > 0) payload.customCategories = customCatUpdates;
                     if (Object.keys(customProbUpdates).length > 0) payload.customProblems = customProbUpdates;
 
-                    // 3. ?�次寫入 Firebase (?�含?��??�刪?��??�令)
+                    // 3. ? 次寫入 Firebase (? 含?  ?? 刪?  ?? 令)
                     if (Object.keys(payload).length > 0) {
                         try {
                             await personalDb.collection('users').doc(currentUser.uid).set(payload, { merge: true });
-                        } catch(e) { console.warn("?��?保險箱批次�??�失??, e); }
+                        } catch(e) { console.warn("?  ?保險箱批次 ?? 失??, e); }
                     }
                 }
                 
                 currentBankName = finalName;
                 localStorage.setItem('oj_v15_bank_name', finalName); 
                 
-                // 等�?存�??�雲端�?步�???
+                // 等 ?存 ?? 雲端 ?步 ???
                 await saveToLocal(true, true); 
                 
-                alert("?��??��?，並已�?步至?�端�?);
+                alert("?  ??  ?，並已 ?步至? 端 ?);
                 
-                // ?�� ?��? window.location.reload()，改?�直?�更??UI
+                // ?   ?  ? window.location.reload()，改? 直? 更??UI
                 document.getElementById('backupModal').style.display = 'none';
                 
                 const nameEl = document.getElementById('currentBankName');
-                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?��?題庫: ` + currentBankName;
+                if (nameEl) nameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ?  ?題庫: ` + currentBankName;
                 
                 currentCatId = null;
                 renderCategoryList();
@@ -2607,18 +2607,18 @@
                 throw new Error(); 
             } 
         } catch(e) { 
-            alert("�?��?��??�格式錯�?); 
+            alert(" ?  ?  ?? 格式錯 ?); 
         } 
     }
 
-    // ================= 下�?程�?碼�???=================
+    // ================= 下 ?程 ?碼 ???=================
     function downloadCode() {
         const p = db.problems.find(x => x.id === currentProbId);
         if (!p) return;
 
         const lang = document.getElementById('langSelect').value;
 
-        // 1. 確�??��?編輯?�內?��?式碼?�即?��??��??�中
+        // 1. 確 ??  ?編輯? 內?  ?式碼? 即?  ??  ?? 中
         if (lang === 'cpp' && p.isMultiFile) {
             if (currentFileIndex === -1) p.code_cpp = editor.getValue();
             else p.multiFiles[currentFileIndex].code = editor.getValue();
@@ -2626,29 +2626,29 @@
             p['code_' + lang] = editor.getValue();
         }
 
-        // 2. 準�?檔�??�綴（�?濾�?不�?法�?檔�?字�?�?
+        // 2. 準 ?檔 ?? 綴（ ?濾 ?不 ?法 ?檔 ?字 ? ?
         const safeTitle = p.title.replace(/[\/\?<>\\:\*\|":\s]/g, "_");
 
         if (lang === 'cpp' && p.isMultiFile) {
-            // --- ?��?多�?案�???(ZIP) ---
+            // --- ?  ?多 ?案 ???(ZIP) ---
             if (typeof JSZip === 'undefined') {
-                alert("?��? ?��???JSZip ?��?庫�??��??��??��???);
+                alert("?  ? ?  ???JSZip ?  ?庫 ??  ??  ??  ???);
                 return;
             }
         
             const zip = new JSZip();
         
-            // ?�入 main.cpp
+            // ? 入 main.cpp
             zip.file("main.cpp", p.code_cpp || "");
         
-            // ?�入?��?標頭檔�?實�?�?(.h / .cpp)
+            // ? 入?  ?標頭檔 ?實 ? ?(.h / .cpp)
             if (p.multiFiles) {
                 p.multiFiles.forEach(f => {
                     zip.file(f.name, f.code || "");
                 });
             }
         
-            // ?��?壓縮檔並觸發下�?
+            // ?  ?壓縮檔並觸發下 ?
             zip.generateAsync({type: "blob"}).then(function(content) {
                 const url = window.URL.createObjectURL(content);
                 const a = document.createElement('a');
@@ -2662,7 +2662,7 @@
             });
         
         } else {
-            // --- ?��??��?檔�?下�? ---
+            // --- ?  ??  ?檔 ?下 ? ---
             let content = lang === 'cpp' ? (p.code_cpp || "") : (p.code_python || "");
             let ext = lang === 'cpp' ? '.cpp' : '.py';
             let filename = `${safeTitle}${ext}`;
@@ -2680,7 +2680,7 @@
         }
     }
 
-// ============= 上傳程�?碼�???============
+// ============= 上傳程 ?碼 ???============
 
     async function handleCodeUpload(input) {
 	const files = input.files;
@@ -2691,23 +2691,23 @@
 
 	const lang = document.getElementById('langSelect').value;
     
-	// 變數準�?：用來�??��??��?程�??�??
+	// 變數準 ?：用來 ??  ??  ?程 ?? ??
 	let successCount = 0;
 	let failMessages = [];
 	let needRenderTabs = false;
 
-	// ?��??��? ZIP 壓縮檔�??�輯 (維�??�本?�防?��?�??縮�???
+	// ?  ??  ? ZIP 壓縮檔 ?? 輯 (維 ?? 本? 防?  ? ??縮 ???
 	if (files.length === 1 && files[0].name.toLowerCase().endsWith('.zip')) {
 	const file = files[0];
 	if (lang !== 'cpp' || !p.isMultiFile) {
-	alert("?��? ?��??��??��?語�?模�?不支?��?檔�?！�?上傳?��? .cpp ??.py 檔�???);
+	alert("?  ? ?  ??  ??  ?語 ?模 ?不支?  ?檔 ?！ ?上傳?  ? .cpp ??.py 檔 ???);
 	    input.value = ''; return;
 	}
 	if (typeof JSZip === 'undefined') {
-	    alert("?��? ?��???JSZip ?��?庫�??��?讀?��?縮�???);
+	    alert("?  ? ?  ???JSZip ?  ?庫 ??  ?讀?  ?縮 ???);
 	    input.value = ''; return;
 	}
-	if (!confirm("?��? 上傳專�?將�?覆�??�目?�在?�個�??��??�?��?式碼，確定�?繼�??��?")) {
+	if (!confirm("?  ? 上傳專 ?將 ?覆 ?? 目? 在? 個 ??  ?? ?  ?式碼，確定 ?繼 ??  ?")) {
 	    input.value = ''; return;
 	}
 
@@ -2735,7 +2735,7 @@
 	    await Promise.all(promises);
 
 	    if (!hasMain) {
-		alert("?��? 壓縮檔內?��???main.cpp，無法�??��?案�?");
+		alert("?  ? 壓縮檔內?  ???main.cpp，無法 ??  ?案 ?");
 		input.value = ''; return;
 	    }
 
@@ -2750,18 +2750,18 @@
 	    currentFileIndex = -1;
 	    editor.setValue(p.code_cpp, -1);
 	    renderWorkspaceTabs();
-	    alert("??ZIP 專�?上傳並解?��??��?");
+	    alert("??ZIP 專 ?上傳並解?  ??  ?");
 
 	} catch (e) {
 	    console.error(e);
-	    alert("?��? 讀??ZIP 檔�?失�?�? + e.message);
+	    alert("?  ? 讀??ZIP 檔 ?失 ? ? + e.message);
 	}
 	input.value = '';
 	return;
     }
 
-    // ?��?多個獨立�?案�??��??�輯 (�? main.cpp, Rectangle.cpp, Rectangle.h)
-      // �?FileReader ?��???Promise，方便用 await 循�??��?
+    // ?  ?多個獨立 ?案 ??  ?? 輯 ( ? main.cpp, Rectangle.cpp, Rectangle.h)
+      //  ?FileReader ?  ???Promise，方便用 await 循 ??  ?
       const readFileAsync = (file) => {
 	return new Promise((resolve, reject) => {
 	    const reader = new FileReader();
@@ -2771,24 +2771,24 @@
 	});
     };
 
-      // 循�?檢查並�??��??�選?��?檔�?
+      // 循 ?檢查並 ??  ?? 選?  ?檔 ?
       for (let i = 0; i < files.length; i++) {
 	const file = files[i];
 	const extension = file.name.split('.').pop().toLowerCase();
 
-	// ?��?檢查 1：�?言不符
+	// ?  ?檢查 1： ?言不符
 	if (lang === 'python' && extension !== 'py') {
-	    failMessages.push(`??[${file.name}] Python 模�??�能上傳 .py 檔�??�`);
+	    failMessages.push(`??[${file.name}] Python 模 ?? 能上傳 .py 檔 ?? `);
 	    continue;
 	}
 	if (lang === 'cpp' && (extension === 'py' || extension === 'zip')) {
-	    failMessages.push(`??[${file.name}] 檔�??��??�誤?�`);
+	    failMessages.push(`??[${file.name}] 檔 ??  ?? 誤? `);
 	    continue;
 	}
         
-	// ?��?檢查 2：單檔模式卻?��? .h ?��??��?�?
+	// ?  ?檢查 2：單檔模式卻?  ? .h ?  ??  ? ?
 	if (!p.isMultiFile && (extension === 'h' || files.length > 1)) {
-	    alert("?��? ?��??�單一檔�?模�?，無法�??��??��??��??��?案�?請�??��?多�?案支?��?);
+	    alert("?  ? ?  ?? 單一檔 ?模 ?，無法 ??  ??  ??  ??  ?案 ?請 ??  ?多 ?案支?  ?);
 	    input.value = ''; return;
 	}
 
@@ -2808,33 +2808,33 @@
 		needRenderTabs = true;
 		if (currentFileIndex === targetIdx) editor.setValue(content, -1);
 	    } else {
-		failMessages.push(`?��? [${file.name}] 題目?�設定此檔�??��?，已?��??�`);
+		failMessages.push(`?  ? [${file.name}] 題目? 設定此檔 ??  ?，已?  ?? `);
 	    }
 	}
      } else {
-	// ?��?檔�?模�??��???
+	// ?  ?檔 ?模 ??  ???
 	if (lang === 'cpp') p.code_cpp = content;
 	else p.code_python = content;
 	editor.setValue(content, -1);
 	successCount++;
     }
         } catch (error) {
-            failMessages.push(`??[${file.name}] 讀?�失?�。`);
+            failMessages.push(`??[${file.name}] 讀? 失? 。`);
         }
     }
 
-    // 檔�??��??��?後�?統整並顯示�???
+    // 檔 ??  ??  ?後 ?統整並顯示 ???
     if (needRenderTabs) renderWorkspaceTabs();
 
     if (failMessages.length === 0 && successCount > 0) {
-	alert(`???��?載入 ${successCount} ?��?案�?`);
+	alert(`???  ?載入 ${successCount} ?  ?案 ?`);
     } else if (failMessages.length > 0) {
-	let msg = `載入完�?，�??�部?��?況�?\n???��?: ${successCount} ?��?案\n\n`;
+	let msg = `載入完 ?， ?? 部?  ?況 ?\n???  ?: ${successCount} ?  ?案\n\n`;
 	msg += failMessages.join('\n');
 	alert(msg);
     }
 
-    // 清除 input ?�??
+    // 清除 input ? ??
     input.value = '';
 }
 
