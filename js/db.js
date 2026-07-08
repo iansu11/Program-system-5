@@ -479,7 +479,7 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                 
             saveToLocal(shouldSyncDb, false);      
             if (!window.location.pathname.includes('workspace')) {
-                window.location.href = '/categories';
+                window.location.href = 'dashboard.html';
             } else {
                 window.location.reload();
             }
