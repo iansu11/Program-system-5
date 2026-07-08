@@ -639,7 +639,7 @@
         else if (path === '/portal') {
             showView('view-portal');
         } 
-        else if (path === '/categories') {
+        else if (path === 'dashboard.html') {
             currentCatId = null;
             
             //確保重新整理後，標題能顯示目前變數中的題庫名稱
@@ -869,7 +869,7 @@
         const bankNameEl = document.getElementById('currentBankName');
         if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> 目前題庫: ` + currentBankName;
         
-        window.location.hash = '/categories';
+        window.location.hash = 'dashboard.html';
         
         } catch (e) {
             console.error("切換題庫發生錯誤", e);
@@ -1055,7 +1055,7 @@
             if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> 目前題庫: ` + currentBankName;
                 
             saveToLocal(shouldSyncDb, false);      
-            window.location.hash = '/categories';
+            window.location.hash = 'dashboard.html';
             checkForUpdates();
 
         } catch (err) { 
