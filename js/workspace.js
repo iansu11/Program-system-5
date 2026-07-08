@@ -40,7 +40,8 @@ try {
     // 2. 如果沒有參數，嘗試直接從網址路徑中抽取出最後一段作為題目 ID
     else {
         const pathSegments = path.split('/').filter(Boolean);
-        // 如果網址結構符合 /categories'problems') {
+        // 如果網址結構符合 /categories/xxx/problems/yyy，最後一段就是題目 ID
+        if (pathSegments.length >= 4 && pathSegments[pathSegments.length - 2] === 'problems') {
             probIdStr = pathSegments[pathSegments.length - 1];
         } else {
             // 備用方案：傳統的 /workspace/題目ID 結構
@@ -1234,8 +1235,8 @@ function stopDrag() {
 
 
     async function runCode() {
-        const p = db.problems.find(x => x.id === currentProbId); 
-        if (!p.testCases || p.testCases.length === 0) { 
+        const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
+        if (!p || !p.testCases || p.testCases.length === 0) { 
             alert("無測資"); 
             return; 
         }
