@@ -40,8 +40,7 @@ try {
     // 2. 如果沒有參數，嘗試直接從網址路徑中抽取出最後一段作為題目 ID
     else {
         const pathSegments = path.split('/').filter(Boolean);
-        // 如果網址結構符合 /categories/xxx/problems/yyy，最後一段就是題目 ID
-        if (pathSegments.length >= 4 && pathSegments[pathSegments.length - 2] === 'problems') {
+        // 如果網址結構符合 dashboard.html'problems') {
             probIdStr = pathSegments[pathSegments.length - 1];
         } else {
             // 備用方案：傳統的 /workspace/題目ID 結構
@@ -52,7 +51,7 @@ try {
 
     if (!probIdStr) {
         alert("找不到題目 ID，返回大廳");
-        window.location.href = '/categories';
+        window.location.href = 'dashboard.html';
         return;
     }
 
@@ -67,7 +66,7 @@ try {
     const p = db.problems.find(x => String(x.id) === String(currentProbId));
     if (!p) {
         alert("找不到該題目的詳細資料！");
-        window.location.href = '/categories';
+        window.location.href = 'dashboard.html';
         return;
     }
 
@@ -739,7 +738,7 @@ function parseContent(text) {
                 
                 currentCatId = null;
                 renderCategoryList();
-                if (currentView === 'view-problem-list') window.location.href='/categories';
+                if (currentView === 'view-problem-list') window.location.href='dashboard.html';
             } else { 
                 throw new Error(); 
             } 
@@ -1458,9 +1457,9 @@ function goBackToProblemList() {
     autoSaveCode();
     const p = db.problems.find(x => String(x.id) === String(currentProbId));
     if (p) {
-        window.location.href = '/categories/' + p.catId + '/problems';
+        window.location.href = 'dashboard.html' + p.catId + '/problems';
     } else {
-        window.location.href = '/categories';
+        window.location.href = 'dashboard.html';
     }
 }
 
@@ -1473,5 +1472,5 @@ if (window.isDbLoaded) {
 }
 
 function goToAdmin() {
-    window.location.href = '/admin.html?probId=' + currentProbId;
+    window.location.href = 'admin.html?probId=' + currentProbId;
 }
