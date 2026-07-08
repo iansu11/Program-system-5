@@ -49,7 +49,7 @@ function logout() {
             localStorage.removeItem('oj_v15_history');
             localStorage.removeItem('oj_v15_bank_name');
             localStorage.removeItem('oj_v15_bank_url');
-            window.location.href = '/login'; 
+            window.location.href = '/index.html'; 
         });
     }
 }
@@ -112,7 +112,7 @@ masterAuth.onAuthStateChanged(async (user) => {
         
         // 如果不在登入頁面，強制導向登入頁
         if (!isLoginPage) {
-            window.location.href = '/login';
+            window.location.href = '/index.html';
         } else {
             const actionBtn = document.getElementById('actionBtn');
             if (actionBtn) {
