@@ -12,11 +12,21 @@ let problemToMoveId = null;
 
 function showView(viewId) {
     currentView = viewId;
-    const views = ['view-source-selector', 'view-custom-portal', 'view-portal', 'view-categories', 'view-problem-list'];
+    const views = ['view-source-selector', 'view-portal', 'view-custom-portal', 'view-categories', 'view-problem-list', 'view-login'];
     views.forEach(v => {
         const el = document.getElementById(v);
         if (el) {
-            el.style.display = (v === viewId) ? (v === 'view-categories' || v === 'view-problem-list' ? 'block' : 'flex') : 'none';
+            if (v === viewId) {
+                if (v === 'view-login') {
+                    el.style.display = 'flex';
+                    document.body.style.backgroundColor = '#232731';
+                } else {
+                    el.style.display = 'block';
+                    document.body.style.backgroundColor = '#E2E8F0';
+                }
+            } else {
+                el.style.display = 'none';
+            }
         }
     });
 }
