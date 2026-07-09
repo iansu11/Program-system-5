@@ -57,7 +57,7 @@ function logout() {
 // 監聽 Firebase 登入狀態變化
 masterAuth.onAuthStateChanged(async (user) => {
     authInitialized = true;
-    const isLoginPage = window.location.pathname.endsWith('login.html') || window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/login') || window.location.pathname === '/';
+    const isLoginPage = window.location.pathname.includes('login') || window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
 
     if (user) {
         currentUser = user;
@@ -90,8 +90,13 @@ masterAuth.onAuthStateChanged(async (user) => {
                 personalDb = personalApp.firestore();
                 
                 // 如果目前在登入頁面，自動跳轉至儀表板
-                if (isLoginPage) {
-                    window.location.href = '/source-selector';
+                if (isLoginPage && !window.disableAutoLoginRedirect) {
+                    // 若為本地檔案，跳轉 dashboard.html 避免 404
+                    if (window.location.protocol === 'file:') {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = '/source-selector';
+                    }
                 }
                 
                 // 觸發頁面各自的資料載入邏輯 (透過 dispatchEvent)
@@ -112,7 +117,11 @@ masterAuth.onAuthStateChanged(async (user) => {
         
         // 如果不在登入頁面，強制導向登入頁
         if (!isLoginPage) {
-            window.location.href = '/index.html';
+            if (window.location.protocol === 'file:') {
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = '/index.html';
+            }
         } else {
             const actionBtn = document.getElementById('actionBtn');
             if (actionBtn) {
