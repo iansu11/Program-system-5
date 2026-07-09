@@ -469,6 +469,41 @@ async function renameCustomBank(e, idx) {
         }
     }
 
+async function deleteCustomBank(e, idx) {
+    e.stopPropagation();
+    const bank = db.customBanks[idx];
+    if (confirm(`確定要刪除題庫「${bank.name}」嗎？這將會永久刪除雲端備份且無法復原！`)) {
+        const bankId = bank.id;
+        db.customBanks.splice(idx, 1);
+        
+        // 若刪除的是目前開啟的題庫，退回大廳
+        if (currentBankUrl === "local_custom_" + bankId) {
+            currentBankUrl = "";
+            currentBankName = "";
+            localStorage.removeItem('oj_v15_bank_url');
+            localStorage.removeItem('oj_v15_bank_name');
+        }
+
+        const btn = e.target.closest('button');
+        if (btn) btn.disabled = true;
+        await saveToLocal(true, false);
+        
+        // 刪除雲端資料
+        if (currentUser && personalDb) {
+            try {
+                await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(bankId).delete();
+            } catch(e) {
+                console.warn("雲端刪除失敗", e);
+            }
+        }
+        
+        renderCustomPortal();
+        if (currentBankUrl === "") {
+            navigateTo('/source-selector');
+        }
+    }
+}
+
 async function loadCustomBank(idx) {
         // 🚀 UI 防呆：加入載入中動畫並鎖定全域按鈕，防止重複點擊
         const container = document.getElementById('customBankList');
