@@ -61,8 +61,8 @@ masterAuth.onAuthStateChanged(async (user) => {
 
     if (user) {
         currentUser = user;
-        const userNameEl = document.getElementById('user-name');
-        if (userNameEl) userNameEl.innerText = user.email;
+        const userNameEls = document.querySelectorAll('.user-name-display');
+        userNameEls.forEach(el => el.innerText = user.email);
         
         try {
             // 🚀 效能優化：如果已經有快取金鑰，直接使用，不必每次換頁都重新等待雲端下載
