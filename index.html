@@ -4,73 +4,467 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登入 - 解題系統 V2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 字體與圖示 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
     
+    <!-- 引入 Firebase SDK 與 auth.js 讓按鈕真正運作 -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-</head>
-<body style="display: flex; flex-direction: row; height: 100vh; background: #232731; color: white;">
-
-    <!-- 左側封面 -->
-    <div class="login-left-cover" style="opacity: 0; transition: opacity 0.3s ease;" id="leftCover"></div>
-
-    <!-- 右側登入表單 -->
-    <div class="login-right-form" style="opacity: 0; transition: opacity 0.3s ease;" id="rightForm">
-        <div class="portal-container" style="padding-top: 30px;">
-            <h1 style="color: #60a5fa; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <i class="fa-solid fa-code"></i> 解題系統 V2
-            </h1>
+    
+    <style>
+        :root {
+            --primary: #6366f1; 
+            --primary-hover: #4f46e5;
+            /* 與大廳底色保持一致 */
+            --bg-page: #f8fafc; 
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --success: #10b981;
             
-            <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
-                <div id="tabLogin" style="cursor:pointer; font-weight:bold; color:white; border-bottom: 2px solid var(--accent); padding-bottom:5px;" onclick="switchAuthTab('login')">
-                    登入現有帳號
-                </div>
-                <div id="tabRegister" style="cursor:pointer; font-weight:bold; color:#aaa; border-bottom: 2px solid transparent; padding-bottom:5px;" onclick="switchAuthTab('register')">
-                    註冊並綁定雲端
-                </div>
+            /* 程式碼編輯器專用色彩 */
+            --editor-bg: #0f172a;
+            --editor-topbar: #1e293b;
+            --syntax-keyword: #c678dd;
+            --syntax-function: #61afef;
+            --syntax-string: #98c379;
+            --syntax-comment: #5c6370;
+            --syntax-text: #abb2bf;
+            --syntax-include: #e06c75;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            background: var(--bg-page);
+            color: var(--text-main);
+        }
+
+        /* 左側：程式碼動畫區域 */
+        .split-left {
+            flex: 1.2;
+            position: relative;
+            background: var(--editor-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* 模擬編輯器視窗 */
+        .editor-window {
+            width: 100%;
+            max-width: 650px;
+            background: #181d28; /* 更深的編輯器底色 */
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            animation: floatEditor 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatEditor {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(15px); }
+        }
+
+        .editor-header {
+            background: var(--editor-topbar);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .editor-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+        }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .editor-title {
+            margin-left: 10px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .editor-body {
+            padding: 24px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--syntax-text);
+            min-height: 250px;
+        }
+
+        /* 閃爍游標 */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: var(--primary);
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 右側：登入表單區域 */
+        .split-right {
+            flex: 1;
+            max-width: 550px;
+            background: var(--bg-page);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: -20px 0 40px rgba(0,0,0,0.05);
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .brand-header {
+            margin-bottom: 40px;
+        }
+
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-title i {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .brand-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* 頁籤切換 */
+        .auth-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .auth-tab {
+            padding: 10px 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+            animation: slideLine 0.3s ease forwards;
+        }
+
+        @keyframes slideLine {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        /* 輸入框設計 */
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+
+        .input-header label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* 教學按鈕設計 */
+        .tutorial-link {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .tutorial-link:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            /* 將輸入框底色改為純白，使其在灰底中更突出 */
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            color: var(--text-main);
+            border-radius: 10px;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* 按鈕設計 */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* 禁止按鈕狀態 */
+        .btn-submit:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #registerConfigArea {
+            display: none;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .split-left { display: none; }
+            .split-right { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左側：程式碼動畫區域 -->
+    <div class="split-left">
+        <div class="editor-window">
+            <div class="editor-header">
+                <div class="editor-dot dot-red"></div>
+                <div class="editor-dot dot-yellow"></div>
+                <div class="editor-dot dot-green"></div>
+                <div class="editor-title">hello.cpp - 解題系統 V2</div>
+            </div>
+            <div class="editor-body">
+                <span id="typed-code"></span><span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右側：登入表單 -->
+    <div class="split-right">
+        <div class="form-container">
+            <div class="brand-header">
+                <div class="brand-title"><i class="fa-solid fa-code"></i> 解題系統 V2</div>
+                <p class="brand-subtitle">歡迎回來，請登入以繼續您的進度。</p>
             </div>
 
-            <div style="text-align: left;">
-                <label style="color: #bbb; font-size: 0.9rem; margin-bottom: 5px; display: block;">電子郵件</label>
-                <input type="email" id="emailInput" class="auth-input" placeholder="example@email.com">
-
-                <label style="color: #bbb; font-size: 0.9rem; margin-bottom: 5px; display: block;">密碼</label>
-                <input type="password" id="passwordInput" class="auth-input" placeholder="至少 6 位數密碼" onkeypress="if(event.key === 'Enter') handleAuthAction()">
-
-                <div id="registerConfigArea" style="display:none; margin-top: 10px;">
-                    <label style="color: #f59e0b; font-size: 0.9rem; margin-bottom: 5px; display: block;">
-                        <i class="fa-solid fa-cloud"></i> Firebase 私有雲端 JSON 金鑰
-                    </label>
-                    <textarea id="registerConfigInput" class="auth-input" style="height: 100px; resize: none; font-family: 'Consolas', monospace; font-size: 0.8rem;" placeholder='{"apiKey": "...", "authDomain": "..."}'></textarea>
-                </div>
+            <div class="auth-tabs">
+                <div id="tabLogin" class="auth-tab active" onclick="switchAuthTab('login')">登入帳號</div>
+                <div id="tabRegister" class="auth-tab" onclick="switchAuthTab('register')">註冊並綁定雲端</div>
             </div>
 
-            <button id="actionBtn" class="btn btn-success" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 20px;" onclick="handleAuthAction()">
-                登入系統
+            <div class="input-group">
+                <div class="input-header">
+                    <label>電子郵件</label>
+                </div>
+                <input type="email" id="emailInput" class="auth-input" placeholder="student@example.com">
+            </div>
+
+            <div class="input-group">
+                <div class="input-header">
+                    <label>密碼</label>
+                </div>
+                <!-- 按下 Enter 時觸發真實的 handleAuthAction() -->
+                <input type="password" id="passwordInput" class="auth-input" placeholder="請輸入至少 6 位數" onkeypress="if(event.key === 'Enter') handleAuthAction()">
+            </div>
+
+            <div class="input-group" id="registerConfigArea">
+                <div class="input-header">
+                    <label style="color: var(--primary);">Firebase 金鑰綁定</label>
+                    <a href="https://youtu.be/xxx" target="_blank" class="tutorial-link">
+                        <i class="fa-solid fa-circle-question"></i> 如何取得金鑰？
+                    </a>
+                </div>
+                <textarea id="registerConfigInput" class="auth-input" style="height: 100px; font-family: monospace; font-size: 0.85rem;" placeholder='{"apiKey": "...", "authDomain": "..."}'></textarea>
+            </div>
+
+            <!-- 這個按鈕將綁定真實的登入/註冊邏輯 -->
+            <button id="actionBtn" class="btn-submit" onclick="handleAuthAction()">
+                <span>登入系統</span> <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </div>
 
-    <!-- 載入邏輯 -->
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
     <script>
-        // 初始化登入頁面的特有狀態
+        // === 程式碼打字動畫邏輯 (C++ 循環版本) ===
+        const rawCode = `#include <iostream>
+
+int main() {
+    std::cout << "Hello C++" << std::endl;
+    return 0;
+}`;
+
+        const typeTarget = document.getElementById('typed-code');
+        let typeIndex = 0;
+        let isTyping = true;
+
+        // C++ 簡易語法高亮
+        function highlightSyntax(text) {
+            let highlighted = text
+                .replace(/#include &lt;iostream&gt;/g, '<span style="color: var(--syntax-include);">#include &lt;iostream&gt;</span>')
+                .replace(/int /g, '<span style="color: var(--syntax-keyword);">int </span>')
+                .replace(/main/g, '<span style="color: var(--syntax-function);">main</span>')
+                .replace(/std::cout/g, '<span style="color: var(--syntax-function);">std::cout</span>')
+                .replace(/std::endl/g, '<span style="color: var(--syntax-function);">std::endl</span>')
+                .replace(/return /g, '<span style="color: var(--syntax-keyword);">return </span>')
+                .replace(/0;/g, '<span style="color: var(--syntax-text);">0;</span>')
+                .replace(/("Hello C\+\+")/g, '<span style="color: var(--syntax-string);">$1</span>');
+            return highlighted;
+        }
+
+        function typeWriter() {
+            if (!isTyping) return;
+
+            if (typeIndex < rawCode.length) {
+                const currentChar = rawCode.charAt(typeIndex);
+                let textToDisplay = rawCode.substring(0, typeIndex + 1);
+                
+                textToDisplay = highlightSyntax(textToDisplay.replace(/</g, "&lt;").replace(/>/g, "&gt;"))
+                                .replace(/\n/g, '<br>')
+                                .replace(/    /g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                                
+                typeTarget.innerHTML = textToDisplay;
+                
+                let speed = Math.random() * 30 + 10;
+                if (currentChar === '\n') speed += 150;
+                
+                typeIndex++;
+                setTimeout(typeWriter, speed);
+            } else {
+                // 打字完成後，等待 3 秒再清除並重新開始
+                setTimeout(() => {
+                    typeTarget.innerHTML = '';
+                    typeIndex = 0;
+                    typeWriter();
+                }, 3000);
+            }
+        }
+        
+        setTimeout(typeWriter, 500);
+
+        // === 登入表單 UI 切換邏輯 ===
         let isLoginMode = true;
+
         function switchAuthTab(mode) {
             isLoginMode = (mode === 'login');
-            document.getElementById('tabLogin').style.color = isLoginMode ? 'white' : '#aaa';
-            document.getElementById('tabLogin').style.borderBottomColor = isLoginMode ? 'var(--accent)' : 'transparent';
-            document.getElementById('tabRegister').style.color = !isLoginMode ? 'white' : '#aaa';
-            document.getElementById('tabRegister').style.borderBottomColor = !isLoginMode ? 'var(--accent)' : 'transparent';
+            
+            document.getElementById('tabLogin').classList.toggle('active', isLoginMode);
+            document.getElementById('tabRegister').classList.toggle('active', !isLoginMode);
             
             document.getElementById('registerConfigArea').style.display = isLoginMode ? 'none' : 'block';
-            document.getElementById('actionBtn').innerText = isLoginMode ? '登入系統' : '註冊並綁定雲端';
-            document.getElementById('actionBtn').className = isLoginMode ? 'btn btn-success' : 'btn btn-primary';
+            
+            const btn = document.getElementById('actionBtn');
+            if (isLoginMode) {
+                btn.innerHTML = '<span>登入系統</span> <i class="fa-solid fa-arrow-right"></i>';
+                btn.style.background = 'var(--primary)';
+            } else {
+                btn.innerHTML = '<span>註冊帳號</span> <i class="fa-solid fa-user-plus"></i>';
+                btn.style.background = 'var(--success)';
+            }
         }
     </script>
+    
+    <!-- 載入真實的系統設定與登入核心邏輯 -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
