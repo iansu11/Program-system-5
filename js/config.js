@@ -72,7 +72,7 @@ let personalDb = null;
 
 // 🚀 效能優化 (Optimistic UI)：如果在本地已有快取的資料，不需要等待 Firebase 網路載入，直接瞬間渲染畫面！
 document.addEventListener('DOMContentLoaded', () => {
-    const isLoginPage = window.location.pathname.endsWith('/login') || window.location.pathname.endsWith('/');
+    const isLoginPage = window.location.pathname.includes('login') || window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
     if (!isLoginPage && db && db.version !== undefined) {
         // 先用本地資料渲染
         window.dispatchEvent(new Event('dbLoaded'));
