@@ -498,9 +498,6 @@ async function deleteCustomBank(e, idx) {
         }
         
         renderCustomPortal();
-        if (currentBankUrl === "") {
-            navigateTo('/source-selector');
-        }
     }
 }
 
