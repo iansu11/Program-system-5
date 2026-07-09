@@ -433,7 +433,11 @@ function parseContent(text) {
     }
 
     function openHistoryModal() {
-        const histList = executionHistories[currentProbId] || []; 
+        let histList = executionHistories[currentProbId];
+        if (!histList && typeof currentBankUrl !== 'undefined') {
+            histList = executionHistories[currentBankUrl + "_" + currentProbId];
+        }
+        histList = histList || []; 
         const listDiv = document.getElementById('historyList'); 
         document.getElementById('historyCodeView').value = ""; 
         listDiv.innerHTML = "";
@@ -1474,4 +1478,14 @@ if (window.isDbLoaded) {
 
 function goToAdmin() {
     window.location.href = '/admin/' + currentProbId;
+}
+
+
+function restoreHistoryCode() {
+    const code = document.getElementById('historyCodeView').value;
+    if (code) {
+        editor.setValue(code, -1);
+        document.getElementById('historyModal').style.display = 'none';
+        alert('代碼已成功載入！');
+    }
 }
