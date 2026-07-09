@@ -49,6 +49,7 @@ function handleRouteChange() {
         showView('view-source-selector');
     }
     else if (path === '/portal') {
+        if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
         showView('view-portal');
     }
     else if (path === '/custom-portal') {
@@ -1017,3 +1018,65 @@ function toggleBankSortMode() {
         }
         renderCustomPortal(); // 重新渲染列表以套用模式
     }
+
+function renderRecentSubmissions() {
+    const listContainer = document.getElementById('recent-submissions-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+    let allSubs = [];
+    for (let key in executionHistories) {
+        let histList = executionHistories[key];
+        if (histList && Array.isArray(histList)) {
+            histList.forEach(run => {
+                allSubs.push({
+                    probId: key,
+                    time: run.time,
+                    status: run.status,
+                    timestamp: new Date(run.time.replace(/[\u202F\u2009]/g, ' ')).getTime()
+                });
+            });
+        }
+    }
+    allSubs.sort((a, b) => b.timestamp - a.timestamp);
+    let recentSubs = allSubs.slice(0, 3);
+    if (recentSubs.length === 0) {
+        listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">尚無作答紀錄</div>';
+        return;
+    }
+    recentSubs.forEach(sub => {
+        let probId = sub.probId;
+        if (probId.includes('_')) probId = probId.split('_')[1];
+        const p = db.problems.find(x => String(x.id) === String(probId));
+        let title = "未知題目";
+        let catName = "";
+        if (p) {
+            title = p.title;
+            const cat = db.categories.find(x => String(x.id) === String(p.catId));
+            if (cat) catName = cat.name;
+        }
+        let statusClass = "badge-fail";
+        let statusText = "WA 錯誤";
+        if (sub.status === "AC") {
+            statusClass = "badge-success";
+            statusText = "AC 通過";
+        } else if (sub.status === "CE") {
+            statusText = "CE 編譯錯誤";
+        } else if (sub.status === "RE") {
+            statusText = "RE 執行錯誤";
+        } else if (sub.status === "TLE") {
+            statusText = "TLE 超時";
+        }
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.style.cursor = 'pointer';
+        div.onclick = () => window.open('/workspace/' + probId, '_blank');
+        div.innerHTML = `
+            <div class="item-info">
+                <h4>${title}</h4>
+                <span>${catName}</span>
+            </div>
+            <span class="status-badge ${statusClass}">${statusText}</span>
+        `;
+        listContainer.appendChild(div);
+    });
+}
