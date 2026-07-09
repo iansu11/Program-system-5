@@ -501,10 +501,10 @@ async function deleteCustomBank(e, idx) {
     }
 }
 
-async function loadCustomBank(idx) {
+    async function loadCustomBank(idx) {
         // 🚀 UI 防呆：加入載入中動畫並鎖定全域按鈕，防止重複點擊
         const container = document.getElementById('customBankList');
-        const cards = container.querySelectorAll('.bank-btn');
+        const cards = container.querySelectorAll('.saas-card');
         let clickedCard = null;
         let originalContent = "";
         
@@ -513,7 +513,11 @@ async function loadCustomBank(idx) {
                 clickedCard = card.querySelector('div[onclick]');
                 if (clickedCard) {
                     originalContent = clickedCard.innerHTML;
-                    clickedCard.innerHTML = `<span style="font-size:1.5rem; font-weight:bold;">⏳ 載入中...</span><span class="bank-desc" style="color: inherit;">儲存並切換題庫</span>`;
+                    clickedCard.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+                        <div class="card-icon-box bg-blue" style="margin:0 auto 10px auto;"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                        <h3 style="margin:0 0 5px 0;">載入中...</h3>
+                        <p style="margin:0;">儲存並切換題庫</p>
+                    </div>`;
                 }
             }
             card.style.pointerEvents = 'none';
@@ -616,29 +620,22 @@ function renderCustomPortal() {
 
         (db.customBanks || []).forEach((bank, idx) => {
             const card = document.createElement('div');
-            card.className = 'bank-btn';
+            card.className = 'saas-card saas-card-sm clickable';
             card.style.position = 'relative';
-            card.style.padding = '40px 20px'; // 加大自訂題庫卡片高度
             card.setAttribute('draggable', isBankSortMode);
-            card.dataset.idx = idx; // 紀錄原始索引 (保留給 onclick 使用)
-            card.dataset.id = bank.id; // 紀錄唯一 ID (排序用)
-            
-            // 排序模式下不顯示操作按鈕，非排序模式顯示更名與刪除
-            const actionsHtml = isBankSortMode ? '' : `
-                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;">
-                    <button class="prob-btn-icon" style="color: #1e3a8a; background: rgba(0,0,0,0.05);" onclick="renameCustomBank(event, ${idx})" title="更名"><i class="fa-solid fa-pen"></i></button>
-                    <button class="prob-btn-icon" style="color: #ef4444; background: rgba(0,0,0,0.05);" onclick="deleteCustomBank(event, ${idx})" title="刪除">✕</button>
-                </div>
-            `;
+            card.dataset.idx = idx; 
+            card.dataset.id = bank.id; 
 
+            // 確保非排序模式才顯示操作按鈕
             card.innerHTML = `
-                <div onclick="if(!isBankSortMode) loadCustomBank(${idx})" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; text-align:left; padding-left: 5px; cursor: ${isBankSortMode ? 'grab' : 'pointer'};">
-                    <span style="font-size:1.5rem;"><i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> ${bank.name}</span>
-                    <span class="bank-desc" style="color: inherit;">${bank.problems ? bank.problems.length : 0} 題</span>
+                <div onclick="if(!isBankSortMode) loadCustomBank(${idx})" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; text-align:left; pointer-events: ${isBankSortMode ? 'none' : 'auto'};">
+                    <div class="card-icon-box bg-purple" style="margin-bottom: 12px;"><i class="fa-solid fa-flask"></i></div>
+                    <h3 style="margin:0 0 5px 0; font-size:1.15rem;">${bank.name}</h3>
+                    <p style="margin:0 0 15px 0; font-size:0.9rem; color:var(--text-muted);">${bank.problems ? bank.problems.length : 0} 題</p>
                 </div>
-                <div class="bank-actions">
-                    <button class="btn btn-outline btn-sm" style="background: white; color: #333; padding: 4px 8px; font-size: 0.85rem; border-color: #ccc;" onclick="renameCustomBank(event, ${idx})" title="更名"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn btn-outline btn-sm" style="background: white; color: #f44747; border-color: #f44747; padding: 4px 8px; font-size: 0.85rem;" onclick="deleteCustomBank(event, ${idx})" title="刪除"><i class="fa-solid fa-trash"></i></button>
+                <div class="card-actions-hover" style="display: ${isBankSortMode ? 'none' : 'flex'};">
+                    <button class="prob-btn-icon prob-edit-btn" style="background: rgba(0,0,0,0.05); padding:6px 10px;" onclick="renameCustomBank(event, ${idx})" title="更名"><i class="fa-solid fa-pen"></i></button>
+                    <button class="prob-btn-icon prob-del-btn" style="background: rgba(0,0,0,0.05); padding:6px 10px; color:#000;" onclick="deleteCustomBank(event, ${idx})" title="刪除"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `;
             container.appendChild(card);
@@ -646,7 +643,7 @@ function renderCustomPortal() {
 
         // 如果在排序模式，啟動拖曳功能
         if (isBankSortMode) {
-            enableDragSort('customBankList', 'bank-btn', saveBankOrder);
+            enableDragSort('customBankList', 'saas-card', saveBankOrder);
         }
     }
 
