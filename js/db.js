@@ -339,7 +339,11 @@ async function syncCategoryDeltaToCloud(catId, diff) {
             if (onclickAttr && onclickAttr.includes(jsonUrl)) {
                 clickedBtn = btn;
                 originalContent = btn.innerHTML;
-                btn.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><span style="font-size: 1.5rem; font-weight:bold;">⏳ 載入中...</span><span style="font-size: 0.9rem; margin-top:5px;">同步雲端資料</span></div>`;
+                btn.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+                    <div class="card-icon-box bg-blue" style="margin:0 auto 10px auto;"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                    <h3 style="margin:0 0 5px 0;">載入中...</h3>
+                    <p style="margin:0;">同步雲端資料</p>
+                </div>`;
             }
             btn.style.pointerEvents = 'none';
             btn.style.opacity = '0.6';
@@ -501,13 +505,13 @@ async function syncCategoryDeltaToCloud(catId, diff) {
         } catch (err) { 
             console.error(err);
             alert("載入失敗！請確認 GitHub 檔案是否存在\n\n詳細錯誤：" + err.message); 
-            if (clickedBtn && originalContent) {
-                clickedBtn.innerHTML = originalContent;
-            }
         } finally {
             buttons.forEach(btn => {
                 btn.style.pointerEvents = 'auto';
                 btn.style.opacity = '1';
             });
+            if (clickedBtn && originalContent) {
+                clickedBtn.innerHTML = originalContent;
+            }
         }
     }
