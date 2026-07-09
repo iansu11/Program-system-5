@@ -214,11 +214,19 @@ function renderProblemList() {
         div.dataset.id = p.id; 
         
         let statusIcon = '<i class="fa-regular fa-circle" style="color:#ccc;"></i>';
-        const historyKey = `${currentBankUrl}_${p.id}`;
-        if (executionHistories[historyKey]) {
+        let historyKey = `${currentBankUrl}_${p.id}`;
+        if (!executionHistories[historyKey] && executionHistories[p.id]) {
+            historyKey = p.id;
+        }
+        if (executionHistories[historyKey] && executionHistories[historyKey].length > 0) {
             const h = executionHistories[historyKey];
-            if (h.every(x => x.pass)) statusIcon = '<i class="fa-solid fa-circle-check" style="color:var(--success);"></i>';
-            else statusIcon = '<i class="fa-solid fa-circle-xmark" style="color:var(--fail);"></i>';
+            // Since pass property doesn't exist in V5 workspace.js, we check the latest run's status
+            let latestRun = h[0];
+            if (latestRun.status && (latestRun.status.includes('全數通過') || latestRun.status === 'AC')) {
+                statusIcon = '<i class="fa-solid fa-circle-check" style="color:var(--success);"></i>';
+            } else {
+                statusIcon = '<i class="fa-solid fa-circle-xmark" style="color:var(--fail);"></i>';
+            }
         }
 
         const previewText = (p.desc || "").substring(0, 50).replace(/#/g, '') + "...";
@@ -1022,6 +1030,15 @@ function toggleBankSortMode() {
 function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
     if (!listContainer) return;
+    
+    // Always refresh from localStorage to get the latest data!
+    let localHistory = localStorage.getItem('oj_v15_history');
+    if (localHistory) {
+        try {
+            executionHistories = JSON.parse(localHistory);
+        } catch(e) {}
+    }
+    
     listContainer.innerHTML = '';
     let allSubs = [];
     for (let key in executionHistories) {
@@ -1054,18 +1071,24 @@ function renderRecentSubmissions() {
             const cat = db.categories.find(x => String(x.id) === String(p.catId));
             if (cat) catName = cat.name;
         }
+        
         let statusClass = "badge-fail";
         let statusText = "WA 錯誤";
-        if (sub.status === "AC") {
+        
+        // sub.status from workspace.js is an HTML string like: <span style="color:var(--success)">✅ 全數通過 (2/2)</span>
+        if (sub.status.includes('全數通過') || sub.status === "AC") {
             statusClass = "badge-success";
             statusText = "AC 通過";
-        } else if (sub.status === "CE") {
+        } else if (sub.status.includes('編譯') || sub.status === "CE") {
             statusText = "CE 編譯錯誤";
-        } else if (sub.status === "RE") {
+        } else if (sub.status.includes('執行錯誤') || sub.status === "RE") {
             statusText = "RE 執行錯誤";
-        } else if (sub.status === "TLE") {
+        } else if (sub.status.includes('超時') || sub.status === "TLE") {
             statusText = "TLE 超時";
+        } else if (sub.status.includes('部分通過')) {
+            statusText = "部分通過";
         }
+        
         const div = document.createElement('div');
         div.className = 'list-item';
         div.style.cursor = 'pointer';
