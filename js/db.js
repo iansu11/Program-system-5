@@ -12,7 +12,10 @@ async function loadUserDataFromCloud(isBackground = false) {
         return;
     }
     try {
-        const docSnap = await personalDb.collection('users').doc(currentUser.uid).get();
+        const docSnap = await Promise.race([
+            personalDb.collection('users').doc(currentUser.uid).get(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), 3000))
+        ]);
         if (docSnap.exists) {
             const data = docSnap.data();
 
@@ -328,7 +331,7 @@ async function syncCategoryDeltaToCloud(catId, diff) {
         if (toast) toast.style.display = 'none'; 
         
         // 🚀 UI 防呆：加入載入中動畫並鎖定全域按鈕
-        const buttons = document.querySelectorAll('.bank-btn');
+        const buttons = document.querySelectorAll('.saas-card');
         let clickedBtn = null;
         let originalContent = "";
         buttons.forEach(btn => {
@@ -336,7 +339,7 @@ async function syncCategoryDeltaToCloud(catId, diff) {
             if (onclickAttr && onclickAttr.includes(jsonUrl)) {
                 clickedBtn = btn;
                 originalContent = btn.innerHTML;
-                btn.innerHTML = `<span style="font-size: 1.5rem; font-weight:bold;">⏳ 載入中...</span><span class="bank-desc">同步雲端資料</span>`;
+                btn.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><span style="font-size: 1.5rem; font-weight:bold;">⏳ 載入中...</span><span style="font-size: 0.9rem; margin-top:5px;">同步雲端資料</span></div>`;
             }
             btn.style.pointerEvents = 'none';
             btn.style.opacity = '0.6';
@@ -349,10 +352,16 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                 if (!res.ok) throw new Error("伺服器錯誤: " + res.status);
                 return res.json();
             });
-            const dbPromise = personalDb ? personalDb.collection('users').doc(currentUser.uid).get().catch(err => {
-                console.warn("個人雲端讀取失敗，將跳過雲端合併", err);
-                return null;
-            }) : Promise.resolve(null);
+            let dbPromise = Promise.resolve(null);
+            if (personalDb) {
+                dbPromise = Promise.race([
+                    personalDb.collection('users').doc(currentUser.uid).get(),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), 3000))
+                ]).catch(err => {
+                    console.warn("個人雲端讀取失敗或超時，將跳過雲端合併", err);
+                    return null;
+                });
+            }
             
             const [newDb, docSnap] = await Promise.all([fetchPromise, dbPromise]);
             
@@ -479,7 +488,11 @@ async function syncCategoryDeltaToCloud(catId, diff) {
                 
             saveToLocal(shouldSyncDb, false);      
             if (!window.location.pathname.includes('workspace')) {
-                window.location.href = '/categories';
+                if (typeof navigateTo === 'function') {
+                    navigateTo('/categories');
+                } else {
+                    window.location.hash = '/categories';
+                }
             } else {
                 window.location.reload();
             }
