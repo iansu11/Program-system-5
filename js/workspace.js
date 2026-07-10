@@ -1427,7 +1427,9 @@ function stopDrag() {
             time: new Date().toLocaleString('zh-TW', { hour12: false }), 
             lang: lang, 
             code: fullCodeForHistory, 
-            status: finalStatus 
+            status: finalStatus,
+            bankUrl: localStorage.getItem('oj_v15_bank_url') || '',
+            bankName: localStorage.getItem('oj_v15_bank_name') || ''
         });
         
         if (typeof recent3Submissions !== 'undefined') {
