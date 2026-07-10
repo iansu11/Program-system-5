@@ -1218,7 +1218,7 @@ function renderRecentSubmissions() {
             } else if (catName !== "綜合題庫") {
                 localStorage.setItem('oj_v15_bank_name', catName);
             }
-            window.open('/workspace/' + sub.probId, '_blank');
+            window.open('/workspace/' + encodeURIComponent(sub.probId), '_blank');
         };
         
         // 排版修正：標題在上方，分類與時間在下方同一列並有間距
