@@ -1123,7 +1123,9 @@ function renderRecentSubmissions() {
                     probId: key,
                     time: run.time,
                     status: run.status,
-                    timestamp: t
+                    timestamp: t,
+                    bankUrl: run.bankUrl,
+                    bankName: run.bankName
                 });
             }
         }
@@ -1152,17 +1154,28 @@ function renderRecentSubmissions() {
         }
 
         let title = globalTitleMap[String(probId)] || "未知的題目";
-        let catName = "綜合題庫";
+        let catName = sub.bankName || "綜合題庫";
         
-        // 嘗試從目前的 db.categories 抓取分類名稱當作題庫名稱顯示
-        if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
-            const p = db.problems.find(x => String(x.id) === String(probId));
-            if (p) {
-                const cat = db.categories.find(x => String(x.id) === String(p.catId));
-                if (cat) catName = cat.name;
+        // 如果舊紀錄沒有 bankName，但它是自訂題庫的題目，我們可以反查
+        if (!sub.bankName && sub.probId.startsWith('custom_')) {
+            if (typeof db !== 'undefined' && db && db.customBanks) {
+                const customId = sub.probId.split('_')[1];
+                const bank = db.customBanks.find(b => String(b.id) === String(customId));
+                if (bank) {
+                    catName = bank.name;
+                    sub.bankUrl = "local_custom_" + bank.id;
+                }
+            }
+        } else if (!sub.bankName) {
+            // 對於預設題庫的舊紀錄，我們可以嘗試從目前載入的題庫抓名稱 (不完美但堪用)
+            if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
+                const p = db.problems.find(x => String(x.id) === String(probId));
+                if (p && localStorage.getItem('oj_v15_bank_name')) {
+                    catName = localStorage.getItem('oj_v15_bank_name');
+                    sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
+                }
             }
         }
-        
         let statusClass = "badge-fail";
         let statusText = "WA 錯誤";
         
@@ -1184,7 +1197,17 @@ function renderRecentSubmissions() {
         const div = document.createElement('div');
         div.className = 'list-item';
         div.style.cursor = 'pointer';
-        div.onclick = () => window.open('/workspace/' + sub.probId, '_blank');
+        div.onclick = () => {
+            if (sub.bankUrl) {
+                localStorage.setItem('oj_v15_bank_url', sub.bankUrl);
+            }
+            if (sub.bankName) {
+                localStorage.setItem('oj_v15_bank_name', sub.bankName);
+            } else if (catName !== "綜合題庫") {
+                localStorage.setItem('oj_v15_bank_name', catName);
+            }
+            window.open('/workspace/' + sub.probId, '_blank');
+        };
         
         // 排版修正：標題在上方，分類與時間在下方同一列並有間距
         div.innerHTML = `
