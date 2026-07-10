@@ -31,10 +31,11 @@ async function handleAuthAction() {
         try {
             const userCredential = await masterAuth.createUserWithEmailAndPassword(email, pwd);
             await masterDb.collection('userSettings').doc(userCredential.user.uid).set({
-                firebaseConfig: configStr
+                firebaseConfig: configStr,
+                role: 'user'
             });
             alert("✅ 註冊成功並綁定雲端！");
-        } catch(err) { 
+        } catch(err) {
             alert("註冊失敗：" + err.message); 
             actionBtn.innerText = originalText;
             actionBtn.disabled = false;
@@ -71,14 +72,27 @@ masterAuth.onAuthStateChanged(async (user) => {
             if (!userConfigStr) {
                 try {
                     const doc = await masterDb.collection('userSettings').doc(user.uid).get();
-                    if (doc.exists && doc.data().firebaseConfig) {
-                        userConfigStr = doc.data().firebaseConfig;
-                        localStorage.setItem('oj_v15_firebaseConfig', userConfigStr);
+                    if (doc.exists) {
+                        if (doc.data().firebaseConfig) {
+                            userConfigStr = doc.data().firebaseConfig;
+                            localStorage.setItem('oj_v15_firebaseConfig', userConfigStr);
+                        }
+                        if (doc.data().role) {
+                            window.currentUserRole = doc.data().role;
+                            localStorage.setItem('oj_v15_userRole', doc.data().role);
+                        } else {
+                            window.currentUserRole = 'user';
+                            localStorage.setItem('oj_v15_userRole', 'user');
+                        }
                     }
                 } catch (netErr) {
                     console.warn("無法從雲端取得金鑰，將嘗試使用本地快取：", netErr);
                 }
             }
+
+            // 若本地有 role 緩存則載入
+            const cachedRole = localStorage.getItem('oj_v15_userRole');
+            if (cachedRole) window.currentUserRole = cachedRole;
 
             if (userConfigStr) {
                 const userConfig = JSON.parse(userConfigStr);
