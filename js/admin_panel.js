@@ -40,11 +40,11 @@ async function loadAnnouncements() {
             const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : '';
             div.innerHTML = `
                 <div style="flex: 1; padding-right: 15px;">
-                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">\${data.title || '無標題'}</div>
-                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 4px; white-space: pre-wrap;">\${data.content || ''}</div>
-                    <div style="color: #94a3b8; font-size: 0.8rem;">\${dateStr}</div>
+                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">${data.title || '無標題'}</div>
+                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 4px; white-space: pre-wrap;">${data.content || ''}</div>
+                    <div style="color: #94a3b8; font-size: 0.8rem;">${dateStr}</div>
                 </div>
-                <button class="btn btn-danger btn-sm" style="flex-shrink: 0;" onclick="deleteAnnouncement('\${doc.id}')">刪除</button>
+                <button class="btn btn-danger btn-sm" style="flex-shrink: 0;" onclick="deleteAnnouncement('${doc.id}')">刪除</button>
             `;
             list.appendChild(div);
         });
@@ -170,12 +170,12 @@ async function publishToGitHub() {
         // Base64 encode for GitHub API (UTF-8 safe)
         const encodedContent = btoa(unescape(encodeURIComponent(contentStr)));
         
-        const apiUrl = \`https://api.github.com/repos/\${owner}/\${repo}/contents/\${targetFile}\`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${targetFile}`;
         
         // Step 1: Get SHA of existing file to overwrite
         let sha = null;
         const getRes = await fetch(apiUrl, {
-            headers: { 'Authorization': \`token \${token}\` }
+            headers: { 'Authorization': `token ${token}` }
         });
         if (getRes.ok) {
             const getJson = await getRes.json();
@@ -184,7 +184,7 @@ async function publishToGitHub() {
         
         // Step 2: PUT request to create/update
         const body = {
-            message: \`Update \${targetFile} via Admin Panel\`,
+            message: `Update ${targetFile} via Admin Panel`,
             content: encodedContent
         };
         if (sha) body.sha = sha;
@@ -192,7 +192,7 @@ async function publishToGitHub() {
         const putRes = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
-                'Authorization': \`token \${token}\`,
+                'Authorization': `token ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
@@ -203,7 +203,7 @@ async function publishToGitHub() {
             throw new Error(errJson.message || 'Unknown GitHub API Error');
         }
         
-        alert(\`✅ 成功發布至 GitHub: \${targetFile}\\n大廳讀取時將會自動抓取最新的檔案！\`);
+        alert(`✅ 成功發布至 GitHub: ${targetFile}\n大廳讀取時將會自動抓取最新的檔案！`);
     } catch(e) {
         alert("❌ 發布失敗: " + e.message);
     } finally {
