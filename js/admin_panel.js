@@ -39,11 +39,12 @@ async function loadAnnouncements() {
             
             const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : '';
             div.innerHTML = `
-                <div>
-                    <span style="color: #64748b; font-size: 0.8rem; margin-right: 10px;">\${dateStr}</span>
-                    <span style="color: #1e293b;">\${data.content}</span>
+                <div style="flex: 1; padding-right: 15px;">
+                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">\${data.title || '無標題'}</div>
+                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 4px; white-space: pre-wrap;">\${data.content || ''}</div>
+                    <div style="color: #94a3b8; font-size: 0.8rem;">\${dateStr}</div>
                 </div>
-                <button class="btn btn-danger btn-sm" onclick="deleteAnnouncement('\${doc.id}')">刪除</button>
+                <button class="btn btn-danger btn-sm" style="flex-shrink: 0;" onclick="deleteAnnouncement('\${doc.id}')">刪除</button>
             `;
             list.appendChild(div);
         });
@@ -53,16 +54,20 @@ async function loadAnnouncements() {
 }
 
 async function addAnnouncement() {
-    const input = document.getElementById('announcementInput');
-    const content = input.value.trim();
-    if (!content) return alert("請輸入公告內容");
+    const titleInput = document.getElementById('announcementTitle');
+    const contentInput = document.getElementById('announcementContent');
+    const title = titleInput ? titleInput.value.trim() : '';
+    const content = contentInput ? contentInput.value.trim() : '';
+    if (!title || !content) return alert("請輸入標題與內容");
     
     try {
         await masterDb.collection('announcements').add({
+            title: title,
             content: content,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        input.value = '';
+        if (titleInput) titleInput.value = '';
+        if (contentInput) contentInput.value = '';
         loadAnnouncements();
     } catch(e) {
         alert("新增失敗: " + e.message);
