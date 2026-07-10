@@ -10,6 +10,36 @@ let currentView = 'view-source-selector';
 let pendingRestoreFileName = "";
 let problemToMoveId = null;
 
+function updateLearningStats() {
+    const solvedCountEl = document.getElementById('stats-solved-count');
+    const bankCountEl = document.getElementById('stats-custom-bank-count');
+    
+    if (solvedCountEl) {
+        let history = {};
+        try {
+            history = JSON.parse(localStorage.getItem('oj_v15_history') || '{}');
+        } catch(e) {}
+        
+        let solvedCount = 0;
+        for (let probId in history) {
+            const records = history[probId];
+            if (records && records.length > 0) {
+                const hasAC = records.some(r => r.status && (r.status.includes('全數通過') || r.status.includes('AC')));
+                if (hasAC) solvedCount++;
+            }
+        }
+        solvedCountEl.innerText = solvedCount;
+    }
+    
+    if (bankCountEl) {
+        let customBankCount = 0;
+        if (typeof db !== 'undefined' && db && db.customBanks) {
+            customBankCount = db.customBanks.length;
+        }
+        bankCountEl.innerText = customBankCount;
+    }
+}
+
 function showView(viewId) {
     currentView = viewId;
     const views = ['view-source-selector', 'view-portal', 'view-custom-portal', 'view-categories', 'view-problem-list', 'view-login'];
@@ -46,6 +76,7 @@ function handleRouteChange() {
     }
 
     if (path === '/source-selector') {
+        updateLearningStats();
         showView('view-source-selector');
     }
     else if (path === '/portal') {
@@ -1133,3 +1164,5 @@ function renderRecentSubmissions() {
 
 // Optimize: Render recent submissions immediately without waiting for DB
 if (typeof renderRecentSubmissions === 'function') setTimeout(renderRecentSubmissions, 0);
+
+window.addEventListener('dbLoaded', updateLearningStats);
