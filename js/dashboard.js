@@ -1123,4 +1123,6 @@ function renderRecentSubmissions() {
         listContainer.appendChild(div);
     });
 }
-\n\n// Optimize: Render recent submissions immediately without waiting for DB\nif (typeof renderRecentSubmissions === \'function\') setTimeout(renderRecentSubmissions, 0);
+
+// Optimize: Render recent submissions immediately without waiting for DB
+if (typeof renderRecentSubmissions === 'function') setTimeout(renderRecentSubmissions, 0);
