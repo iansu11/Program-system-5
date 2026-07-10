@@ -1074,17 +1074,24 @@ function renderRecentSubmissions() {
         let probId = sub.probId;
         if (probId.includes('_')) probId = probId.split('_')[1];
         
-        let title = "讀取中...";
+        let globalTitleMap = {};
+        try { globalTitleMap = JSON.parse(localStorage.getItem('oj_v15_titles') || '{}'); } catch(e) {}
+        
+        if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
+            db.problems.forEach(p => {
+                globalTitleMap[String(p.id)] = p.title;
+            });
+            try { localStorage.setItem('oj_v15_titles', JSON.stringify(globalTitleMap)); } catch(e) {}
+        }
+
+        let title = globalTitleMap[String(probId)] || "未知的題目";
         let catName = "";
         
-        if (window.db && window.db.problems && window.db.problems.length > 0) {
+        if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
             const p = db.problems.find(x => String(x.id) === String(probId));
             if (p) {
-                title = p.title;
                 const cat = db.categories.find(x => String(x.id) === String(p.catId));
                 if (cat) catName = cat.name;
-            } else {
-                title = "未知題目";
             }
         }
         
