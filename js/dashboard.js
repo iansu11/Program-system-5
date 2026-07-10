@@ -1169,12 +1169,19 @@ function renderRecentSubmissions() {
                 }
             }
         } else if (!sub.bankName) {
-            // 對於預設題庫的舊紀錄，我們可以嘗試從目前載入的題庫抓名稱 (不完美但堪用)
-            if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
-                const p = db.problems.find(x => String(x.id) === String(probId));
-                if (p && localStorage.getItem('oj_v15_bank_name')) {
-                    catName = localStorage.getItem('oj_v15_bank_name');
-                    sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
+            // 從我們剛剛建立的 globalDefaultBankMap 中尋找
+            if (window.globalDefaultBankMap && window.globalDefaultBankMap[sub.probId]) {
+                const info = window.globalDefaultBankMap[sub.probId];
+                catName = info.bankName;
+                sub.bankUrl = info.bankUrl;
+            } else {
+                // 如果 map 還沒準備好或找不到，試試看當前的 db
+                if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
+                    const p = db.problems.find(x => String(x.id) === String(sub.probId));
+                    if (p && localStorage.getItem('oj_v15_bank_name')) {
+                        catName = localStorage.getItem('oj_v15_bank_name');
+                        sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
+                    }
                 }
             }
         }
@@ -1240,3 +1247,51 @@ window.addEventListener('dbLoaded', () => {
     updateLearningStats();
     if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
 });
+
+
+// 自動背景建立預設題庫的對應表，用以精準還原舊紀錄的題庫來源
+window.globalDefaultBankMap = {};
+async function buildGlobalDefaultBankMap() {
+    const cachedMap = localStorage.getItem('oj_v15_default_bank_map');
+    if (cachedMap) {
+        try {
+            window.globalDefaultBankMap = JSON.parse(cachedMap);
+            // 立刻重繪一次紀錄，這樣一進來就能看到
+            if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
+        } catch(e) {}
+    }
+    
+    const banks = [
+        { url: '/program-1.json', name: '114-第一學期程式設計' },
+        { url: '/program-oop.json', name: '114-第二學期物件導向' },
+        { url: '/program-cpe.json', name: 'CPE 一顆星選集' }
+    ];
+    
+    let isUpdated = false;
+    for (let b of banks) {
+        try {
+            const res = await fetch(b.url);
+            const data = await res.json();
+            if (data && data.problems) {
+                data.problems.forEach(p => {
+                    if (!window.globalDefaultBankMap[String(p.id)]) {
+                        window.globalDefaultBankMap[String(p.id)] = {
+                            bankUrl: b.url,
+                            bankName: b.name
+                        };
+                        isUpdated = true;
+                    }
+                });
+            }
+        } catch(e) {
+            console.warn("Failed to fetch default bank for mapping:", b.url);
+        }
+    }
+    
+    if (isUpdated) {
+        localStorage.setItem('oj_v15_default_bank_map', JSON.stringify(window.globalDefaultBankMap));
+        // 重繪以套用新找到的預設題庫
+        if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
+    }
+}
+window.addEventListener('load', buildGlobalDefaultBankMap);
