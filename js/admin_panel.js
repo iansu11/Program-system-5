@@ -1,5 +1,5 @@
 // admin_panel.js
-window.addEventListener('dbLoaded', () => {
+window.addEventListener('personalCloudReady', () => {
     // Only allow admin
     const role = window.currentUserRole || localStorage.getItem('oj_v15_userRole');
     if (role !== 'admin') {
