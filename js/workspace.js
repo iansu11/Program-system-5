@@ -1410,11 +1410,10 @@ function stopDrag() {
             finalStatus = `<span style="color:var(--fail)">❌ 編譯或連線失敗</span>`; 
         } else if (passCount === p.testCases.length) { 
             finalStatus = `<span style="color:var(--success)">✅ 全數通過 (${passCount}/${p.testCases.length})</span>`; 
-        } else { 
+                } else { 
             finalStatus = `<span style="color:var(--warning)">⚠️ 部分通過 (${passCount}/${p.testCases.length})</span>`; 
         }
 
-        // 將所有檔案的內容整合存入歷史紀錄，方便回頭檢視
         let fullCodeForHistory = mainCode;
         if (lang === 'cpp' && p.isMultiFile && p.multiFiles) {
             fullCodeForHistory = `// === main.cpp ===\n${mainCode}\n`;
@@ -1431,11 +1430,23 @@ function stopDrag() {
             status: finalStatus 
         });
         
-        if (executionHistories[currentProbId].length > 30) {
+        if (typeof recent3Submissions !== 'undefined') {
+            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(currentProbId));
+            recent3Submissions.unshift({
+                probId: String(currentProbId),
+                title: p.title || '未知題目',
+                status: finalStatus,
+                time: new Date().toLocaleString('zh-TW', { hour12: false }),
+                timestamp: new Date().getTime()
+            });
+            recent3Submissions = recent3Submissions.slice(0, 3);
+            localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
+        }
+
+        if (executionHistories[currentProbId].length > 20) {
             executionHistories[currentProbId].pop();
         }
-        
-        // 【修正3：不再上傳整個題庫，僅更新本機 LocalStorage 與雲端局部的程式碼與歷史紀錄】
+
         const historyString = JSON.stringify(executionHistories);
         localStorage.setItem('oj_v15_history', historyString);
         localStorage.setItem('oj_v15_data', JSON.stringify(db)); // 僅更新本機題庫暫存
@@ -1443,11 +1454,14 @@ function stopDrag() {
         if (currentUser) {
             try {
                 // 【修改】：僅將歷史紀錄同步到雲端，不再將「作答程式碼」寫入 customProblems
-                await personalDb.collection('users').doc(currentUser.uid).set({
-                     historyData: historyString,
-                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-
+                const updatePayload = {
+                    historyData: historyString,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                if (typeof recent3Submissions !== 'undefined') {
+                    updatePayload.recent3Submissions = JSON.stringify(recent3Submissions);
+                }
+                await personalDb.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
             } catch(e) {
                 console.error("雲端歷史紀錄存檔失敗:", e);
             }
@@ -1456,6 +1470,8 @@ function stopDrag() {
         btn.disabled = false; 
         btn.innerText = "▶️ 執行";
     }
+
+ }
 
 
 function goBackToProblemList() {
