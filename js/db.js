@@ -113,10 +113,12 @@ async function loadUserDataFromCloud(isBackground = false) {
             }
             
             if (data.historyData) executionHistories = JSON.parse(data.historyData);
+            if (data.recent3Submissions) recent3Submissions = JSON.parse(data.recent3Submissions);
 
             // 更新本地快取
             localStorage.setItem('oj_v15_data', JSON.stringify(db));
             localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
+    localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
         }
 
         if (!isBackground) {
@@ -268,6 +270,7 @@ async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) {
 
             if (syncHistoryToCloud) {
                 updatePayload.historyData = JSON.stringify(executionHistories);
+                updatePayload.recent3Submissions = JSON.stringify(recent3Submissions);
             }
 
             await personalDb.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
