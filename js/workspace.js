@@ -1437,7 +1437,9 @@ function stopDrag() {
                 title: p.title || '未知題目',
                 status: finalStatus,
                 time: new Date().toLocaleString('zh-TW', { hour12: false }),
-                timestamp: new Date().getTime()
+                timestamp: new Date().getTime(),
+                bankUrl: localStorage.getItem('oj_v15_bank_url') || '',
+                bankName: localStorage.getItem('oj_v15_bank_name') || ''
             });
             recent3Submissions = recent3Submissions.slice(0, 3);
             localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
