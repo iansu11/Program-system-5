@@ -1334,15 +1334,24 @@ async function loadAdminAndAnnouncements() {
                     snap.docs.forEach(doc => {
                         const data = doc.data();
                         const div = document.createElement('div');
-                        div.style.marginBottom = '8px';
-                        div.style.paddingBottom = '8px';
-                        div.style.borderBottom = '1px dashed #bfdbfe';
+                        div.className = 'list-item clickable';
+                        div.style.cursor = 'pointer';
                         
                         const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : '';
-                        div.innerHTML = `<div style="color: #2563eb; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">[${dateStr}] ${data.title || '系統公告'}</div><div style="color: #334155; white-space: pre-wrap;">${data.content || ''}</div>`;
+                        div.innerHTML = `
+                            <div class="item-info">
+                                <h4 style="color: var(--primary); margin: 0 0 5px 0;">${data.title || '系統公告'}</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">${dateStr}</span>
+                            </div>
+                        `;
+                        div.onclick = () => {
+                            document.getElementById('annModalTitle').innerText = data.title || '系統公告';
+                            document.getElementById('annModalDate').innerText = dateStr;
+                            document.getElementById('annModalContent').innerText = data.content || '';
+                            document.getElementById('announcementModal').style.display = 'flex';
+                        };
                         list.appendChild(div);
                     });
-                    if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
                 }
             }
         } catch(e) {
