@@ -123,12 +123,14 @@ async function loadUserDataFromCloud(isBackground = false) {
 
         if (!isBackground) {
             // 資料載入完成後發送事件，讓各頁面自行更新 UI
+            window.isCloudSyncFinished = true;
             window.isDbLoaded = true; window.dispatchEvent(new Event('dbLoaded'));
         }
         checkForUpdates();
     } catch (e) { 
         console.error("讀取雲端失敗：", e); 
         if (!isBackground) {
+            window.isCloudSyncFinished = true;
             window.isDbLoaded = true; window.dispatchEvent(new Event('dbLoaded'));
         }
     }
@@ -228,6 +230,7 @@ async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) {
     }
 
     localStorage.setItem('oj_v15_data', JSON.stringify(db)); 
+    localStorage.setItem('oj_v15_data_url', currentBankUrl);
     localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
     if (currentUser) localStorage.setItem('oj_v15_uid', currentUser.uid);
 
