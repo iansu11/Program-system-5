@@ -1236,36 +1236,50 @@ function renderRecentSubmissions() {
                 document.head.appendChild(style);
             }
 
-            // 給予 600ms 讓 db.js 完成背景題庫與 Firebase 下載
-            setTimeout(() => {
+            function checkAndOpen(retries) {
                 let finalBankUrl = sub.bankUrl;
                 let finalBankName = catName;
+                let found = false;
                 
-                // 強制在點擊時重新解析 (避免剛載入時抓錯或尚未載入完成)
+                // 強制在點擊時重新解析
                 if (window.globalDefaultBankMap && window.globalDefaultBankMap[probId]) {
                     finalBankUrl = window.globalDefaultBankMap[probId].bankUrl;
                     finalBankName = window.globalDefaultBankMap[probId].bankName;
+                    found = true;
                 } else if (typeof db !== 'undefined' && db && db.customBanks) {
                     for (let bank of db.customBanks) {
                         if (bank.problems && bank.problems.some(p => String(p.id) === String(probId))) {
                             finalBankUrl = "local_custom_" + bank.id;
                             finalBankName = bank.name;
+                            found = true;
                             break;
                         }
                     }
                 }
                 
-                if (finalBankUrl) {
-                    localStorage.setItem('oj_v15_bank_url', finalBankUrl);
+                if (found || retries === 0) {
+                    if (finalBankUrl) {
+                        localStorage.setItem('oj_v15_bank_url', finalBankUrl);
+                    }
+                    if (finalBankName && finalBankName !== "綜合題庫") {
+                        localStorage.setItem('oj_v15_bank_name', finalBankName);
+                    }
+                    
+                    if (found || finalBankUrl) {
+                        document.body.removeChild(overlay);
+                        window.open('/workspace/' + encodeURIComponent(probId), '_blank');
+                    } else {
+                        // 都找不到且沒網址
+                        overlay.innerHTML = '<div style="background:white; padding:20px; border-radius:10px; color:#ef4444; text-align:center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">找不到此題目的對應題庫，可能已被刪除或網路錯誤。<br><button onclick="document.body.removeChild(this.parentNode.parentNode)" style="margin-top:15px; padding:6px 16px; border:none; background:#ef4444; color:white; border-radius:4px; cursor:pointer;">關閉</button></div>';
+                    }
+                } else {
+                    // 還沒找到，繼續等 (200ms)
+                    setTimeout(() => checkAndOpen(retries - 1), 200);
                 }
-                if (finalBankName && finalBankName !== "綜合題庫") {
-                    localStorage.setItem('oj_v15_bank_name', finalBankName);
-                }
-                
-                // 移除讀取中畫面並開啟分頁
-                document.body.removeChild(overlay);
-                window.open('/workspace/' + encodeURIComponent(probId), '_blank');
-            }, 600);
+            }
+            
+            // 最多等待 25 次 * 200ms = 5 秒
+            checkAndOpen(25);
         };
         
         // 排版修正：標題在上方，分類與時間在下方同一列並有間距
@@ -1312,9 +1326,9 @@ async function buildGlobalDefaultBankMap() {
     }
     
     const banks = [
-        { url: '/program-1.json', name: '114-第一學期程式設計' },
-        { url: '/program-oop.json', name: '114-第二學期物件導向' },
-        { url: '/program-cpe.json', name: 'CPE 一顆星選集' }
+        { url: '/db.json', name: 'CPE 一顆星選集' },
+        { url: '/program-1.json', name: '113-第二學期程式設計' },
+        { url: '/program-oop-9.5.json', name: '114-第二學期物件導向' }
     ];
     
     let isUpdated = false;
