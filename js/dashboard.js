@@ -12,15 +12,16 @@ let problemToMoveId = null;
 
 function updateLearningStats() {
     const solvedCountEl = document.getElementById('stats-solved-count');
-    const bankCountEl = document.getElementById('stats-custom-bank-count');
+    const totalCountEl = document.getElementById('stats-total-problems-count');
+    const progressBar = document.getElementById('stats-progress-bar');
     
+    let solvedCount = 0;
     if (solvedCountEl) {
         let history = {};
         try {
             history = JSON.parse(localStorage.getItem('oj_v15_history') || '{}');
         } catch(e) {}
         
-        let solvedCount = 0;
         for (let probId in history) {
             const records = history[probId];
             if (records && records.length > 0) {
@@ -31,12 +32,49 @@ function updateLearningStats() {
         solvedCountEl.innerText = solvedCount;
     }
     
-    if (bankCountEl) {
-        let customBankCount = 0;
-        if (typeof db !== 'undefined' && db && db.customBanks) {
-            customBankCount = db.customBanks.length;
-        }
-        bankCountEl.innerText = customBankCount;
+    let totalProblems = 0;
+    
+    // 計算自訂題庫的總題目數
+    let totalCustomProblems = 0;
+    if (typeof db !== 'undefined' && db && db.customBanks) {
+        db.customBanks.forEach(b => {
+            if (b.problems) totalCustomProblems += b.problems.length;
+        });
+    }
+    
+    // 計算預設題庫的總題目數 (利用 localStorage 緩存避免每次發送請求)
+    let totalDefaultProblems = localStorage.getItem('oj_v15_total_default_problems');
+    if (!totalDefaultProblems) {
+        Promise.all([
+            fetch('/program-1.json').then(r=>r.json()).catch(()=>({problems:[]})),
+            fetch('/program-oop.json').then(r=>r.json()).catch(()=>({problems:[]})),
+            fetch('/program-exam.json').then(r=>r.json()).catch(()=>({problems:[]}))
+        ]).then(results => {
+            let count = 0;
+            results.forEach(res => {
+                if (res.problems) count += res.problems.length;
+            });
+            localStorage.setItem('oj_v15_total_default_problems', count);
+            // 重新呼叫以更新 UI
+            updateLearningStats();
+        });
+        totalDefaultProblems = 0;
+    } else {
+        totalDefaultProblems = parseInt(totalDefaultProblems);
+    }
+    
+    totalProblems = totalDefaultProblems + totalCustomProblems;
+    
+    if (totalCountEl) {
+        // 如果還在非同步抓取中且無緩存，先顯示載入中或目前的自訂數
+        totalCountEl.innerText = totalProblems > 0 ? totalProblems : (totalDefaultProblems === 0 ? '載入中...' : 0);
+    }
+    
+    if (progressBar) {
+        let progress = totalProblems > 0 ? Math.round((solvedCount / totalProblems) * 100) : 0;
+        if (progress > 100) progress = 100;
+        progressBar.style.width = progress + '%';
+        // 可選：如果你希望進度條上顯示文字，可以加這裡，不過目前只有線條
     }
 }
 
