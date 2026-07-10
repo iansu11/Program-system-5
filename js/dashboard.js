@@ -1203,11 +1203,45 @@ function renderRecentSubmissions() {
         div.className = 'list-item';
         div.style.cursor = 'pointer';
         div.onclick = () => {
-            let finalBankUrl = sub.bankUrl;
-            let finalBankName = catName;
-            
-            // 延遲解析：如果最初沒有解析出 bankUrl，在點擊的當下再次解析
-            if (!finalBankUrl) {
+            // 顯示讀取中 overlay
+            let overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0'; overlay.style.left = '0';
+            overlay.style.width = '100vw'; overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'rgba(255,255,255,0.7)';
+            overlay.style.zIndex = '99999';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.fontSize = '1.3rem';
+            overlay.style.fontWeight = 'bold';
+            overlay.style.color = 'var(--primary)';
+            overlay.style.backdropFilter = 'blur(3px)';
+            overlay.innerHTML = '<div class="spinner" style="margin-right:12px;"></div> 正在為您準備題庫環境，請稍候...';
+            document.body.appendChild(overlay);
+
+            if (!document.getElementById('spinner-style')) {
+                let style = document.createElement('style');
+                style.id = 'spinner-style';
+                style.innerHTML = `
+                    .spinner {
+                        width: 28px; height: 28px;
+                        border: 4px solid rgba(0,0,0,0.1);
+                        border-top-color: var(--primary);
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                    }
+                    @keyframes spin { 100% { transform: rotate(360deg); } }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // 給予 600ms 讓 db.js 完成背景題庫與 Firebase 下載
+            setTimeout(() => {
+                let finalBankUrl = sub.bankUrl;
+                let finalBankName = catName;
+                
+                // 強制在點擊時重新解析 (避免剛載入時抓錯或尚未載入完成)
                 if (window.globalDefaultBankMap && window.globalDefaultBankMap[probId]) {
                     finalBankUrl = window.globalDefaultBankMap[probId].bankUrl;
                     finalBankName = window.globalDefaultBankMap[probId].bankName;
@@ -1220,15 +1254,18 @@ function renderRecentSubmissions() {
                         }
                     }
                 }
-            }
-            
-            if (finalBankUrl) {
-                localStorage.setItem('oj_v15_bank_url', finalBankUrl);
-            }
-            if (finalBankName && finalBankName !== "綜合題庫") {
-                localStorage.setItem('oj_v15_bank_name', finalBankName);
-            }
-            window.open('/workspace/' + encodeURIComponent(probId), '_blank');
+                
+                if (finalBankUrl) {
+                    localStorage.setItem('oj_v15_bank_url', finalBankUrl);
+                }
+                if (finalBankName && finalBankName !== "綜合題庫") {
+                    localStorage.setItem('oj_v15_bank_name', finalBankName);
+                }
+                
+                // 移除讀取中畫面並開啟分頁
+                document.body.removeChild(overlay);
+                window.open('/workspace/' + encodeURIComponent(probId), '_blank');
+            }, 600);
         };
         
         // 排版修正：標題在上方，分類與時間在下方同一列並有間距
