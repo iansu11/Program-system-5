@@ -1100,13 +1100,36 @@ function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
     if (!listContainer) return;
     
-    let recentSubs = [];
-    try {
-        recentSubs = JSON.parse(localStorage.getItem('oj_v15_recent3') || '[]');
-    } catch(e) {}
+    let localHistory = localStorage.getItem('oj_v15_history');
+    if (localHistory) {
+        try {
+            executionHistories = JSON.parse(localHistory);
+        } catch(e) {}
+    }
     
-    // Sort by timestamp just in case
-    recentSubs.sort((a, b) => b.timestamp - a.timestamp);
+    let allSubs = [];
+    for (let key in executionHistories) {
+        let histList = executionHistories[key];
+        if (histList && Array.isArray(histList)) {
+            // 取最新3筆來比較時間即可
+            for (let i = 0; i < Math.min(3, histList.length); i++) {
+                let run = histList[i];
+                let timeStr = run.time.replace(/[\u202F\u2009]/g, ' ');
+                let t = new Date(timeStr).getTime();
+                if (isNaN(t)) {
+                    t = Date.now() - Math.random() * 10000;
+                }
+                allSubs.push({
+                    probId: key,
+                    time: run.time,
+                    status: run.status,
+                    timestamp: t
+                });
+            }
+        }
+    }
+    allSubs.sort((a, b) => b.timestamp - a.timestamp);
+    let recentSubs = allSubs.slice(0, 3);
     
     if (recentSubs.length === 0) {
         listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size:1.1rem; font-weight:500;">目前暫時沒有作答紀錄</div>';
@@ -1118,8 +1141,27 @@ function renderRecentSubmissions() {
         let probId = sub.probId;
         if (probId.includes('_')) probId = probId.split('_')[1];
         
-        let title = sub.title || "未知的題目";
-        let bankNameStr = sub.bankName || "綜合題庫";
+        let globalTitleMap = {};
+        try { globalTitleMap = JSON.parse(localStorage.getItem('oj_v15_titles') || '{}'); } catch(e) {}
+        
+        if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
+            db.problems.forEach(p => {
+                globalTitleMap[String(p.id)] = p.title;
+            });
+            try { localStorage.setItem('oj_v15_titles', JSON.stringify(globalTitleMap)); } catch(e) {}
+        }
+
+        let title = globalTitleMap[String(probId)] || "未知的題目";
+        let catName = "綜合題庫";
+        
+        // 嘗試從目前的 db.categories 抓取分類名稱當作題庫名稱顯示
+        if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
+            const p = db.problems.find(x => String(x.id) === String(probId));
+            if (p) {
+                const cat = db.categories.find(x => String(x.id) === String(p.catId));
+                if (cat) catName = cat.name;
+            }
+        }
         
         let statusClass = "badge-fail";
         let statusText = "WA 錯誤";
@@ -1142,24 +1184,15 @@ function renderRecentSubmissions() {
         const div = document.createElement('div');
         div.className = 'list-item';
         div.style.cursor = 'pointer';
+        div.onclick = () => window.open('/workspace/' + sub.probId, '_blank');
         
-        // Handle navigation with bank context
-        div.onclick = () => {
-            if (sub.bankUrl) {
-                localStorage.setItem('oj_v15_bank_url', sub.bankUrl);
-            }
-            if (sub.bankName) {
-                localStorage.setItem('oj_v15_bank_name', sub.bankName);
-            }
-            window.open('/workspace/' + sub.probId, '_blank');
-        };
-        
+        // 排版修正：標題在上方，分類與時間在下方同一列並有間距
         div.innerHTML = `
             <div class="item-info" style="width: 100%;">
                 <h4 style="font-size:1rem; margin-bottom:6px;">${title}</h4>
                 <div style="font-size:0.85rem; color:#888; display:flex; align-items:center;">
-                    <span style="font-weight:500; color:var(--primary); min-width:80px;">${bankNameStr}</span>
-                    <span style="margin: 0 8px; color: #ccc;">|</span>
+                    <span style="font-weight:500; color:var(--primary); min-width:80px;">${catName}</span>
+                    <span style="margin: 0 10px; color: #ccc;">|</span>
                     <span>${sub.time}</span>
                 </div>
             </div>
@@ -1168,7 +1201,6 @@ function renderRecentSubmissions() {
             </div>
         `;
         
-        // Ensures flex layout on the list-item itself applies correctly
         div.style.display = 'flex';
         div.style.justifyContent = 'space-between';
         div.style.alignItems = 'center';
