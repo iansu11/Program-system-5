@@ -1301,7 +1301,7 @@ window.addEventListener('load', buildGlobalDefaultBankMap);
 
 
 // --- Admin Logic & Announcements ---
-window.addEventListener('dbLoaded', async () => {
+async function loadAdminAndAnnouncements() {
     // Inject Admin Panel button if role is admin
     const role = window.currentUserRole || localStorage.getItem('oj_v15_userRole');
     if (role === 'admin') {
@@ -1339,7 +1339,7 @@ window.addEventListener('dbLoaded', async () => {
                         div.style.borderBottom = '1px dashed #bfdbfe';
                         
                         const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : '';
-                        div.innerHTML = `<span style="color: #2563eb; font-weight: 600; font-size: 0.85rem; margin-right: 8px;">[${dateStr}]</span> <span>${data.content}</span>`;
+                        div.innerHTML = `<div style="color: #2563eb; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">[${dateStr}] ${data.title || '系統公告'}</div><div style="color: #334155; white-space: pre-wrap;">${data.content || ''}</div>`;
                         list.appendChild(div);
                     });
                     if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
@@ -1349,7 +1349,13 @@ window.addEventListener('dbLoaded', async () => {
             console.error("Failed to load announcements:", e);
         }
     }
-});
+}
+
+if (window.isDbLoaded) {
+    loadAdminAndAnnouncements();
+}
+window.addEventListener('dbLoaded', loadAdminAndAnnouncements);
+window.addEventListener('personalCloudReady', loadAdminAndAnnouncements);
 
 
 // --- 個人設定與升級邏輯 ---
