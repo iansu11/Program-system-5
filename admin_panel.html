@@ -11,6 +11,20 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        .auth-input {
+            background-color: #ffffff !important;
+            color: #333333 !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25) !important;
+        }
+    </style>
 </head>
 <body style="background-color: var(--bg-page-light); color: #333; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
     
@@ -25,7 +39,7 @@
         </div>
     </div>
 
-    <div class="page-view active" style="display: block; max-width: 900px; margin: 0 auto; width: 100%; overflow-y: auto; padding: 30px;">
+    <div class="page-view active" style="display: block;  width: 100%; overflow-y: auto; padding: 30px;">
         <div class="page-header" style="margin-bottom: 30px;">
             <div>
                 <h1 style="color: #8b5cf6; margin:0 0 5px 0;"><i class="fa-solid fa-crown"></i> 系統管理者後台</h1>
