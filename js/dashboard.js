@@ -1350,3 +1350,46 @@ window.addEventListener('dbLoaded', async () => {
         }
     }
 });
+
+
+// --- 個人設定與升級邏輯 ---
+function bindAvatarSettings() {
+    document.querySelectorAll('.user-avatar').forEach(el => {
+        el.style.cursor = 'pointer';
+        el.title = "點擊開啟個人設定";
+        el.onclick = () => {
+            const modal = document.getElementById('settingsModal');
+            if(modal) modal.style.display = 'flex';
+        };
+    });
+}
+
+// 嘗試立即綁定，並且在 DOMContentLoaded 時再次綁定確保萬無一失
+bindAvatarSettings();
+document.addEventListener('DOMContentLoaded', bindAvatarSettings);
+window.addEventListener('dbLoaded', bindAvatarSettings);
+
+async function upgradeToAdmin() {
+    if (!currentUser || !masterDb) return alert("系統尚未準備好，請稍後再試。");
+    const code = prompt("請輸入管理者授權碼：");
+    if (code === 'antigravity-admin-2026') {
+        try {
+            await masterDb.collection('userSettings').doc(currentUser.uid).update({ role: 'admin' });
+            alert("✅ 授權碼正確！您已升級為系統管理員。\n畫面即將重新整理以套用新權限。");
+            localStorage.setItem('oj_v15_userRole', 'admin');
+            window.location.reload();
+        } catch(e) {
+            // 如果原本沒有 userSettings document，則使用 set + merge
+            try {
+                await masterDb.collection('userSettings').doc(currentUser.uid).set({ role: 'admin' }, { merge: true });
+                alert("✅ 授權碼正確！您已升級為系統管理員。\n畫面即將重新整理以套用新權限。");
+                localStorage.setItem('oj_v15_userRole', 'admin');
+                window.location.reload();
+            } catch(e2) {
+                alert("❌ 更新權限失敗：" + e2.message);
+            }
+        }
+    } else if (code !== null) {
+        alert("❌ 授權碼錯誤！");
+    }
+}
