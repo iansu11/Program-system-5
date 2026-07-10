@@ -1471,8 +1471,6 @@ function stopDrag() {
         btn.innerText = "▶️ 執行";
     }
 
- }
-
 
 function goBackToProblemList() {
     autoSaveCode();
