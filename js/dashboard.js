@@ -1260,14 +1260,49 @@ function renderRecentSubmissions() {
                 if (found || retries === 0) {
                     if (finalBankUrl) {
                         localStorage.setItem('oj_v15_bank_url', finalBankUrl);
-                    }
-                    if (finalBankName && finalBankName !== "綜合題庫") {
-                        localStorage.setItem('oj_v15_bank_name', finalBankName);
-                    }
-                    
-                    if (found || finalBankUrl) {
-                        document.body.removeChild(overlay);
-                        window.open('/workspace/' + encodeURIComponent(probId), '_blank');
+                        localStorage.setItem('oj_v15_data_url', finalBankUrl); // 同步網址防呆
+                        
+                        if (finalBankName && finalBankName !== "綜合題庫") {
+                            localStorage.setItem('oj_v15_bank_name', finalBankName);
+                        }
+                        
+                        // 🚀 終極優化：確保能在開啟分頁的瞬間就看到題目，我們在此處先幫新分頁把資料準備好
+                        async function prepareDbAndOpen() {
+                            let newDb = { categories: [], problems: [], version: "", customBanks: (typeof db !== 'undefined' && db && db.customBanks) ? db.customBanks : [] };
+                            
+                            if (finalBankUrl.startsWith("local_custom_")) {
+                                const customId = finalBankUrl.replace("local_custom_", "");
+                                if (typeof db !== 'undefined' && db && db.customBanks) {
+                                    const targetBank = db.customBanks.find(b => String(b.id) === String(customId));
+                                    if (targetBank) {
+                                        newDb.categories = targetBank.categories || [];
+                                        newDb.problems = targetBank.problems || [];
+                                        newDb.version = targetBank.version || "";
+                                    }
+                                }
+                            } else {
+                                // 預設題庫，背景下載原始 JSON
+                                try {
+                                    const res = await fetch(finalBankUrl);
+                                    const rawData = await res.json();
+                                    newDb.categories = rawData.categories || [];
+                                    newDb.problems = rawData.problems || [];
+                                    newDb.version = rawData.version || "";
+                                } catch(e) {
+                                    console.error("預先下載題庫失敗", e);
+                                }
+                            }
+                            
+                            // 將準備好的完整資料塞入快取，讓新分頁一打開就能瞬間渲染
+                            localStorage.setItem('oj_v15_data', JSON.stringify(newDb));
+                            
+                            document.body.removeChild(overlay);
+                            window.open('/workspace/' + encodeURIComponent(probId), '_blank');
+                        }
+                        
+                        if (found || finalBankUrl) {
+                            prepareDbAndOpen();
+                        }
                     } else {
                         // 都找不到且沒網址
                         overlay.innerHTML = '<div style="background:white; padding:20px; border-radius:10px; color:#ef4444; text-align:center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">找不到此題目的對應題庫，可能已被刪除或網路錯誤。<br><button onclick="document.body.removeChild(this.parentNode.parentNode)" style="margin-top:15px; padding:6px 16px; border:none; background:#ef4444; color:white; border-radius:4px; cursor:pointer;">關閉</button></div>';
