@@ -1236,4 +1236,7 @@ function renderRecentSubmissions() {
 
 if (typeof renderRecentSubmissions === 'function') setTimeout(renderRecentSubmissions, 0);
 
-window.addEventListener('dbLoaded', updateLearningStats);
+window.addEventListener('dbLoaded', () => {
+    updateLearningStats();
+    if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
+});
