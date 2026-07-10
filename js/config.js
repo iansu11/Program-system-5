@@ -52,7 +52,6 @@ if (localHistory) {
 const localBankName = localStorage.getItem('oj_v15_bank_name');
 if (localBankName) currentBankName = localBankName;
 
-const localBankUrl = localStorage.getItem('oj_v15_bank_url');
 if (localBankUrl) currentBankUrl = localBankUrl;
 
 // ==========================================
