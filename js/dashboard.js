@@ -1154,40 +1154,33 @@ function renderRecentSubmissions() {
         }
 
         let title = globalTitleMap[String(probId)] || "未知的題目";
-        let catName = sub.bankName || "綜合題庫";
+        let catName = "綜合題庫";
         
-        if (!sub.bankName) {
-            let found = false;
-            
-            // 1. 從預設題庫地圖尋找
-            if (window.globalDefaultBankMap && window.globalDefaultBankMap[sub.probId]) {
-                const info = window.globalDefaultBankMap[sub.probId];
-                catName = info.bankName;
-                sub.bankUrl = info.bankUrl;
-                found = true;
-            }
-            
-            // 2. 如果預設題庫沒有，徹底掃描所有自訂題庫
-            if (!found && typeof db !== 'undefined' && db && db.customBanks) {
+        // 1. 強制優先從預設題庫地圖尋找 (最準確，可修正以前存錯的 bankName)
+        if (window.globalDefaultBankMap && window.globalDefaultBankMap[probId]) {
+            const info = window.globalDefaultBankMap[probId];
+            catName = info.bankName;
+            sub.bankUrl = info.bankUrl;
+        } 
+        // 2. 如果預設題庫沒有，徹底掃描所有自訂題庫
+        else {
+            let foundCustom = false;
+            if (typeof db !== 'undefined' && db && db.customBanks) {
                 for (let bank of db.customBanks) {
-                    if (bank.problems && bank.problems.some(p => String(p.id) === String(sub.probId))) {
+                    if (bank.problems && bank.problems.some(p => String(p.id) === String(probId))) {
                         catName = bank.name;
                         sub.bankUrl = "local_custom_" + bank.id;
-                        found = true;
+                        foundCustom = true;
                         break;
                     }
                 }
             }
-            
-            // 3. 終極保底方案：使用目前載入的 db
-            if (!found && typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
-                const p = db.problems.find(x => String(x.id) === String(sub.probId));
-                if (p && localStorage.getItem('oj_v15_bank_name')) {
-                    catName = localStorage.getItem('oj_v15_bank_name');
-                    sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
-                }
+            // 3. 終極保底：如果都找不到，才使用紀錄中存的 bankName
+            if (!foundCustom && sub.bankName) {
+                catName = sub.bankName;
             }
         }
+        
         let statusClass = "badge-fail";
         let statusText = "WA 錯誤";
         
@@ -1211,16 +1204,16 @@ function renderRecentSubmissions() {
         div.style.cursor = 'pointer';
         div.onclick = () => {
             let finalBankUrl = sub.bankUrl;
-            let finalBankName = sub.bankName || catName;
+            let finalBankName = catName;
             
             // 延遲解析：如果最初沒有解析出 bankUrl，在點擊的當下再次解析
             if (!finalBankUrl) {
-                if (window.globalDefaultBankMap && window.globalDefaultBankMap[sub.probId]) {
-                    finalBankUrl = window.globalDefaultBankMap[sub.probId].bankUrl;
-                    finalBankName = window.globalDefaultBankMap[sub.probId].bankName;
+                if (window.globalDefaultBankMap && window.globalDefaultBankMap[probId]) {
+                    finalBankUrl = window.globalDefaultBankMap[probId].bankUrl;
+                    finalBankName = window.globalDefaultBankMap[probId].bankName;
                 } else if (typeof db !== 'undefined' && db && db.customBanks) {
                     for (let bank of db.customBanks) {
-                        if (bank.problems && bank.problems.some(p => String(p.id) === String(sub.probId))) {
+                        if (bank.problems && bank.problems.some(p => String(p.id) === String(probId))) {
                             finalBankUrl = "local_custom_" + bank.id;
                             finalBankName = bank.name;
                             break;
@@ -1235,7 +1228,7 @@ function renderRecentSubmissions() {
             if (finalBankName && finalBankName !== "綜合題庫") {
                 localStorage.setItem('oj_v15_bank_name', finalBankName);
             }
-            window.open('/workspace/' + encodeURIComponent(sub.probId), '_blank');
+            window.open('/workspace/' + encodeURIComponent(probId), '_blank');
         };
         
         // 排版修正：標題在上方，分類與時間在下方同一列並有間距
