@@ -380,15 +380,67 @@ function saveModelAnswerFromModal() {
 
 function openHistoryModal() {
     const modal = document.getElementById('historyModal');
-    if (modal) modal.style.display = 'flex';
+    if (!modal) return;
+    
+    const listDiv = document.getElementById('historyList');
+    const codeView = document.getElementById('historyCodeView');
+    
+    if (listDiv) listDiv.innerHTML = "";
+    if (codeView) codeView.value = "";
+    
+    let histList = typeof executionHistories !== 'undefined' ? executionHistories[adminProbId] : null;
+    if (!histList && typeof currentBankUrl !== 'undefined' && typeof executionHistories !== 'undefined') {
+        histList = executionHistories[currentBankUrl + "_" + adminProbId];
+    }
+    histList = histList || [];
+    
+    if (histList.length === 0) {
+        if (listDiv) listDiv.innerHTML = "<div style='color:#666; text-align:center; padding:30px; font-size:1.1rem;'>尚無執行紀錄</div>";
+    } else {
+        histList.forEach((hist, idx) => {
+            const item = document.createElement('div');
+            item.className = 'hist-item';
+            item.style.padding = '10px';
+            item.style.borderBottom = '1px solid #333';
+            item.style.cursor = 'pointer';
+            
+            item.onclick = () => {
+                const items = listDiv.querySelectorAll('.hist-item');
+                items.forEach(el => el.style.background = 'transparent');
+                item.style.background = '#2a2a2a';
+                if (codeView) codeView.value = hist.code || "";
+            };
+            
+            item.innerHTML = `<div style="font-size:0.85rem; color:#aaa;">${hist.time || ''} <span style="color:var(--accent)">[${hist.lang || ''}]</span></div><div style="margin-top:5px; font-weight:bold;">${hist.status || ''}</div>`;
+            if (listDiv) listDiv.appendChild(item);
+            
+            if (idx === 0) item.click();
+        });
+    }
+
+    modal.style.display = 'flex';
 }
 
 function clearProblemHistory() {
-    if (confirm('確定清空此題紀錄？')) {
+    if (confirm('確定清空此題紀錄？此動作無法復原。')) {
         const list = document.getElementById('historyList');
-        if (list) list.innerHTML = '';
+        if (list) list.innerHTML = "<div style='color:#666; text-align:center; padding:30px; font-size:1.1rem;'>尚無執行紀錄</div>";
         const codeView = document.getElementById('historyCodeView');
         if (codeView) codeView.value = '';
+        
+        if (typeof executionHistories !== 'undefined') {
+            delete executionHistories[adminProbId];
+            if (typeof currentBankUrl !== 'undefined') {
+                delete executionHistories[currentBankUrl + "_" + adminProbId];
+            }
+            const historyString = JSON.stringify(executionHistories);
+            localStorage.setItem('oj_v15_history', historyString);
+            if (typeof currentUser !== 'undefined' && currentUser && typeof personalDb !== 'undefined') {
+                personalDb.collection('users').doc(currentUser.uid).set({
+                    historyData: historyString
+                }, { merge: true });
+            }
+        }
     }
 }
 
