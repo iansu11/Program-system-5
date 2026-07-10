@@ -45,8 +45,18 @@ try {
             probIdStr = pathSegments[pathSegments.length - 1];
         } else {
             // 備用方案：傳統的 /workspace/題目ID 結構
-            const match = path.match(/^\/workspace\/([a-zA-Z0-9_-]+)$/);
-            probIdStr = match ? match[1] : null;
+            if (path.startsWith('/workspace/')) {
+                let extracted = path.substring('/workspace/'.length);
+                // 移除可能的結尾斜線
+                if (extracted.endsWith('/')) extracted = extracted.slice(0, -1);
+                try {
+                    probIdStr = decodeURIComponent(extracted);
+                } catch(e) {
+                    probIdStr = extracted;
+                }
+            } else {
+                probIdStr = null;
+            }
         }
     }
 
