@@ -1156,32 +1156,35 @@ function renderRecentSubmissions() {
         let title = globalTitleMap[String(probId)] || "未知的題目";
         let catName = sub.bankName || "綜合題庫";
         
-        // 如果舊紀錄沒有 bankName，但它是自訂題庫的題目，我們可以反查
-        if (!sub.bankName && sub.probId.startsWith('custom_')) {
-            if (typeof db !== 'undefined' && db && db.customBanks) {
-                // 自訂題目的 probId 是 custom_timestamp，我們必須尋找哪個 bank 包含這個題目
-                for (let bank of db.customBanks) {
-                    if (bank.problems && bank.problems.some(p => String(p.id) === String(sub.probId))) {
-                        catName = bank.name;
-                        sub.bankUrl = "local_custom_" + bank.id;
-                        break;
-                    }
-                }
-            }
-        } else if (!sub.bankName) {
-            // 從我們剛剛建立的 globalDefaultBankMap 中尋找
+        if (!sub.bankName) {
+            let found = false;
+            
+            // 1. 從預設題庫地圖尋找
             if (window.globalDefaultBankMap && window.globalDefaultBankMap[sub.probId]) {
                 const info = window.globalDefaultBankMap[sub.probId];
                 catName = info.bankName;
                 sub.bankUrl = info.bankUrl;
-            } else {
-                // 如果 map 還沒準備好或找不到，試試看當前的 db
-                if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
-                    const p = db.problems.find(x => String(x.id) === String(sub.probId));
-                    if (p && localStorage.getItem('oj_v15_bank_name')) {
-                        catName = localStorage.getItem('oj_v15_bank_name');
-                        sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
+                found = true;
+            }
+            
+            // 2. 如果預設題庫沒有，徹底掃描所有自訂題庫
+            if (!found && typeof db !== 'undefined' && db && db.customBanks) {
+                for (let bank of db.customBanks) {
+                    if (bank.problems && bank.problems.some(p => String(p.id) === String(sub.probId))) {
+                        catName = bank.name;
+                        sub.bankUrl = "local_custom_" + bank.id;
+                        found = true;
+                        break;
                     }
+                }
+            }
+            
+            // 3. 終極保底方案：使用目前載入的 db
+            if (!found && typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
+                const p = db.problems.find(x => String(x.id) === String(sub.probId));
+                if (p && localStorage.getItem('oj_v15_bank_name')) {
+                    catName = localStorage.getItem('oj_v15_bank_name');
+                    sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
                 }
             }
         }
