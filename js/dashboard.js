@@ -1326,10 +1326,10 @@ async function loadAdminAndAnnouncements() {
             const container = document.getElementById('announcements-container');
             const list = document.getElementById('announcements-list');
             if (container && list) {
+                container.style.display = 'block';
                 if (snap.empty) {
-                    container.style.display = 'none';
+                    list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">目前無系統公告</div>';
                 } else {
-                    container.style.display = 'block';
                     list.innerHTML = '';
                     snap.docs.forEach(doc => {
                         const data = doc.data();
