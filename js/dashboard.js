@@ -1031,7 +1031,6 @@ function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
     if (!listContainer) return;
     
-    // Always refresh from localStorage to get the latest data!
     let localHistory = localStorage.getItem('oj_v15_history');
     if (localHistory) {
         try {
@@ -1039,54 +1038,72 @@ function renderRecentSubmissions() {
         } catch(e) {}
     }
     
-    listContainer.innerHTML = '';
     let allSubs = [];
     for (let key in executionHistories) {
         let histList = executionHistories[key];
         if (histList && Array.isArray(histList)) {
-            histList.forEach(run => {
+            // Only need to consider at most the first 3 submissions from each problem for performance
+            for (let i = 0; i < Math.min(3, histList.length); i++) {
+                let run = histList[i];
+                let timeStr = run.time.replace(/[\u202F\u2009]/g, ' ');
+                // Try to parse the time. If invalid, use 0
+                let t = new Date(timeStr).getTime();
+                if (isNaN(t)) {
+                    // Fallback for custom time formats
+                    t = Date.now() - Math.random() * 10000;
+                }
                 allSubs.push({
                     probId: key,
                     time: run.time,
                     status: run.status,
-                    timestamp: new Date(run.time.replace(/[\u202F\u2009]/g, ' ')).getTime()
+                    timestamp: t
                 });
-            });
+            }
         }
     }
     allSubs.sort((a, b) => b.timestamp - a.timestamp);
     let recentSubs = allSubs.slice(0, 3);
+    
     if (recentSubs.length === 0) {
-        listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">尚無作答紀錄</div>';
+        listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size:1.1rem; font-weight:500;">目前暫時沒有作答紀錄</div>';
         return;
     }
+    
+    listContainer.innerHTML = '';
     recentSubs.forEach(sub => {
         let probId = sub.probId;
         if (probId.includes('_')) probId = probId.split('_')[1];
-        const p = db.problems.find(x => String(x.id) === String(probId));
-        let title = "未知題目";
+        
+        let title = "讀取中...";
         let catName = "";
-        if (p) {
-            title = p.title;
-            const cat = db.categories.find(x => String(x.id) === String(p.catId));
-            if (cat) catName = cat.name;
+        
+        if (window.db && window.db.problems && window.db.problems.length > 0) {
+            const p = db.problems.find(x => String(x.id) === String(probId));
+            if (p) {
+                title = p.title;
+                const cat = db.categories.find(x => String(x.id) === String(p.catId));
+                if (cat) catName = cat.name;
+            } else {
+                title = "未知題目";
+            }
         }
         
         let statusClass = "badge-fail";
         let statusText = "WA 錯誤";
         
-        // sub.status from workspace.js is an HTML string like: <span style="color:var(--success)">✅ 全數通過 (2/2)</span>
-        if (sub.status.includes('全數通過') || sub.status === "AC") {
-            statusClass = "badge-success";
-            statusText = "AC 通過";
-        } else if (sub.status.includes('編譯') || sub.status === "CE") {
-            statusText = "CE 編譯錯誤";
-        } else if (sub.status.includes('執行錯誤') || sub.status === "RE") {
-            statusText = "RE 執行錯誤";
-        } else if (sub.status.includes('超時') || sub.status === "TLE") {
-            statusText = "TLE 超時";
-        } else if (sub.status.includes('部分通過')) {
-            statusText = "部分通過";
+        if (sub.status && typeof sub.status === 'string') {
+            if (sub.status.includes('全數通過') || sub.status === "AC") {
+                statusClass = "badge-success";
+                statusText = "AC 通過";
+            } else if (sub.status.includes('編譯') || sub.status === "CE") {
+                statusText = "CE 編譯錯誤";
+            } else if (sub.status.includes('執行錯誤') || sub.status === "RE") {
+                statusText = "RE 執行錯誤";
+            } else if (sub.status.includes('超時') || sub.status === "TLE") {
+                statusText = "TLE 超時";
+            } else if (sub.status.includes('部分通過')) {
+                statusText = "部分通過";
+            }
         }
         
         const div = document.createElement('div');
@@ -1095,11 +1112,15 @@ function renderRecentSubmissions() {
         div.onclick = () => window.open('/workspace/' + probId, '_blank');
         div.innerHTML = `
             <div class="item-info">
-                <h4>${title}</h4>
-                <span>${catName}</span>
+                <h4 style="font-size:1rem; margin-bottom:4px;">${title}</h4>
+                <div style="display:flex; justify-content:space-between; width:100%; font-size:0.85rem; color:#888;">
+                    <span>${catName}</span>
+                    <span>${sub.time}</span>
+                </div>
             </div>
             <span class="status-badge ${statusClass}">${statusText}</span>
         `;
         listContainer.appendChild(div);
     });
 }
+\n\n// Optimize: Render recent submissions immediately without waiting for DB\nif (typeof renderRecentSubmissions === \'function\') setTimeout(renderRecentSubmissions, 0);
