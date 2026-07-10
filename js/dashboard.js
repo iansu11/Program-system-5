@@ -1100,94 +1100,17 @@ function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
     if (!listContainer) return;
     
-    let localHistory = localStorage.getItem('oj_v15_history');
-    if (localHistory) {
-        try {
-            executionHistories = JSON.parse(localHistory);
-        } catch(e) {}
-    }
-    
-    let allSubs = [];
-    for (let key in executionHistories) {
-        let histList = executionHistories[key];
-        if (histList && Array.isArray(histList)) {
-            // 取最新3筆來比較時間即可
-            for (let i = 0; i < Math.min(3, histList.length); i++) {
-                let run = histList[i];
-                let timeStr = run.time.replace(/[\u202F\u2009]/g, ' ');
-                let t = new Date(timeStr).getTime();
-                if (isNaN(t)) {
-                    t = Date.now() - Math.random() * 10000;
-                }
-                allSubs.push({
-                    probId: key,
-                    time: run.time,
-                    status: run.status,
-                    timestamp: t,
-                    bankUrl: run.bankUrl,
-                    bankName: run.bankName
-                });
-            }
-        }
-    }
-    allSubs.sort((a, b) => b.timestamp - a.timestamp);
-    let recentSubs = allSubs.slice(0, 3);
-    
-    if (recentSubs.length === 0) {
+    if (typeof recent3Submissions === 'undefined' || !recent3Submissions || recent3Submissions.length === 0) {
         listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size:1.1rem; font-weight:500;">目前暫時沒有作答紀錄</div>';
         return;
     }
     
     listContainer.innerHTML = '';
-    recentSubs.forEach(sub => {
+    recent3Submissions.forEach(sub => {
         let probId = sub.probId;
-        if (probId.includes('_')) probId = probId.split('_')[1];
-        
-        let globalTitleMap = {};
-        try { globalTitleMap = JSON.parse(localStorage.getItem('oj_v15_titles') || '{}'); } catch(e) {}
-        
-        if (typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
-            db.problems.forEach(p => {
-                globalTitleMap[String(p.id)] = p.title;
-            });
-            try { localStorage.setItem('oj_v15_titles', JSON.stringify(globalTitleMap)); } catch(e) {}
-        }
-
-        let title = globalTitleMap[String(probId)] || "未知的題目";
+        let title = sub.title || "未知的題目";
         let catName = sub.bankName || "綜合題庫";
         
-        if (!sub.bankName) {
-            let found = false;
-            
-            // 1. 從預設題庫地圖尋找
-            if (window.globalDefaultBankMap && window.globalDefaultBankMap[sub.probId]) {
-                const info = window.globalDefaultBankMap[sub.probId];
-                catName = info.bankName;
-                sub.bankUrl = info.bankUrl;
-                found = true;
-            }
-            
-            // 2. 如果預設題庫沒有，徹底掃描所有自訂題庫
-            if (!found && typeof db !== 'undefined' && db && db.customBanks) {
-                for (let bank of db.customBanks) {
-                    if (bank.problems && bank.problems.some(p => String(p.id) === String(sub.probId))) {
-                        catName = bank.name;
-                        sub.bankUrl = "local_custom_" + bank.id;
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            
-            // 3. 終極保底方案：使用目前載入的 db
-            if (!found && typeof db !== 'undefined' && db && db.problems && db.problems.length > 0) {
-                const p = db.problems.find(x => String(x.id) === String(sub.probId));
-                if (p && localStorage.getItem('oj_v15_bank_name')) {
-                    catName = localStorage.getItem('oj_v15_bank_name');
-                    sub.bankUrl = localStorage.getItem('oj_v15_bank_url');
-                }
-            }
-        }
         let statusClass = "badge-fail";
         let statusText = "WA 錯誤";
         
@@ -1221,7 +1144,6 @@ function renderRecentSubmissions() {
             window.open('/workspace/' + encodeURIComponent(sub.probId), '_blank');
         };
         
-        // 排版修正：標題在上方，分類與時間在下方同一列並有間距
         div.innerHTML = `
             <div class="item-info" style="width: 100%;">
                 <h4 style="font-size:1rem; margin-bottom:6px;">${title}</h4>
@@ -1238,7 +1160,6 @@ function renderRecentSubmissions() {
         
         div.style.display = 'flex';
         div.style.justifyContent = 'space-between';
-        div.style.alignItems = 'center';
         
         listContainer.appendChild(div);
     });
