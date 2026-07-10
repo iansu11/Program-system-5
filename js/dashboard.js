@@ -1345,6 +1345,22 @@ async function loadAdminAndAnnouncements() {
                             </div>
                         `;
                         div.onclick = () => {
+                            if (!document.getElementById('announcementModal')) {
+                                const modalHTML = `
+                                    <div id="announcementModal" class="modal">
+                                        <div class="modal-box" style="width: 500px; max-width: 90%;">
+                                            <h3 id="annModalTitle" style="color: var(--primary); margin-top: 0;">公告標題</h3>
+                                            <p id="annModalDate" style="color: var(--text-muted); font-size: 0.9rem; margin-top: -10px; margin-bottom: 20px;">日期</p>
+                                            <div id="annModalContent" style="color: var(--text-main); white-space: pre-wrap; line-height: 1.6; max-height: 300px; overflow-y: auto; padding-right: 10px; border-top: 1px solid #e5e7eb; padding-top: 15px;"></div>
+                                            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                                                <button class="btn btn-outline" onclick="document.getElementById('announcementModal').style.display='none'">關閉</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                            }
+                            
                             document.getElementById('annModalTitle').innerText = data.title || '系統公告';
                             document.getElementById('annModalDate').innerText = dateStr;
                             document.getElementById('annModalContent').innerText = data.content || '';
