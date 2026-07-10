@@ -1298,3 +1298,55 @@ async function buildGlobalDefaultBankMap() {
     }
 }
 window.addEventListener('load', buildGlobalDefaultBankMap);
+
+
+// --- Admin Logic & Announcements ---
+window.addEventListener('dbLoaded', async () => {
+    // Inject Admin Panel button if role is admin
+    const role = window.currentUserRole || localStorage.getItem('oj_v15_userRole');
+    if (role === 'admin') {
+        document.querySelectorAll('.user-profile').forEach(el => {
+            if (!el.querySelector('.admin-btn')) {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-outline btn-sm admin-btn';
+                btn.style.marginLeft = '10px';
+                btn.style.borderColor = '#8b5cf6';
+                btn.style.color = '#8b5cf6';
+                btn.innerHTML = '<i class="fa-solid fa-crown"></i> 管理者後台';
+                btn.onclick = () => window.location.href = '/admin_panel.html';
+                el.insertBefore(btn, el.lastElementChild);
+            }
+        });
+    }
+
+    // Load Announcements
+    if (masterDb) {
+        try {
+            const snap = await masterDb.collection('announcements').orderBy('timestamp', 'desc').limit(5).get();
+            const container = document.getElementById('announcements-container');
+            const list = document.getElementById('announcements-list');
+            if (container && list) {
+                if (snap.empty) {
+                    container.style.display = 'none';
+                } else {
+                    container.style.display = 'block';
+                    list.innerHTML = '';
+                    snap.docs.forEach(doc => {
+                        const data = doc.data();
+                        const div = document.createElement('div');
+                        div.style.marginBottom = '8px';
+                        div.style.paddingBottom = '8px';
+                        div.style.borderBottom = '1px dashed #bfdbfe';
+                        
+                        const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : '';
+                        div.innerHTML = `<span style="color: #2563eb; font-weight: 600; font-size: 0.85rem; margin-right: 8px;">[${dateStr}]</span> <span>${data.content}</span>`;
+                        list.appendChild(div);
+                    });
+                    if (list.lastElementChild) list.lastElementChild.style.borderBottom = 'none';
+                }
+            }
+        } catch(e) {
+            console.error("Failed to load announcements:", e);
+        }
+    }
+});
