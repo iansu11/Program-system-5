@@ -8,7 +8,8 @@ let db = {
     customBanks: [] // 存放使用者自訂的所有題庫
 };
 
-let executionHistories = {}; 
+let executionHistories = {};
+let recent3Submissions = []; 
 let currentBankName = ""; 
 let currentBankUrl = "";  
 let pendingUpdateDb = null;
@@ -29,11 +30,17 @@ let adminMultiFiles = [];  // 後台設定專用的暫存物件
 let adminCurrentFileIndex = -1; 
 
 const localData = localStorage.getItem('oj_v15_data');
-if (localData) { 
+const localDataUrl = localStorage.getItem('oj_v15_data_url');
+const localBankUrl = localStorage.getItem('oj_v15_bank_url');
+
+if (localData && (!localDataUrl || localDataUrl === localBankUrl)) { 
     try { 
         db = JSON.parse(localData); 
     } catch(e) {} 
 }
+
+const localRecent3 = localStorage.getItem('oj_v15_recent3');
+if (localRecent3) { try { recent3Submissions = JSON.parse(localRecent3); } catch(e) {} }
 
 const localHistory = localStorage.getItem('oj_v15_history');
 if (localHistory) { 
