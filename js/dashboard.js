@@ -1159,11 +1159,13 @@ function renderRecentSubmissions() {
         // 如果舊紀錄沒有 bankName，但它是自訂題庫的題目，我們可以反查
         if (!sub.bankName && sub.probId.startsWith('custom_')) {
             if (typeof db !== 'undefined' && db && db.customBanks) {
-                const customId = sub.probId.split('_')[1];
-                const bank = db.customBanks.find(b => String(b.id) === String(customId));
-                if (bank) {
-                    catName = bank.name;
-                    sub.bankUrl = "local_custom_" + bank.id;
+                // 自訂題目的 probId 是 custom_timestamp，我們必須尋找哪個 bank 包含這個題目
+                for (let bank of db.customBanks) {
+                    if (bank.problems && bank.problems.some(p => String(p.id) === String(sub.probId))) {
+                        catName = bank.name;
+                        sub.bankUrl = "local_custom_" + bank.id;
+                        break;
+                    }
                 }
             }
         } else if (!sub.bankName) {
