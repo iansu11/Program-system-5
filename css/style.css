@@ -413,11 +413,21 @@
 	/* === ? 面 2: ?  ?題庫管 ???=== */
 	#view-custom-portal { 
     	    display: none; 
+            flex-direction: column; 
+            height: 100%; 
+            background: var(--main-bg); 
+            color: var(--text-main); 
+            overflow-y: auto;
 	}
 	
         /* === ? 面 2.5: 題庫大廳 === */
         #view-portal { 
             display: none; 
+            flex-direction: column; 
+            height: 100%; 
+            background: var(--main-bg); 
+            color: var(--text-main); 
+            overflow-y: auto;
         }
 
         .portal-container { 
@@ -627,7 +637,7 @@
             padding: 0; 
             width: 100%; 
             height: 100%;
-            overflow: hidden; 
+            overflow-y: auto; 
             display: none; 
             flex-direction: column;
             background: var(--main-bg); 
@@ -690,7 +700,7 @@
             padding: 0; 
             width: 100%; 
             height: 100%;
-            overflow: hidden; 
+            overflow-y: auto; 
             display: none; 
             flex-direction: column;
             background: var(--main-bg); 
