@@ -21,7 +21,10 @@ async function handleAuthAction() {
             const user = userCredential.user;
             
             // 明確登入：第一件要做的事情是去系統雲端查詢金鑰
-            const doc = await masterDb.collection('userSettings').doc(user.uid).get();
+            // 依據使用者建議，給予一小段緩衝時間確保 Firebase Auth 與 Firestore 狀態完全同步
+            await new Promise(resolve => setTimeout(resolve, 800));
+            // 強制從伺服器讀取，避免讀到舊的本地快取 (認為找不到文件)
+            const doc = await masterDb.collection('userSettings').doc(user.uid).get({ source: 'server' });
             if (doc.exists && doc.data().firebaseConfig) {
                 const configStr = doc.data().firebaseConfig;
                 localStorage.setItem('oj_v15_firebaseConfig', configStr);
