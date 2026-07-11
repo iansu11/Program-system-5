@@ -420,15 +420,17 @@ function editCategory(catId, oldName) {
         let draggedItem = null;
         
         container.addEventListener('dragstart', (e) => { 
-            if (!e.target.classList.contains(itemClass)) return; 
-            draggedItem = e.target; 
-            e.target.classList.add('dragging'); 
-            e.dataTransfer.effectAllowed = 'move'; 
+            const target = e.target.closest(`.${itemClass}`);
+            if (!target) return; 
+            draggedItem = target; 
+            target.classList.add('dragging'); 
+            if(e.dataTransfer) e.dataTransfer.effectAllowed = 'move'; 
         });
         
         container.addEventListener('dragend', (e) => { 
-            if (!e.target.classList.contains(itemClass)) return; 
-            e.target.classList.remove('dragging'); 
+            const target = e.target.closest(`.${itemClass}`);
+            if (!target) return; 
+            target.classList.remove('dragging'); 
             draggedItem = null; 
             onUpdateOrder(); 
         });
@@ -455,12 +457,13 @@ function editCategory(catId, oldName) {
     }
 
     function saveCategoryOrder() { 
-        const cards = document.querySelectorAll('.cat-card'); 
+        const cards = document.querySelectorAll('#main-cat-grid .cat-card'); 
         const newOrder = []; 
         cards.forEach(card => { 
             const cat = db.categories.find(c => String(c.id) === String(card.dataset.id)); 
             if (cat) newOrder.push(cat); 
         }); 
+        if (cards.length > 0 && newOrder.length === 0) return;
         db.categories = newOrder; 
         saveToLocal(true, false); 
     }
@@ -692,6 +695,7 @@ function saveBankOrder() {
             const bank = db.customBanks.find(b => String(b.id) === String(card.dataset.id));
             if (bank) newOrder.push(bank);
         });
+        if (cards.length > 0 && newOrder.length === 0) return;
         db.customBanks = newOrder;
         saveToLocal(true, false); 
     }
