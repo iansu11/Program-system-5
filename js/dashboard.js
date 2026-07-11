@@ -624,7 +624,23 @@ async function deleteCustomBank(e, idx) {
         const toast = document.getElementById('updateToast');
         if (toast) toast.style.display = 'none';
 
-        const selected = db.customBanks[idx];
+        let selected = db.customBanks[idx];
+        
+        // 🚀 防呆與自動修復：如果目前的 selected 是輕量版 (沒有 problems)，代表 db.js 尚未從雲端載入完整的 customBanks
+        // 此時如果強行進入，會導致整個題庫被洗成空陣列，因此我們在這裡主動抓取完整的資料！
+        if (!selected.problems && currentUser && personalDb) {
+            try {
+                const docSnap = await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(selected.id).get();
+                if (docSnap.exists) {
+                    const fullData = docSnap.data();
+                    db.customBanks[idx] = fullData;
+                    selected = fullData;
+                }
+            } catch(e) {
+                console.error("無法動態載入完整題庫資料：", e);
+            }
+        }
+
         currentBankName = selected.name;
         currentBankUrl = "local_custom_" + selected.id;
 
@@ -639,6 +655,7 @@ async function deleteCustomBank(e, idx) {
 
         localStorage.setItem('oj_v15_bank_name', currentBankName);
         localStorage.setItem('oj_v15_bank_url', currentBankUrl);
+        localStorage.setItem('oj_v15_data_url', currentBankUrl); // 💡 同步更新防呆 URL，避免 workspace 認為快取失效
         
         const bankNameEl = document.getElementById('currentBankName');
         if (bankNameEl) bankNameEl.innerHTML = `<i class="fa-solid fa-folder-open" style="color: #60a5fa; margin-right: 8px;"></i> 目前題庫: ` + currentBankName;
