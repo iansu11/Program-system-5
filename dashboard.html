@@ -6,7 +6,7 @@
     <title>題庫大廳 - 解題系統 V2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="/css/style.css?v=1.0.1">
+    <link rel="stylesheet" href="/css/style.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -29,21 +29,18 @@
 </head>
 <body style="background-color: var(--bg-page-light); color: #333; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
         
+    <!-- 視圖：題庫來源選擇 -->
+    <div id="view-source-selector">
     <div class="topbar">
         <div class="logo-section" onclick="window.location.href='/dashboard.html'">
             <i class="fa-solid fa-code"></i> 解題系統 V2
         </div>
         <div class="user-profile">
-            <span id="user-name-display" class="user-name-display" style="font-size: 0.95rem; font-weight: 500;">載入中...</span>
+            <span id="user-name-source" class="user-name-display" style="font-size: 0.95rem; font-weight: 500;">載入中...</span>
             <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
             <button class="btn btn-outline btn-sm" style="margin-left: 10px;" onclick="logout()">登出</button>
         </div>
     </div>
-
-    <div id="main-views-container" style="flex:1; overflow-y:scroll; overflow-x:hidden;">
-    <!-- 視圖：題庫來源選擇 -->
-    <div id="view-source-selector">
-    
 
     <div class="page-view active" style="display: block;">
 
@@ -127,7 +124,16 @@
 </div>
 
 <div id="view-custom-portal">
-    
+    <div class="topbar">
+        <div class="logo-section" onclick="window.location.href='/dashboard.html'">
+            <i class="fa-solid fa-code"></i> 解題系統 V2
+        </div>
+        <div class="user-profile">
+            <span id="user-name-custom" class="user-name-display" style="font-size: 0.95rem; font-weight: 500;">載入中...</span>
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <button class="btn btn-outline btn-sm" style="margin-left: 10px;" onclick="logout()">登出</button>
+        </div>
+    </div>
     <div class="page-view active" style="display: block;">
         <div class="page-header">
             <div>
@@ -145,7 +151,16 @@
 
 
 <div id="view-portal">
-    
+    <div class="topbar">
+        <div class="logo-section" onclick="window.location.href='/dashboard.html'">
+            <i class="fa-solid fa-code"></i> 解題系統 V2
+        </div>
+        <div class="user-profile">
+            <span id="user-name-portal" class="user-name-display" style="font-size: 0.95rem; font-weight: 500;">載入中...</span>
+            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            <button class="btn btn-outline btn-sm" style="margin-left: 10px;" onclick="logout()">登出</button>
+        </div>
+    </div>
     <div class="page-view active" style="display: block;">
         <div class="page-header">
             <div>
@@ -180,8 +195,17 @@
 </div>
 
     <!-- 視圖：分類列表 -->
-    <div id="view-categories" class="page-view" style="display: none;">
-        
+    <div id="view-categories">
+        <div class="topbar">
+            <div class="logo-section" onclick="window.location.href='/dashboard.html'">
+                <i class="fa-solid fa-code"></i> 解題系統 V2
+            </div>
+            <div class="user-profile">
+                <span id="user-name-categories" class="user-name-display" style="font-size: 0.95rem; font-weight: 500;">載入中...</span>
+                <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                <button class="btn btn-outline btn-sm" style="margin-left: 10px;" onclick="logout()">登出</button>
+            </div>
+        </div>
         <div class="page-view active" style="display: block;">
             <div class="page-header">
                 <div style="display:flex; align-items:center; gap:15px;">
@@ -201,8 +225,17 @@
     </div>
 
     <!-- 視圖：題目列表 -->
-    <div id="view-problem-list" class="page-view" style="display: none; max-width: 900px; margin: 0 auto;">
-        
+    <div id="view-problem-list">
+        <div class="topbar">
+            <div class="logo-section" onclick="window.location.href='/dashboard.html'">
+                <i class="fa-solid fa-code"></i> 解題系統 V2
+            </div>
+            <div class="user-profile">
+                <span id="user-name-problems" class="user-name-display" style="font-size: 0.95rem; font-weight: 500;">載入中...</span>
+                <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                <button class="btn btn-outline btn-sm" style="margin-left: 10px;" onclick="logout()">登出</button>
+            </div>
+        </div>
         <div class="page-view active" style="display: block; max-width: 900px;">
             <div class="page-header">
                 <div style="display:flex; align-items:center; gap:15px;">
@@ -221,9 +254,7 @@
         </div>
     </div>
 
-</div>
-
-    <!-- Announcement Modal -->
+<!-- Announcement Modal -->
 <div id="announcementModal" class="modal">
     <div class="modal-box" style="width: 500px; max-width: 90%; background: #f8fafc; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.1); color: #334155;">
         <h3 id="annModalTitle" style="color: #2563eb; margin-top: 0; font-size: 1.3rem;">公告標題</h3>
