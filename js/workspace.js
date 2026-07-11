@@ -1496,12 +1496,18 @@ function goBackToProblemList() {
     }
 }
 
-
+let isWorkspaceInitialized = false;
 window.addEventListener('dbLoaded', () => {
-    if (typeof initWorkspace === 'function') initWorkspace();
+    if (!isWorkspaceInitialized && typeof initWorkspace === 'function') {
+        initWorkspace();
+        isWorkspaceInitialized = true;
+    }
 });
 if (window.isDbLoaded) {
-    if (typeof initWorkspace === 'function') initWorkspace();
+    if (!isWorkspaceInitialized && typeof initWorkspace === 'function') {
+        initWorkspace();
+        isWorkspaceInitialized = true;
+    }
 }
 
 function goToAdmin() {
