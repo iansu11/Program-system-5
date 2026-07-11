@@ -686,7 +686,7 @@ function hardResetAll() {
     }
 
 function saveBankOrder() {
-        const cards = document.querySelectorAll('#customBankList .bank-btn');
+        const cards = document.querySelectorAll('#customBankList .saas-card');
         const newOrder = [];
         cards.forEach(card => {
             const bank = db.customBanks.find(b => b.id === card.dataset.id);
