@@ -248,6 +248,7 @@ function renderCategoryList() {
         div.className = 'cat-card';
         div.draggable = isCatSortMode; 
         div.dataset.index = index; 
+        div.dataset.id = cat.id; 
 
         const probCount = db.problems.filter(p => p.catId == cat.id).length;
         div.innerHTML = `
@@ -279,7 +280,7 @@ function renderProblemList() {
     filtered.forEach((p) => {
         const div = document.createElement('div');
         div.className = 'prob-item';
-        div.draggable = isBankSortMode; 
+        div.draggable = isProbSortMode; 
         div.dataset.id = p.id; 
         
         let statusIcon = '<i class="fa-regular fa-circle" style="color:#ccc;"></i>';
@@ -457,7 +458,7 @@ function editCategory(catId, oldName) {
     }
 
     function saveCategoryOrder() { 
-        const cards = document.querySelectorAll('#main-cat-grid .cat-card'); 
+        const cards = document.querySelectorAll('#categoryList .cat-card'); 
         const newOrder = []; 
         cards.forEach(card => { 
             const cat = db.categories.find(c => String(c.id) === String(card.dataset.id)); 
