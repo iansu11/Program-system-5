@@ -30,14 +30,24 @@ async function loadUserDataFromCloud(isBackground = false) {
                         customBanksSnap.docs.forEach(doc => { fullBanksMap[doc.id] = doc.data(); });
                         db.customBanks = parsedBanks.map(b => {
                             if (fullBanksMap[b.id]) return fullBanksMap[b.id];
+                            const localBank = (db.customBanks || []).find(lb => lb.id === b.id);
+                            if (localBank && localBank.problems) return Object.assign({}, localBank, b);
                             return b; 
                         });
                     } else {
-                        db.customBanks = parsedBanks;
+                        db.customBanks = parsedBanks.map(b => {
+                            const localBank = (db.customBanks || []).find(lb => lb.id === b.id);
+                            if (localBank && localBank.problems) return Object.assign({}, localBank, b);
+                            return b;
+                        });
                     }
                 } catch(e) {
                     console.error("載入自訂題庫內容失敗：", e);
-                    db.customBanks = parsedBanks;
+                    db.customBanks = parsedBanks.map(b => {
+                        const localBank = (db.customBanks || []).find(lb => lb.id === b.id);
+                        if (localBank && localBank.problems) return Object.assign({}, localBank, b);
+                        return b;
+                    });
                 }
             }
 
