@@ -117,8 +117,11 @@ masterAuth.onAuthStateChanged(async (user) => {
                 window.dispatchEvent(new Event('personalCloudReady'));
 
             } else {
-                alert("未設定雲端系統將無法同步您的雲端進度");
-                window.dispatchEvent(new Event('personalCloudReady'));
+                alert("未設定雲端系統將無法同步您的雲端進度，請重新綁定或註冊！");
+                masterAuth.signOut().then(() => {
+                    localStorage.removeItem('oj_v15_firebaseConfig');
+                    localStorage.removeItem('oj_v15_userRole');
+                });
             }
         } catch (err) {
             console.error(err);
