@@ -142,8 +142,8 @@ masterAuth.onAuthStateChanged(async (user) => {
                 actionBtn.disabled = false;
                 actionBtn.innerText = typeof isLoginMode !== 'undefined' && isLoginMode ? '登入系統' : '註冊並綁定雲端';
             }
-            const leftCover = document.getElementById('leftCover');
-            const rightForm = document.getElementById('rightForm');
+            const leftCover = document.querySelector('.split-left');
+            const rightForm = document.querySelector('.split-right');
             if (leftCover) leftCover.style.opacity = '1';
             if (rightForm) rightForm.style.opacity = '1';
         }
