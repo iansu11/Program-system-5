@@ -50,6 +50,8 @@ function logout() {
             localStorage.removeItem('oj_v15_history');
             localStorage.removeItem('oj_v15_bank_name');
             localStorage.removeItem('oj_v15_bank_url');
+            localStorage.removeItem('oj_v15_firebaseConfig');
+            localStorage.removeItem('oj_v15_userRole');
             window.location.href = '/index.html'; 
         });
     }
@@ -66,28 +68,26 @@ masterAuth.onAuthStateChanged(async (user) => {
         userNameEls.forEach(el => el.innerText = user.email);
         
         try {
-            // 🚀 效能優化：如果已經有快取金鑰，直接使用，不必每次換頁都重新等待雲端下載
+            // 依據使用者要求：只要帳密正確就一定要去同步尋找金鑰，確保有正確連接雲端
             let userConfigStr = localStorage.getItem('oj_v15_firebaseConfig');
             
-            if (!userConfigStr) {
-                try {
-                    const doc = await masterDb.collection('userSettings').doc(user.uid).get();
-                    if (doc.exists) {
-                        if (doc.data().firebaseConfig) {
-                            userConfigStr = doc.data().firebaseConfig;
-                            localStorage.setItem('oj_v15_firebaseConfig', userConfigStr);
-                        }
-                        if (doc.data().role) {
-                            window.currentUserRole = doc.data().role;
-                            localStorage.setItem('oj_v15_userRole', doc.data().role);
-                        } else {
-                            window.currentUserRole = 'user';
-                            localStorage.setItem('oj_v15_userRole', 'user');
-                        }
+            try {
+                const doc = await masterDb.collection('userSettings').doc(user.uid).get();
+                if (doc.exists) {
+                    if (doc.data().firebaseConfig) {
+                        userConfigStr = doc.data().firebaseConfig;
+                        localStorage.setItem('oj_v15_firebaseConfig', userConfigStr);
                     }
-                } catch (netErr) {
-                    console.warn("無法從雲端取得金鑰，將嘗試使用本地快取：", netErr);
+                    if (doc.data().role) {
+                        window.currentUserRole = doc.data().role;
+                        localStorage.setItem('oj_v15_userRole', doc.data().role);
+                    } else {
+                        window.currentUserRole = 'user';
+                        localStorage.setItem('oj_v15_userRole', 'user');
+                    }
                 }
+            } catch (netErr) {
+                console.warn("無法從雲端取得金鑰，將嘗試使用本地快取：", netErr);
             }
 
             // 若本地有 role 緩存則載入
