@@ -29,34 +29,15 @@ async function loadUserDataFromCloud(isBackground = false) {
                         const fullBanksMap = {};
                         customBanksSnap.docs.forEach(doc => { fullBanksMap[doc.id] = doc.data(); });
                         db.customBanks = parsedBanks.map(b => {
-                            const cloudBank = fullBanksMap[b.id];
-                            const localBank = (db.customBanks || []).find(lb => lb.id === b.id);
-                            
-                            if (cloudBank) {
-                                // 💡 智慧合併：如果雲端的 problems 是空的，但本地端有完整的 problems，代表雲端可能曾被輕量化覆寫。這時候以本地的為準！
-                                if ((!cloudBank.problems || cloudBank.problems.length === 0) && localBank && localBank.problems && localBank.problems.length > 0) {
-                                    return Object.assign({}, cloudBank, localBank); 
-                                }
-                                return cloudBank;
-                            }
-                            
-                            if (localBank && localBank.problems) return Object.assign({}, localBank, b);
+                            if (fullBanksMap[b.id]) return fullBanksMap[b.id];
                             return b; 
                         });
                     } else {
-                        db.customBanks = parsedBanks.map(b => {
-                            const localBank = (db.customBanks || []).find(lb => lb.id === b.id);
-                            if (localBank && localBank.problems) return Object.assign({}, localBank, b);
-                            return b;
-                        });
+                        db.customBanks = parsedBanks;
                     }
                 } catch(e) {
                     console.error("載入自訂題庫內容失敗：", e);
-                    db.customBanks = parsedBanks.map(b => {
-                        const localBank = (db.customBanks || []).find(lb => lb.id === b.id);
-                        if (localBank && localBank.problems) return Object.assign({}, localBank, b);
-                        return b;
-                    });
+                    db.customBanks = parsedBanks;
                 }
             }
 
