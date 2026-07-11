@@ -1121,11 +1121,4 @@
 /* =========================================
    Fixed Scrollbars for Dashboard Views 
    ========================================= */
-#view-custom-portal, 
-#view-portal, 
-#view-categories, 
-#view-problem-list,
-#view-admin {
-    overflow-y: auto !important;
-    height: 100% !important;
-}
+
