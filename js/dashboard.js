@@ -243,6 +243,13 @@ function renderCategoryList() {
     const list = document.getElementById('categoryList');
     if (!list) return;
     list.innerHTML = '';
+    
+    if (isCatSortMode) {
+        list.classList.add('sort-mode');
+    } else {
+        list.classList.remove('sort-mode');
+    }
+
     db.categories.forEach((cat, index) => {
         const div = document.createElement('div');
         div.className = 'cat-card';
@@ -275,6 +282,13 @@ function renderProblemList() {
     const list = document.getElementById('probListContainer');
     if (!list) return;
     list.innerHTML = '';
+    
+    if (isProbSortMode) {
+        list.classList.add('sort-mode');
+    } else {
+        list.classList.remove('sort-mode');
+    }
+
     const filtered = db.problems.filter(p => p.catId == currentCatId);
     
     filtered.forEach((p) => {
@@ -418,6 +432,9 @@ function editCategory(catId, oldName) {
 
     function enableDragSort(containerId, itemClass, onUpdateOrder) {
         const container = document.getElementById(containerId); 
+        if (!container) return;
+        if (container.dataset.dragEnabled === 'true') return;
+        container.dataset.dragEnabled = 'true';
         let draggedItem = null;
         
         container.addEventListener('dragstart', (e) => { 
