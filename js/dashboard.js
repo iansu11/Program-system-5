@@ -1127,9 +1127,9 @@ function toggleBankSortMode() {
             btn.innerText = isBankSortMode ? "✅ 完成排序" : "⇅ 調整順序";
             btn.className = isBankSortMode ? "btn btn-danger" : "btn btn-outline";
             if (!isBankSortMode) {
-                // 結束排序時恢復白色樣式
-                btn.style.color = "white";
-                btn.style.borderColor = "white";
+                // 結束排序時清除行內樣式，讓 CSS 接管 (btn-outline 預設顏色)
+                btn.style.color = "";
+                btn.style.borderColor = "";
             }
         }
         renderCustomPortal(); // 重新渲染列表以套用模式
