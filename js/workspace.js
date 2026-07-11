@@ -142,6 +142,10 @@ try {
     
     document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
     document.getElementById('view-workspace').style.display = 'flex';
+    
+    // 💡 只有當成功找到題目並渲染完畢後，才標記為已初始化，避免 Optimistic UI 提早觸發導致永遠卡在「載入中」
+    isWorkspaceInitialized = true;
+    
   } catch (e) {
     document.body.innerHTML = '<div style="color:red; padding:20px; font-size:20px;">CRITICAL ERROR in initWorkspace: <br><pre>' + e.stack + '</pre></div>';
     console.error(e);
@@ -1500,13 +1504,11 @@ let isWorkspaceInitialized = false;
 window.addEventListener('dbLoaded', () => {
     if (!isWorkspaceInitialized && typeof initWorkspace === 'function') {
         initWorkspace();
-        isWorkspaceInitialized = true;
     }
 });
 if (window.isDbLoaded) {
     if (!isWorkspaceInitialized && typeof initWorkspace === 'function') {
         initWorkspace();
-        isWorkspaceInitialized = true;
     }
 }
 
