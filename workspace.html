@@ -21,62 +21,9 @@
 
     <div id="view-workspace" style="flex:1; display:flex; flex-direction:column; width:100%; overflow:hidden;">
         <div class="ws-header">
-            <div style="flex: 0 0 30%; max-width: 30%; min-width: 250px; display: flex; align-items: center; justify-content: flex-start; padding: 0 5px 0 30px; box-sizing: border-box; border-right: 1px solid rgba(0,0,0,0.3);">
-                <span id="wsTitle" style="font-weight:bold; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 100%; cursor:pointer;" onclick="window.location.href='/categories'" title="返回題庫">題目名稱</span>
-            </div>
-            <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px 0 15px; box-sizing: border-box; overflow-x: visible; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-left: -24px;">
-                    <button class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0;" onclick="goToAdmin()">⚙️ 設定</button>
-
-                    <select id="langSelect" onchange="changeWorkspaceLang()">
-                        <option value="cpp">C++ (GCC)</option>
-                        <option value="python">Python 3</option>
-                    </select>
-                    <button class="btn btn-outline btn-sm" onclick="adjustFontSize(-1)" title="縮小字體">A-</button>
-                    <button class="btn btn-outline btn-sm" onclick="adjustFontSize(1)" title="放大字體">A+</button>
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
-                    <button id="modeBtn" class="btn btn-outline btn-sm" style="color: var(--accent); border-color: var(--accent);" onclick="toggleCompileMode()">☁️ 雲端編譯</button>
-                    <input type="file" id="codeUploadInput" style="display:none;" accept=".cpp,.h,.py,.zip" multiple onchange="handleCodeUpload(this)">
-                    <button class="btn btn-outline btn-sm" onclick="document.getElementById('codeUploadInput').click()">📤 上傳</button>
-                    <button class="btn btn-outline btn-sm" onclick="downloadCode()">📥 下載</button>
-                    <button class="btn btn-ai btn-sm" style="padding: 4px 8px; font-size: 0.8rem;" onclick="openAIHelperModal()">🤖 AI 診斷</button>
-                    <button class="btn btn-outline btn-sm" onclick="copyCode()">📋 複製</button>
-                    <button class="btn btn-outline btn-sm" onclick="resetCode()">🔄 重置</button>
-                    <button class="btn btn-success btn-sm" style="height: 32px; display: inline-flex; align-items: center;" id="runBtn" onclick="runCode()">▶️ 執行</button>
-                </div>
-            </div>
-        </div>
-        <div class="ws-container">
-            <div class="pane-left">
-                <h3 style="margin-top:0; color:var(--accent); border-bottom:1px solid #ccc; padding-bottom:10px;">題目描述</h3>
-                <div id="wsDesc" class="problem-content"></div>
-            </div>
-            <div class="pane-right" id="paneRight">
-                <div class="editor-tabs" id="wsEditorTabs" style="display:none;"></div>
-
-                <div id="editor"></div>
-                <div class="resizer-bar" id="dragHandle"><div class="resizer-icon"></div></div>
-                <div class="console-area" id="consoleArea">
-                    <div class="console-header">執行結果 (Output)</div>
-                    <div id="outputLogs"><div style="color:#666;">等待執行...</div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="historyModal" class="modal">
-        <div class="modal-box" style="width: 800px; max-width: 90vw;">
-            <h3 style="margin-top:0;"><i class="fa-solid fa-clock-rotate-left"></i> 執行紀錄</h3>
-            <div style="display:flex; gap:20px; height: 400px;">
-                <div id="historyList" style="width:250px; overflow-y:auto; border-right:1px solid #ddd; padding-right:10px;">
-                    <!-- 紀錄列表 -->
-                </div>
-                <div style="flex:1; display:flex; flex-direction:column;">
-                    <textarea id="historyCodeView" readonly style="flex:1; background:#1e1e1e; color:#d4d4d4; font-family:monospace; padding:10px; border:none; resize:none;"></textarea>
-                    <div style="text-align:right; margin-top:10px;">
-                        <button class="btn btn-primary" onclick="restoreHistoryCode()">載入此代碼</button>
-                    </div>
+            <div style="flex: 0 0 30%; max-width: 30%; min-width: 250px; display: flex; align-items: center; justify-content: flex-start; padding: 0 5px 0 30px; box-sizing: border-box; border-right: 1px
+<truncated 4543 bytes>
+</div>
                 </div>
             </div>
             <div style="text-align:right; margin-top:15px; border-top:1px solid #ddd; padding-top:10px;">
@@ -121,3 +68,5 @@
 
 </body>
 </html>
+
+The above content shows the entire, complete file contents of the requested file.
