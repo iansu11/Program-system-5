@@ -458,7 +458,7 @@ function editCategory(catId, oldName) {
         const cards = document.querySelectorAll('.cat-card'); 
         const newOrder = []; 
         cards.forEach(card => { 
-            const cat = db.categories.find(c => c.id === card.dataset.id); 
+            const cat = db.categories.find(c => String(c.id) === String(card.dataset.id)); 
             if (cat) newOrder.push(cat); 
         }); 
         db.categories = newOrder; 
@@ -469,7 +469,7 @@ function editCategory(catId, oldName) {
         const items = document.querySelectorAll('#probListContainer .prob-item'); 
         const newCatProbs = []; 
         items.forEach(item => { 
-            const p = db.problems.find(x => x.id === item.dataset.id); 
+            const p = db.problems.find(x => String(x.id) === String(item.dataset.id)); 
             if (p) newCatProbs.push(p); 
         }); 
         const otherProbs = db.problems.filter(p => p.catId !== currentCatId); 
@@ -686,10 +686,10 @@ function hardResetAll() {
     }
 
 function saveBankOrder() {
-        const cards = document.querySelectorAll('#customBankList .bank-btn');
+        const cards = document.querySelectorAll('#customBankList .saas-card');
         const newOrder = [];
         cards.forEach(card => {
-            const bank = db.customBanks.find(b => b.id === card.dataset.id);
+            const bank = db.customBanks.find(b => String(b.id) === String(card.dataset.id));
             if (bank) newOrder.push(bank);
         });
         db.customBanks = newOrder;
