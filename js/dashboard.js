@@ -10,6 +10,8 @@ let currentView = 'view-source-selector';
 let pendingRestoreFileName = "";
 let problemToMoveId = null;
 
+const defaultTemplates = { cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}', python: '# your code here\n' };
+
 function updateLearningStats() {
     const solvedCountEl = document.getElementById('stats-solved-count');
     const totalCountEl = document.getElementById('stats-total-problems-count');
