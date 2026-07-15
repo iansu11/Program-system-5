@@ -2438,7 +2438,8 @@
     
     function downloadBackup() { 
         const date = new Date().toISOString().slice(0, 10); 
-        let filename = prompt("請輸入檔案名稱 (無需副檔名):", `oj_backup_${date}`); 
+        const defaultName = (typeof currentBankName !== 'undefined' && currentBankName) ? `${currentBankName}_備份_${date}` : `oj_backup_${date}`;
+        let filename = prompt("請輸入檔案名稱 (無需副檔名):", defaultName); 
         if (!filename) return; 
         
         if (!filename.endsWith(".txt") && !filename.endsWith(".json")) { 
