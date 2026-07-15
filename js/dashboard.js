@@ -890,7 +890,7 @@ async function deleteProblemInList(e, id) {
 
 function openBackupUI() { 
         pendingRestoreFileName = ""; 
-        document.getElementById('backupStr').value = btoa(encodeURIComponent(JSON.stringify(db))); 
+        document.getElementById('backupStr').value = JSON.stringify(db); // 使用單行 JSON 以便安全複製貼上
         document.getElementById('backupModal').style.display = 'flex'; 
     }
 
@@ -900,11 +900,11 @@ function downloadBackup() {
         if (!filename) return; 
         
         if (!filename.endsWith(".txt") && !filename.endsWith(".json")) { 
-            filename += ".txt"; 
+            filename += ".json"; 
         } 
         
-        const backupData = btoa(encodeURIComponent(JSON.stringify(db))); 
-        const blob = new Blob([backupData], { type: 'text/plain' }); 
+        const backupData = JSON.stringify(db, null, 4); // 排版漂亮的 JSON
+        const blob = new Blob([backupData], { type: 'application/json' }); 
         const url = window.URL.createObjectURL(blob); 
         const a = document.createElement('a'); 
         a.href = url; 
@@ -924,15 +924,7 @@ function handleBackupFile(input) {
         
         reader.onload = function(e) { 
             let content = e.target.result.trim(); 
-            if (content.startsWith("{") || content.startsWith("[")) { 
-                try { 
-                    JSON.parse(content); 
-                    content = btoa(encodeURIComponent(content)); 
-                } catch(err) { 
-                    alert("檔案格式錯誤"); 
-                    return; 
-                } 
-            } 
+            // 不再強制轉換成 base64，保持原樣塞入
             document.getElementById('backupStr').value = content; 
         }; 
         reader.readAsText(file); 
@@ -947,7 +939,15 @@ function copyBackupCode() {
 
 async function execRestore() { 
         try { 
-            const data = JSON.parse(decodeURIComponent(atob(document.getElementById('backupStr').value))); 
+            const val = document.getElementById('backupStr').value.trim();
+            let data;
+            // 判斷是新版純 JSON 還是舊版 Base64
+            if (val.startsWith("{") || val.startsWith("[")) {
+                data = JSON.parse(val);
+            } else {
+                data = JSON.parse(decodeURIComponent(atob(val))); 
+            }
+
             if (data.categories && data.problems) { 
                 const catCount = data.categories.length || 0;
                 const probCount = data.problems.length || 0;
