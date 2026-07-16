@@ -1043,6 +1043,17 @@ function openModelAnswerUI() {
         document.getElementById('modelAnswerModal').style.display = 'flex'; 
     }
 
+function enableTabInTextarea(id) {
+    const el = document.getElementById(id); 
+    if (!el) return;
+    el.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') { 
+            e.preventDefault(); 
+            this.setRangeText('    ', this.selectionStart, this.selectionEnd, 'end');
+        }
+    });
+}
+
 function openHistoryModal() {
         const histList = executionHistories[currentProbId] || []; 
         const listDiv = document.getElementById('historyList'); 
