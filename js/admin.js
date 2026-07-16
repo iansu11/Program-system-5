@@ -14,6 +14,20 @@ function autoResize(textarea) {
     textarea.style.height = textarea.scrollHeight + 'px';
 }
 
+function enableTabInTextarea(id) {
+    const el = document.getElementById(id); 
+    if (!el) return;
+    el.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') { 
+            e.preventDefault(); 
+            const start = this.selectionStart; 
+            const end = this.selectionEnd; 
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end); 
+            this.selectionStart = this.selectionEnd = start + 4; 
+        }
+    });
+}
+
 function initAdmin() {
     const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
@@ -43,6 +57,8 @@ function initAdmin() {
     document.getElementById('view-admin').style.display = 'flex';
     renderAdmin();
     initAdminResizer();
+    enableTabInTextarea('editTemplate');
+    enableTabInTextarea('modelAnswerInput');
 }
 
 function goToWorkspace() {
