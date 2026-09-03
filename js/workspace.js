@@ -1044,7 +1044,7 @@ function openModelAnswerUI() {
     }
 
 function openHistoryModal() {
-        const histList = executionHistories[currentProbId] || []; 
+        const histList = executionHistories[currentProbId];
         const listDiv = document.getElementById('historyList'); 
         document.getElementById('historyCodeView').value = ""; 
         listDiv.innerHTML = "";
