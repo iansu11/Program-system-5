@@ -1137,8 +1137,10 @@ function copyPromptAndOpenGemini() {
 
 function enableTabInTextarea(id) {
         const el = document.getElementById(id); 
-        if (!el) return;
-        el.addEventListener('keydown', function(e) {
+    if (!el) return;
+    if (el.dataset.tabEnabled) return;
+    el.dataset.tabEnabled = "true";
+    el.addEventListener('keydown', function(e) {
             if (e.key === 'Tab') { 
                 e.preventDefault(); 
                 this.setRangeText('    ', this.selectionStart, this.selectionEnd, 'end');
