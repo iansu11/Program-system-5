@@ -1695,23 +1695,33 @@
         if (confirm("確定刪除？")) { 
             db.problems = db.problems.filter(p => String(p.id) !== String(id)); 
             
-            if (typeof executionHistories !== 'undefined') {
-                let deletedAny = false;
-                for (let hKey in executionHistories) {
-                    if (hKey === String(id) || hKey.endsWith('_' + String(id))) {
-                        delete executionHistories[hKey];
-                        deletedAny = true;
+            try {
+                let localHist = localStorage.getItem('oj_v15_history');
+                if (localHist) {
+                    let histObj = JSON.parse(localHist);
+                    let deletedAny = false;
+                    for (let hKey in histObj) {
+                        if (hKey === String(id) || hKey.endsWith('_' + String(id))) {
+                            delete histObj[hKey];
+                            deletedAny = true;
+                        }
+                    }
+                    if (deletedAny) {
+                        const historyString = JSON.stringify(histObj);
+                        localStorage.setItem('oj_v15_history', historyString);
+                        // update global variable if it exists in dashboard/workspace
+                        if (typeof executionHistories !== 'undefined') {
+                            executionHistories = histObj;
+                        }
+                        if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
+                            personalDb.collection('users').doc(currentUser.uid).set({
+                                historyData: historyString
+                            }, { merge: true }).catch(err => console.error(err));
+                        }
                     }
                 }
-                if (deletedAny) {
-                    const historyString = JSON.stringify(executionHistories);
-                    localStorage.setItem('oj_v15_history', historyString);
-                    if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
-                        personalDb.collection('users').doc(currentUser.uid).set({
-                            historyData: historyString
-                        }, { merge: true }).catch(err => console.error(err));
-                    }
-                }
+            } catch(e) {
+                console.error(e);
             }
             
             await saveToLocal(true, false); 
