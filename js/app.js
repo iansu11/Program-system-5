@@ -1107,12 +1107,13 @@
     function enableTabInTextarea(id) {
         const el = document.getElementById(id); 
         if (!el) return;
-        if (el.dataset.tabEnabled) return;
-        el.dataset.tabEnabled = "true";
         el.addEventListener('keydown', function(e) {
             if (e.key === 'Tab') { 
                 e.preventDefault(); 
-                this.setRangeText('    ', this.selectionStart, this.selectionEnd, 'end');
+                const start = this.selectionStart; 
+                const end = this.selectionEnd; 
+                this.value = this.value.substring(0, start) + "    " + this.value.substring(end); 
+                this.selectionStart = this.selectionEnd = start + 4; 
             }
         });
     }
@@ -1693,36 +1694,7 @@
     async function deleteProblemInList(e, id) { 
         e.stopPropagation(); 
         if (confirm("確定刪除？")) { 
-            db.problems = db.problems.filter(p => String(p.id) !== String(id)); 
-            
-            try {
-                let localHist = localStorage.getItem('oj_v15_history');
-                if (localHist) {
-                    let histObj = JSON.parse(localHist);
-                    let deletedAny = false;
-                    for (let hKey in histObj) {
-                        if (hKey === String(id) || hKey.endsWith('_' + String(id))) {
-                            delete histObj[hKey];
-                            deletedAny = true;
-                        }
-                    }
-                    if (deletedAny) {
-                        const historyString = JSON.stringify(histObj);
-                        localStorage.setItem('oj_v15_history', historyString);
-                        // update global variable if it exists in dashboard/workspace
-                        if (typeof executionHistories !== 'undefined') {
-                            executionHistories = histObj;
-                        }
-                        if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
-                            personalDb.collection('users').doc(currentUser.uid).set({
-                                historyData: historyString
-                            }, { merge: true }).catch(err => console.error(err));
-                        }
-                    }
-                }
-            } catch(e) {
-                console.error(e);
-            }
+            db.problems = db.problems.filter(p => p.id !== id); 
             
             await saveToLocal(true, false); 
             await syncProblemDeltaToCloud(id, null); // 傳遞 null，觸發雲端獨立刪除該題
