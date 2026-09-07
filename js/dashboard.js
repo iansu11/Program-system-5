@@ -402,37 +402,6 @@ function deleteCategory(catId) {
     }
 }
 
-async function deleteProblemInList(e, id) { 
-    e.stopPropagation(); 
-    if (confirm("確定刪除？")) { 
-        db.problems = db.problems.filter(p => String(p.id) !== String(id)); 
-        
-        if (typeof executionHistories !== 'undefined') {
-            let deletedAny = false;
-            for (let hKey in executionHistories) {
-                if (hKey === String(id) || hKey.endsWith('_' + String(id))) {
-                    delete executionHistories[hKey];
-                    deletedAny = true;
-                }
-            }
-            if (deletedAny) {
-                const historyString = JSON.stringify(executionHistories);
-                localStorage.setItem('oj_v15_history', historyString);
-                if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
-                    personalDb.collection('users').doc(currentUser.uid).set({
-                        historyData: historyString
-                    }, { merge: true }).catch(e => console.error(e));
-                }
-            }
-        }
-
-        await saveToLocal(true, false); 
-        await syncProblemDeltaToCloud(id, null);
-        renderProblemList(); 
-        if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
-    } 
-}
-
 function deleteProblem(probId) {
     if (confirm("確定要刪除此題目嗎？(無法復原)")) {
         db.problems = db.problems.filter(p => p.id != probId);
@@ -929,17 +898,6 @@ function editProblemInList(e, id) {
         window.location.href = '/admin/' + id; 
     }
 
-async function deleteProblemInList(e, id) { 
-        e.stopPropagation(); 
-        if (confirm("確定刪除？")) { 
-            db.problems = db.problems.filter(p => p.id !== id); 
-            
-            await saveToLocal(true, false); 
-            await syncProblemDeltaToCloud(id, null); // 傳遞 null，觸發雲端獨立刪除該題
-            renderProblemList(); 
-        } 
-    }
-
 function openBackupUI() { 
         pendingRestoreFileName = ""; 
         document.getElementById('backupStr').value = JSON.stringify(db); // 使用單行 JSON 以便安全複製貼上
@@ -1189,22 +1147,6 @@ function toggleBankSortMode() {
         }
         renderCustomPortal(); // 重新渲染列表以套用模式
     }
-
-window.deleteRecentHistory = function(historyKey) {
-    if (confirm("確定要刪除這筆作答紀錄嗎？")) {
-        if (typeof executionHistories !== 'undefined' && executionHistories[historyKey]) {
-            delete executionHistories[historyKey];
-            const historyString = JSON.stringify(executionHistories);
-            localStorage.setItem('oj_v15_history', historyString);
-            if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
-                personalDb.collection('users').doc(currentUser.uid).set({
-                    historyData: historyString
-                }, { merge: true }).catch(e => console.error(e));
-            }
-            if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
-        }
-    }
-}
 
 function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
