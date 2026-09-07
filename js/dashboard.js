@@ -402,18 +402,57 @@ function deleteCategory(catId) {
     }
 }
 
+async function deleteProblemInList(e, id) { 
+    e.stopPropagation(); 
+    if (confirm("確定刪除？")) { 
+        db.problems = db.problems.filter(p => String(p.id) !== String(id)); 
+        
+        if (typeof executionHistories !== 'undefined') {
+            let deletedAny = false;
+            for (let hKey in executionHistories) {
+                if (hKey === String(id) || hKey.endsWith('_' + String(id))) {
+                    delete executionHistories[hKey];
+                    deletedAny = true;
+                }
+            }
+            if (deletedAny) {
+                const historyString = JSON.stringify(executionHistories);
+                localStorage.setItem('oj_v15_history', historyString);
+                if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
+                    personalDb.collection('users').doc(currentUser.uid).set({
+                        historyData: historyString
+                    }, { merge: true }).catch(e => console.error(e));
+                }
+            }
+        }
+
+        await saveToLocal(true, false); 
+        await syncProblemDeltaToCloud(id, null);
+        renderProblemList(); 
+        if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
+    } 
+}
+
 function deleteProblem(probId) {
     if (confirm("確定要刪除此題目嗎？(無法復原)")) {
         db.problems = db.problems.filter(p => p.id != probId);
         
-        if (typeof executionHistories !== 'undefined' && executionHistories[probId]) {
-            delete executionHistories[probId];
-            const historyString = JSON.stringify(executionHistories);
-            localStorage.setItem('oj_v15_history', historyString);
-            if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
-                personalDb.collection('users').doc(currentUser.uid).set({
-                    historyData: historyString
-                }, { merge: true }).catch(e => console.error(e));
+        if (typeof executionHistories !== 'undefined') {
+            let deletedAny = false;
+            for (let hKey in executionHistories) {
+                if (hKey === String(probId) || hKey.endsWith('_' + String(probId))) {
+                    delete executionHistories[hKey];
+                    deletedAny = true;
+                }
+            }
+            if (deletedAny) {
+                const historyString = JSON.stringify(executionHistories);
+                localStorage.setItem('oj_v15_history', historyString);
+                if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
+                    personalDb.collection('users').doc(currentUser.uid).set({
+                        historyData: historyString
+                    }, { merge: true }).catch(e => console.error(e));
+                }
             }
         }
         
@@ -1151,6 +1190,22 @@ function toggleBankSortMode() {
         renderCustomPortal(); // 重新渲染列表以套用模式
     }
 
+window.deleteRecentHistory = function(historyKey) {
+    if (confirm("確定要刪除這筆作答紀錄嗎？")) {
+        if (typeof executionHistories !== 'undefined' && executionHistories[historyKey]) {
+            delete executionHistories[historyKey];
+            const historyString = JSON.stringify(executionHistories);
+            localStorage.setItem('oj_v15_history', historyString);
+            if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
+                personalDb.collection('users').doc(currentUser.uid).set({
+                    historyData: historyString
+                }, { merge: true }).catch(e => console.error(e));
+            }
+            if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
+        }
+    }
+}
+
 function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
     if (!listContainer) return;
@@ -1382,8 +1437,11 @@ function renderRecentSubmissions() {
                     <span>${sub.time}</span>
                 </div>
             </div>
-            <div style="display:flex; align-items:center; margin-left: 10px;">
+            <div style="display:flex; align-items:center; margin-left: 10px; gap: 10px;">
                 <span class="status-badge ${statusClass}" style="white-space:nowrap;">${statusText}</span>
+                <button class="prob-btn-icon" onclick="event.stopPropagation(); deleteRecentHistory('${sub.probId}')" title="刪除此紀錄" style="padding: 4px; font-size: 1rem; color: #ef4444; background: transparent; border: none; cursor: pointer;">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
             </div>
         `;
         
