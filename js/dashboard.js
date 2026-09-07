@@ -405,30 +405,9 @@ function deleteCategory(catId) {
 function deleteProblem(probId) {
     if (confirm("確定要刪除此題目嗎？(無法復原)")) {
         db.problems = db.problems.filter(p => p.id != probId);
-        
-        if (typeof executionHistories !== 'undefined') {
-            let deletedAny = false;
-            for (let hKey in executionHistories) {
-                if (hKey === String(probId) || hKey.endsWith('_' + String(probId))) {
-                    delete executionHistories[hKey];
-                    deletedAny = true;
-                }
-            }
-            if (deletedAny) {
-                const historyString = JSON.stringify(executionHistories);
-                localStorage.setItem('oj_v15_history', historyString);
-                if (typeof personalDb !== 'undefined' && typeof currentUser !== 'undefined' && currentUser) {
-                    personalDb.collection('users').doc(currentUser.uid).set({
-                        historyData: historyString
-                    }, { merge: true }).catch(e => console.error(e));
-                }
-            }
-        }
-        
         saveToLocal(true, false);
         syncProblemDeltaToCloud(probId, null);
         renderProblemList();
-        if (typeof renderRecentSubmissions === 'function') renderRecentSubmissions();
     }
 }
 
@@ -896,6 +875,17 @@ function editProblemInList(e, id) {
         currentProbId = id; 
         // 修正：直接跳轉 hash，避免 goToAdmin 讀取到 editor 的過期資料
         window.location.href = '/admin/' + id; 
+    }
+
+async function deleteProblemInList(e, id) { 
+        e.stopPropagation(); 
+        if (confirm("確定刪除？")) { 
+            db.problems = db.problems.filter(p => p.id !== id); 
+            
+            await saveToLocal(true, false); 
+            await syncProblemDeltaToCloud(id, null); // 傳遞 null，觸發雲端獨立刪除該題
+            renderProblemList(); 
+        } 
     }
 
 function openBackupUI() { 
@@ -1379,11 +1369,8 @@ function renderRecentSubmissions() {
                     <span>${sub.time}</span>
                 </div>
             </div>
-            <div style="display:flex; align-items:center; margin-left: 10px; gap: 10px;">
+            <div style="display:flex; align-items:center; margin-left: 10px;">
                 <span class="status-badge ${statusClass}" style="white-space:nowrap;">${statusText}</span>
-                <button class="prob-btn-icon" onclick="event.stopPropagation(); deleteRecentHistory('${sub.probId}')" title="刪除此紀錄" style="padding: 4px; font-size: 1rem; color: #ef4444; background: transparent; border: none; cursor: pointer;">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
             </div>
         `;
         
