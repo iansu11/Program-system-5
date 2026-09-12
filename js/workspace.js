@@ -1432,6 +1432,19 @@ function stopDrag() {
             });
         }
 
+        try {
+            let rLocal = localStorage.getItem('oj_v15_recent3');
+            if (rLocal) {
+                let parsed = JSON.parse(rLocal);
+                if (Array.isArray(parsed)) recent3Submissions = parsed;
+            }
+            let hLocal = localStorage.getItem('oj_v15_history');
+            if (hLocal) {
+                let parsed = JSON.parse(hLocal);
+                if (parsed && typeof parsed === 'object') executionHistories = parsed;
+            }
+        } catch(e) {}
+
         if (!executionHistories[currentProbId]) executionHistories[currentProbId] = [];
         executionHistories[currentProbId].unshift({ 
             time: new Date().toLocaleString('zh-TW', { hour12: false }), 
