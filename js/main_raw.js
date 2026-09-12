@@ -1107,12 +1107,13 @@
     function enableTabInTextarea(id) {
         const el = document.getElementById(id); 
         if (!el) return;
-        if (el.dataset.tabEnabled) return;
-        el.dataset.tabEnabled = "true";
         el.addEventListener('keydown', function(e) {
             if (e.key === 'Tab') { 
                 e.preventDefault(); 
-                this.setRangeText('    ', this.selectionStart, this.selectionEnd, 'end');
+                const start = this.selectionStart; 
+                const end = this.selectionEnd; 
+                this.value = this.value.substring(0, start) + "    " + this.value.substring(end); 
+                this.selectionStart = this.selectionEnd = start + 4; 
             }
         });
     }
