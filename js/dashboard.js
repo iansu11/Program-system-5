@@ -405,9 +405,23 @@ function deleteCategory(catId) {
 function deleteProblem(probId) {
     if (confirm("確定要刪除此題目嗎？(無法復原)")) {
         db.problems = db.problems.filter(p => p.id != probId);
+        
+        if (typeof executionHistories !== 'undefined' && executionHistories[probId]) {
+            delete executionHistories[probId];
+            localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
+        }
+        if (typeof recent3Submissions !== 'undefined') {
+            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(probId));
+            localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
+        }
+
         saveToLocal(true, false);
         syncProblemDeltaToCloud(probId, null);
         renderProblemList();
+        
+        if (typeof renderRecentSubmissions === 'function') {
+            renderRecentSubmissions();
+        }
     }
 }
 
