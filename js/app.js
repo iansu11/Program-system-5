@@ -889,15 +889,25 @@
 
     // 刪除自訂題庫
     async function deleteCustomBank(e, idx) {
-        e.stopPropagation();
-        if (confirm(`確定要刪除自訂題庫「${db.customBanks[idx].name}」嗎？此動作無法復原。`)) {
-            db.customBanks.splice(idx, 1);
-            const btn = e.target;
-            if (btn) { btn.disabled = true; btn.innerText = "⏳"; }
-            await saveToLocal(true, false);
-            renderCustomPortal();
-    	}
-    }
+    e.stopPropagation();
+    if (confirm(確定要刪除自訂題庫「」嗎？此動作無法復原。)) {
+        const deletedBankUrl = 'local_custom_' + db.customBanks[idx].id;
+        db.customBanks.splice(idx, 1);
+        const btn = e.target;
+        if (btn) { btn.disabled = true; btn.innerText = '⏳'; }
+        
+        if (typeof recent3Submissions !== 'undefined') {
+            recent3Submissions = recent3Submissions.filter(s => s.bankUrl !== deletedBankUrl);
+            localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
+        }
+
+        await saveToLocal(true, false);
+        renderCustomPortal();
+        if (typeof renderRecentSubmissions === 'function') {
+            renderRecentSubmissions();
+        }
+	}
+}
        
     
     async function fetchAndLoadBank(jsonUrl, displayName, forceReset = false) {
@@ -1564,25 +1574,37 @@
         } 
     }
 
-    async function deleteCategory(e, id) { 
-        e.stopPropagation(); 
-        if (!confirm("確定刪除？底下的題目也會一併刪除。")) return; 
-        
-        const problemsToDelete = db.problems.filter(p => p.catId === id);
-        
-        db.categories = db.categories.filter(c => c.id !== id); 
-        db.problems = db.problems.filter(p => p.catId !== id); 
-        
-        await saveToLocal(true, false); 
-        
-        // 雲端同步刪除分類與其題目
-        await syncCategoryDeltaToCloud(id, null);
-        for (const p of problemsToDelete) {
-            await syncProblemDeltaToCloud(p.id, null);
-        }
-        
-        renderCategoryList(); 
+    async function deleteCategory(e, id) {
+    e.stopPropagation();
+    if (!confirm("確定刪除？底下的題目也會一併刪除。")) return;
+    
+    const problemsToDelete = db.problems.filter(p => p.catId === id);
+    db.categories = db.categories.filter(c => c.id !== id);
+    db.problems = db.problems.filter(p => p.catId !== id);
+    
+    if (typeof recent3Submissions !== 'undefined') {
+        const idsToDelete = problemsToDelete.map(p => String(p.id));
+        recent3Submissions = recent3Submissions.filter(s => !idsToDelete.includes(String(s.probId)));
+        localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
     }
+    if (typeof executionHistories !== 'undefined') {
+        for(let p of problemsToDelete) {
+            if (executionHistories[p.id]) delete executionHistories[p.id];
+        }
+        localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
+    }
+
+    await saveToLocal(true, false);
+    
+    await syncCategoryDeltaToCloud(id, null);
+    for(let p of problemsToDelete) {
+        await syncProblemDeltaToCloud(p.id, null);
+    }
+    renderProblemList();
+    if (typeof renderRecentSubmissions === 'function') {
+        renderRecentSubmissions();
+    }
+}
 
     function toggleProbSortMode() { 
         isProbSortMode = !isProbSortMode; 
