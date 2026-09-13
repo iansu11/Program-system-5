@@ -1692,15 +1692,27 @@
     
 
     async function deleteProblemInList(e, id) { 
-        e.stopPropagation(); 
-        if (confirm("確定刪除？")) { 
-            db.problems = db.problems.filter(p => p.id !== id); 
-            
-            await saveToLocal(true, false); 
-            await syncProblemDeltaToCloud(id, null); // 傳遞 null，觸發雲端獨立刪除該題
-            renderProblemList(); 
-        } 
-    }
+    e.stopPropagation(); 
+    if (confirm("確定刪除？")) { 
+        db.problems = db.problems.filter(p => p.id !== id); 
+        
+        if (typeof executionHistories !== 'undefined' && executionHistories[id]) {
+            delete executionHistories[id];
+            localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
+        }
+        if (typeof recent3Submissions !== 'undefined') {
+            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(id));
+            localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
+        }
+
+        await saveToLocal(true, false); 
+        await syncProblemDeltaToCloud(id, null); 
+        renderProblemList(); 
+        if (typeof renderRecentSubmissions === 'function') {
+            renderRecentSubmissions();
+        }
+    } 
+}
 
 // ================= 移動題目功能 =================
     let problemToMoveId = null;
