@@ -901,7 +901,7 @@
             localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
         }
 
-        await saveToLocal(true, false);
+        await saveToLocal(true, true);
         renderCustomPortal();
         if (typeof renderRecentSubmissions === 'function') {
             renderRecentSubmissions();
@@ -1594,7 +1594,7 @@
         localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
     }
 
-    await saveToLocal(true, false);
+    await saveToLocal(true, true);
     
     await syncCategoryDeltaToCloud(id, null);
     for(let p of problemsToDelete) {
@@ -1727,7 +1727,7 @@
             localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
         }
 
-        await saveToLocal(true, false); 
+        await saveToLocal(true, true); 
         await syncProblemDeltaToCloud(id, null); 
         renderProblemList(); 
         if (typeof renderRecentSubmissions === 'function') {
