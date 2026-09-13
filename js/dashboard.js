@@ -394,7 +394,19 @@ function deleteCategory(catId) {
         db.problems = db.problems.filter(p => p.catId != catId);
         db.categories = db.categories.filter(c => c.id != catId);
         
-        saveToLocal(true, false);
+        if (typeof recent3Submissions !== 'undefined') {
+            const idsToDelete = toDeleteProbs.map(p => String(p.id));
+            recent3Submissions = recent3Submissions.filter(s => !idsToDelete.includes(String(s.probId)));
+            localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
+        }
+        if (typeof executionHistories !== 'undefined') {
+            for(let p of toDeleteProbs) {
+                if (executionHistories[p.id]) delete executionHistories[p.id];
+            }
+            localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
+        }
+
+        saveToLocal(true, true);
         syncCategoryDeltaToCloud(catId, null);
         toDeleteProbs.forEach(p => syncProblemDeltaToCloud(p.id, null));
         
@@ -415,7 +427,7 @@ function deleteProblem(probId) {
             localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
         }
 
-        saveToLocal(true, false);
+        saveToLocal(true, true);
         syncProblemDeltaToCloud(probId, null);
         renderProblemList();
         if (typeof renderRecentSubmissions === "function") renderRecentSubmissions();
@@ -906,7 +918,7 @@ async function deleteProblemInList(e, id) {
             localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
         }
 
-        await saveToLocal(true, false); 
+        await saveToLocal(true, true); 
         await syncProblemDeltaToCloud(id, null); 
         renderProblemList(); 
         if (typeof renderRecentSubmissions === 'function') {
