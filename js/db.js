@@ -242,33 +242,25 @@ async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) {
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            if (syncDbToCloud) {
+            if (syncDbToCloud && !isCustom) {
+                const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
+                if (safeKey) {
+                    updatePayload.bankProgress = {
+                        [safeKey]: JSON.stringify({
+                            categories: db.categories,
+                            problems: db.problems,
+                            version: db.version
+                        })
+                    };
+                    updatePayload.bankVersions = {
+                        [safeKey]: db.version || "未記錄"
+                    };
+                }
+            }
+            
+            if (syncDbToCloud && isCustom) {
                 const lightweightBanks = (db.customBanks || []).map(b => ({ id: b.id, name: b.name, version: b.version }));
                 updatePayload.userCustomBanks = JSON.stringify(lightweightBanks);
-                
-                // 🚀 修復：確保所有的自訂題庫完整資料都被寫入雲端子集合
-                const batch = personalDb.batch();
-                (db.customBanks || []).forEach(b => {
-                    const docRef = personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(b.id);
-                    batch.set(docRef, b);
-                });
-                await batch.commit();
-                
-                if (!isCustom) {
-                    const safeKey = currentBankUrl ? currentBankUrl.replace(/[\.\#\$\[\]]/g, '_') : '';
-                    if (safeKey) {
-                        updatePayload.bankProgress = {
-                            [safeKey]: JSON.stringify({
-                                categories: db.categories,
-                                problems: db.problems,
-                                version: db.version
-                            })
-                        };
-                        updatePayload.bankVersions = {
-                            [safeKey]: db.version || "未記錄"
-                        };
-                    }
-                }
             }
 
             if (syncHistoryToCloud) {
@@ -276,7 +268,21 @@ async function saveToLocal(syncDbToCloud = true, syncHistoryToCloud = true) {
                 updatePayload.recent3Submissions = JSON.stringify(recent3Submissions);
             }
 
+            // 先儲存 User Profile (History, Progress, etc)
             await personalDb.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
+            
+            // 再儲存 Custom Banks Batch (若失敗不會影響上方)
+            if (syncDbToCloud) {
+                const batch = personalDb.batch();
+                (db.customBanks || []).forEach(b => {
+                    if (b && b.id) {
+                        const docRef = personalDb.collection('users').doc(currentUser.uid).collection('customBanks').doc(b.id);
+                        batch.set(docRef, b);
+                    }
+                });
+                await batch.commit();
+            }
+
             console.log("✅ 雲端分離儲存成功");
         } catch (e) { 
             console.error("雲端同步失敗：", e); 
