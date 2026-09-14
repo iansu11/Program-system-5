@@ -30,27 +30,65 @@ function enableTabInTextarea(id) {
 function initAdmin() {
     const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // === 方案二：攔截系統題庫編輯模式 ===
+    window.isSystemEditMode = urlParams.get('mode') === 'system_edit';
+    window.systemEditCatId = urlParams.get('catId');
+    window.systemEditAction = urlParams.get('action');
+    
     let probIdStr = null;
     if (urlParams.has('probId')) {
         probIdStr = urlParams.get('probId');
-    } else {
+    } else if (!window.isSystemEditMode) {
         const match = path.match(/^\/admin\/([a-zA-Z0-9_-]+)$/);
         probIdStr = match ? match[1] : null;
     }
     
-    if (!probIdStr) {
-        alert("找不到題目 ID，返回大廳");
-        window.location.href = '/categories';
-        return;
-    }
-    
-    adminProbId = probIdStr;
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
-    
-    if (!p) {
-        alert("找不到此題目，可能已被刪除");
-        window.location.href = '/categories';
-        return;
+    if (window.isSystemEditMode) {
+        const systemDataStr = localStorage.getItem('oj_system_edit_data');
+        if (!systemDataStr) {
+            alert("找不到系統題庫暫存資料！請從後台重新進入。");
+            window.close();
+            return;
+        }
+        window.systemEditData = JSON.parse(systemDataStr);
+        
+        if (window.systemEditAction === 'new') {
+            // 新增模式：產生一個新的假題目塞進暫存
+            adminProbId = 'sys_' + Date.now();
+            const newProb = {
+                id: adminProbId,
+                category: window.systemEditCatId,
+                title: "新題目",
+                desc: "",
+                tpl_cpp: defaultTemplates.cpp,
+                tpl_python: defaultTemplates.python
+            };
+            window.systemEditData.problems.push(newProb);
+        } else {
+            adminProbId = probIdStr;
+        }
+        
+        const p = window.systemEditData.problems.find(x => String(x.id) === String(adminProbId));
+        if (!p) {
+            alert("在系統題庫中找不到此題目！");
+            window.close();
+            return;
+        }
+    } else {
+        // 原有一般模式
+        if (!probIdStr) {
+            alert("找不到題目 ID，返回大廳");
+            window.location.href = '/categories';
+            return;
+        }
+        adminProbId = probIdStr;
+        const p = db.problems.find(x => String(x.id) === String(adminProbId));
+        if (!p) {
+            alert("找不到此題目，可能已被刪除");
+            window.location.href = '/categories';
+            return;
+        }
     }
 
     document.getElementById('view-admin').style.display = 'flex';
@@ -65,7 +103,13 @@ function goToWorkspace() {
 }
 
 function renderAdmin() {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
+    let p;
+    if (window.isSystemEditMode) {
+        p = window.systemEditData.problems.find(x => String(x.id) === String(adminProbId));
+    } else {
+        p = db.problems.find(x => String(x.id) === String(adminProbId));
+    }
+    
     if (!p) return;
     
     document.getElementById('editTitle').value = p.title || "";
@@ -114,7 +158,12 @@ function changeAdminLang() {
 }
 
 async function saveAdminAndBack() { 
-    const p = db.problems.find(x => String(x.id) === String(adminProbId)); 
+    let p;
+    if (window.isSystemEditMode) {
+        p = window.systemEditData.problems.find(x => String(x.id) === String(adminProbId));
+    } else {
+        p = db.problems.find(x => String(x.id) === String(adminProbId));
+    }
     
     // --- 開始套用 UI 上的新設定 ---
     p.title = document.getElementById('editTitle').value; 
@@ -159,14 +208,24 @@ async function saveAdminAndBack() {
 
     const btn = document.querySelector('#view-admin .btn-primary');
     if (btn) { btn.disabled = true; btn.innerText = "⏳ 儲存中..."; }
-    await saveToLocal(true, false); 
     
-    if (typeof syncProblemDeltaToCloud === 'function') {
-        await syncProblemDeltaToCloud(adminProbId, p);
-    }
+    if (window.isSystemEditMode) {
+        // 方案二：僅寫入暫存，不寫入 Firebase，直接關閉分頁
+        localStorage.setItem('oj_system_edit_data', JSON.stringify(window.systemEditData));
+        alert("✅ 題目修改已暫存！\n請回到「管理員控制台 (Admin Panel)」點擊發布即可。");
+        window.close();
+        return;
+    } else {
+        // 一般模式：寫入 Firebase 並跳轉
+        await saveToLocal(true, false); 
+        
+        if (typeof syncProblemDeltaToCloud === 'function') {
+            await syncProblemDeltaToCloud(adminProbId, p);
+        }
 
-    if (btn) { btn.disabled = false; btn.innerText = "💾 儲存並返回"; }
-    window.location.href = '/workspace/' + adminProbId;
+        if (btn) { btn.disabled = false; btn.innerText = "💾 儲存並返回"; }
+        window.location.href = '/workspace/' + adminProbId;
+    }
 }
 
 function insertBoldToDesc() {
