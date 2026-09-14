@@ -85,15 +85,32 @@
         </div>
     </div>
 
+    <div id="aiHelperModal" class="modal">
+        <div class="modal-box" style="width:600px; max-width:90%; height:550px; display:flex; flex-direction:column;">
+            <h3 style="display:flex; align-items:center; gap:10px; color:var(--accent); margin-top:0;">
+                🤖 AI 程式碼診斷 (外連版)
+            </h3>
+            <p style="color:#aaa; font-size:0.9rem; margin-top:-5px;">
+                系統已自動生成提示詞。您可以純複製，或複製並開啟新分頁。
+            </p>
+            <textarea id="aiPromptOutput" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#d4d4d4; border:1px solid #333; padding:10px; font-size:0.9rem;" readonly></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                <button class="btn btn-outline" onclick="document.getElementById('aiHelperModal').style.display='none'">取消</button>
+                <button class="btn btn-primary" onclick="copyPromptOnly()">📋 純複製</button>
+                <button class="btn btn-ai" onclick="copyPromptAndOpenGemini()">🚀 複製並前往 Gemini</button>
+            </div>
+        </div>
+    </div>
+
     <div id="updateToast">
         <span style="font-weight: bold; font-size: 1.1rem;">✨ 發現題庫有新版本！</span>
         <button class="btn" style="background: white; color: #059669;" onclick="applyUpdate()">立即同步</button>
     </div>
 
-    <script src="/js/config.js?v=24"></script>
-    <script src="/js/db.js?v=24"></script>
-    <script src="/js/workspace.js?v=24"></script>
-    <script src="/js/auth.js?v=24"></script>
+    <script src="/js/config.js?v=26"></script>
+    <script src="/js/db.js?v=26"></script>
+    <script src="/js/workspace.js?v=26"></script>
+    <script src="/js/auth.js?v=26"></script>
 
     <script>
         // 確保不依賴舊事件，當 window 載入、且 db 已從本地/雲端就緒後啟動
