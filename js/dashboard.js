@@ -1223,7 +1223,6 @@ function renderRecentSubmissions() {
     listContainer.innerHTML = '';
     recentSubs.forEach(sub => {
         let probId = sub.probId;
-        if (probId.includes('_')) probId = probId.split('_')[1];
         
         let globalTitleMap = {};
         try { globalTitleMap = JSON.parse(localStorage.getItem('oj_v15_titles') || '{}'); } catch(e) {}
