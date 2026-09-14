@@ -1194,24 +1194,22 @@ function renderRecentSubmissions() {
     let allSubs = [];
     for (let key in executionHistories) {
         let histList = executionHistories[key];
-        if (histList && Array.isArray(histList)) {
-            // 抓最新3筆
-            for (let i = 0; i < Math.min(3, histList.length); i++) {
-                let run = histList[i];
-                let timeStr = run.time.replace(/[\u202F\u2009]/g, ' ');
-                let t = new Date(timeStr).getTime();
-                if (isNaN(t)) {
-                    t = Date.now() - Math.random() * 10000;
-                }
-                allSubs.push({
-                    probId: key,
-                    time: run.time,
-                    status: run.status,
-                    timestamp: t,
-                    bankUrl: run.bankUrl,
-                    bankName: run.bankName
-                });
+        if (histList && Array.isArray(histList) && histList.length > 0) {
+            // 一題只取最新的一筆作答紀錄 (索引 0)
+            let run = histList[0];
+            let timeStr = run.time.replace(/[\u202F\u2009]/g, ' ');
+            let t = new Date(timeStr).getTime();
+            if (isNaN(t)) {
+                t = Date.now() - Math.random() * 10000;
             }
+            allSubs.push({
+                probId: key,
+                time: run.time,
+                status: run.status,
+                timestamp: t,
+                bankUrl: run.bankUrl,
+                bankName: run.bankName
+            });
         }
     }
     allSubs.sort((a, b) => b.timestamp - a.timestamp);
