@@ -101,10 +101,12 @@ try {
     }
 
     const titleEl = document.getElementById('wsTitle');
-    if (window.isSystemEditMode) {
-        titleEl.innerHTML = `<span style="color:#f59e0b; margin-right:8px;">🧪 系統題庫測試區 (草稿模式)</span> ${p.title || "未命名題目"}`;
-    } else {
-        titleEl.innerText = p.title || "未命名題目";
+    if (titleEl) {
+        if (window.isSystemEditMode) {
+            titleEl.innerHTML = `<span style="color:#f59e0b; margin-right:8px;">🧪 系統題庫測試區 (草稿模式)</span> ${p.title || "未命名題目"}`;
+        } else {
+            titleEl.innerText = p.title || "未命名題目";
+        }
     }
     const descContent = p.desc ? p.desc : "這個題目目前沒有描述。請回到設定頁面加入描述。";
     
@@ -1541,10 +1543,16 @@ function goBackToProblemList() {
 
 
 window.addEventListener('dbLoaded', () => {
-    if (typeof initWorkspace === 'function') initWorkspace();
+    if (typeof initWorkspace === 'function') {
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initWorkspace);
+        else initWorkspace();
+    }
 });
 if (window.isDbLoaded) {
-    if (typeof initWorkspace === 'function') initWorkspace();
+    if (typeof initWorkspace === 'function') {
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initWorkspace);
+        else initWorkspace();
+    }
 }
 
 function goToAdmin() {
