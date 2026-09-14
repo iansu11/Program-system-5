@@ -1456,7 +1456,7 @@ function stopDrag() {
         });
         
         if (typeof recent3Submissions !== 'undefined') {
-            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(currentProbId));
+            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(currentProbId) && !String(s.probId).endsWith('_' + String(currentProbId)));
             recent3Submissions.unshift({
                 probId: String(currentProbId),
                 title: p.title || '未知題目',
