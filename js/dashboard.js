@@ -912,6 +912,17 @@ async function deleteProblemInList(e, id) {
     if (confirm("確定刪除？")) { 
         db.problems = db.problems.filter(p => p.id !== id); 
         
+        // 【重要修復】：如果是自訂題庫，必須同步更新 db.customBanks 裡的陣列，否則 saveToLocal 會把舊的存回雲端
+        if (currentBankUrl && currentBankUrl.startsWith("local_custom_")) {
+            const customId = currentBankUrl.replace("local_custom_", "");
+            if (db.customBanks) {
+                const targetBank = db.customBanks.find(b => b.id === customId);
+                if (targetBank) {
+                    targetBank.problems = db.problems;
+                }
+            }
+        }
+
         if (typeof executionHistories !== 'undefined' && executionHistories[id]) {
             delete executionHistories[id];
             localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
