@@ -59,6 +59,7 @@ function initAdmin() {
             const newProb = {
                 id: adminProbId,
                 category: window.systemEditCatId,
+                catId: window.systemEditCatId,
                 title: "新題目",
                 desc: "",
                 tpl_cpp: defaultTemplates.cpp,
