@@ -272,14 +272,22 @@ function renderSystemBankTree() {
         return;
     }
     
-    cats.forEach(c => {
+    cats.forEach((c, catIdx) => {
         const catProbs = probs.filter(p => p.category === c.id || p.catId === c.id);
         let probsHtml = '';
-        catProbs.forEach(p => {
+        catProbs.forEach((p, pIdx) => {
             probsHtml += `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; margin-left: 20px; border-left: 2px solid #e2e8f0;">
-                    <div><span style="color:#64748b; font-size:0.8rem;">[${p.id}]</span> ${p.title}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; margin-left: 20px; border-left: 2px solid #e2e8f0; border-bottom: 1px solid #f8fafc;">
+                    <div style="flex:1; display:flex; align-items:center; gap: 8px;">
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                            <button title="上移" onclick="moveSystemBankProblem('${p.id}', -1)" style="border:none; background:none; cursor:pointer; font-size:10px; padding:0; color:#94a3b8; ${pIdx===0 ? 'visibility:hidden;':''}">▲</button>
+                            <button title="下移" onclick="moveSystemBankProblem('${p.id}', 1)" style="border:none; background:none; cursor:pointer; font-size:10px; padding:0; color:#94a3b8; ${pIdx===catProbs.length-1 ? 'visibility:hidden;':''}">▼</button>
+                        </div>
+                        <span style="color:#64748b; font-size:0.8rem;">[${p.id}]</span> 
+                        <span>${p.title}</span>
+                    </div>
                     <div>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem; background:#3b82f6; color:white;" onclick="testSystemBankProblem('${p.id}')">🧪 測試</button>
                         <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankProblem('${p.id}')">編輯</button>
                         <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankProblem('${p.id}')">刪除</button>
                     </div>
@@ -290,7 +298,13 @@ function renderSystemBankTree() {
         treeDiv.innerHTML += `
             <div style="margin-bottom: 10px; background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;">
-                    <div style="font-weight: bold; color: #1e293b;">📁 ${c.name}</div>
+                    <div style="display:flex; align-items:center; gap: 8px; font-weight: bold; color: #1e293b;">
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                            <button title="上移" onclick="moveSystemBankCategory('${c.id}', -1)" style="border:none; background:none; cursor:pointer; font-size:12px; padding:0; color:#94a3b8; ${catIdx===0 ? 'visibility:hidden;':''}">▲</button>
+                            <button title="下移" onclick="moveSystemBankCategory('${c.id}', 1)" style="border:none; background:none; cursor:pointer; font-size:12px; padding:0; color:#94a3b8; ${catIdx===cats.length-1 ? 'visibility:hidden;':''}">▼</button>
+                        </div>
+                        📁 ${c.name}
+                    </div>
                     <div>
                         <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="addSystemBankProblem('${c.id}')">+ 新增題目</button>
                         <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankCategory('${c.id}', '${c.name}')">改名</button>
@@ -301,6 +315,50 @@ function renderSystemBankTree() {
             </div>
         `;
     });
+}
+
+function moveSystemBankCategory(id, dir) {
+    const cats = window.currentSystemBankData.categories;
+    const idx = cats.findIndex(c => c.id === id);
+    if (idx < 0) return;
+    const targetIdx = idx + dir;
+    if (targetIdx >= 0 && targetIdx < cats.length) {
+        // Swap
+        [cats[idx], cats[targetIdx]] = [cats[targetIdx], cats[idx]];
+        syncSystemBankToLocal();
+        renderSystemBankTree();
+    }
+}
+
+function moveSystemBankProblem(id, dir) {
+    const probs = window.currentSystemBankData.problems;
+    const pIdx = probs.findIndex(p => p.id === id);
+    if (pIdx < 0) return;
+    const p = probs[pIdx];
+    const catId = p.category || p.catId;
+    
+    // 找出所有同分類的題目索引
+    const catProbsIndices = [];
+    probs.forEach((prob, index) => {
+        if (prob.category === catId || prob.catId === catId) {
+            catProbsIndices.push(index);
+        }
+    });
+    
+    const currentLocalIdx = catProbsIndices.indexOf(pIdx);
+    const targetLocalIdx = currentLocalIdx + dir;
+    
+    if (targetLocalIdx >= 0 && targetLocalIdx < catProbsIndices.length) {
+        const targetGlobalIdx = catProbsIndices[targetLocalIdx];
+        // Swap in the global array
+        [probs[pIdx], probs[targetGlobalIdx]] = [probs[targetGlobalIdx], probs[pIdx]];
+        syncSystemBankToLocal();
+        renderSystemBankTree();
+    }
+}
+
+function testSystemBankProblem(probId) {
+    window.open(`workspace.html?mode=system_edit&probId=${probId}`, '_blank');
 }
 
 function addSystemBankCategory() {
