@@ -211,3 +211,206 @@ async function publishToGitHub() {
         btn.disabled = false;
     }
 }
+
+// === 方案二：系統預設題庫線上編輯器 ===
+window.currentSystemBankData = null;
+window.currentSystemBankFile = null;
+window.currentSystemBankSha = null;
+
+async function loadSystemBankForEdit() {
+    const fileName = document.getElementById('systemBankSelect').value;
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
+    
+    if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
+    
+    document.getElementById('editingBankTitle').innerText = `載入中...`;
+    
+    try {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`;
+        const res = await fetch(apiUrl, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        
+        if (!res.ok) throw new Error("找不到檔案或無權限");
+        
+        const data = await res.json();
+        const jsonStr = decodeURIComponent(escape(atob(data.content)));
+        
+        window.currentSystemBankData = JSON.parse(jsonStr);
+        window.currentSystemBankFile = fileName;
+        window.currentSystemBankSha = data.sha;
+        
+        // 保證結構完整
+        if (!window.currentSystemBankData.categories) window.currentSystemBankData.categories = [];
+        if (!window.currentSystemBankData.problems) window.currentSystemBankData.problems = [];
+        
+        // 寫入 localStorage 供 admin.html 共用
+        localStorage.setItem('oj_system_edit_data', JSON.stringify(window.currentSystemBankData));
+        
+        document.getElementById('editingBankTitle').innerText = `編輯中：${fileName}`;
+        document.getElementById('systemBankEditorArea').style.display = 'block';
+        
+        renderSystemBankTree();
+    } catch(e) {
+        alert("載入失敗：" + e.message);
+    }
+}
+
+function renderSystemBankTree() {
+    const treeDiv = document.getElementById('systemBankTree');
+    treeDiv.innerHTML = '';
+    
+    if (!window.currentSystemBankData) return;
+    
+    const cats = window.currentSystemBankData.categories || [];
+    const probs = window.currentSystemBankData.problems || [];
+    
+    if (cats.length === 0) {
+        treeDiv.innerHTML = '<div style="color:#94a3b8; text-align:center;">目前沒有任何分類</div>';
+        return;
+    }
+    
+    cats.forEach(c => {
+        const catProbs = probs.filter(p => p.category === c.id);
+        let probsHtml = '';
+        catProbs.forEach(p => {
+            probsHtml += `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; margin-left: 20px; border-left: 2px solid #e2e8f0;">
+                    <div><span style="color:#64748b; font-size:0.8rem;">[${p.id}]</span> ${p.title}</div>
+                    <div>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankProblem('${p.id}')">編輯</button>
+                        <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankProblem('${p.id}')">刪除</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        treeDiv.innerHTML += `
+            <div style="margin-bottom: 10px; background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;">
+                    <div style="font-weight: bold; color: #1e293b;">📁 ${c.name}</div>
+                    <div>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="addSystemBankProblem('${c.id}')">+ 新增題目</button>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankCategory('${c.id}', '${c.name}')">改名</button>
+                        <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankCategory('${c.id}')">刪分類</button>
+                    </div>
+                </div>
+                ${probsHtml}
+            </div>
+        `;
+    });
+}
+
+function addSystemBankCategory() {
+    const name = prompt("請輸入新分類名稱：");
+    if (!name || !name.trim()) return;
+    const newId = Date.now().toString();
+    window.currentSystemBankData.categories.push({ id: newId, name: name.trim() });
+    syncSystemBankToLocal();
+    renderSystemBankTree();
+}
+
+function editSystemBankCategory(id, oldName) {
+    const newName = prompt("修改分類名稱：", oldName);
+    if (!newName || !newName.trim() || newName === oldName) return;
+    const cat = window.currentSystemBankData.categories.find(c => c.id === id);
+    if (cat) {
+        cat.name = newName.trim();
+        syncSystemBankToLocal();
+        renderSystemBankTree();
+    }
+}
+
+function deleteSystemBankCategory(id) {
+    if (confirm("確定要刪除此分類？底下的題目也會一起刪除喔！")) {
+        window.currentSystemBankData.categories = window.currentSystemBankData.categories.filter(c => c.id !== id);
+        window.currentSystemBankData.problems = window.currentSystemBankData.problems.filter(p => p.category !== id);
+        syncSystemBankToLocal();
+        renderSystemBankTree();
+    }
+}
+
+function deleteSystemBankProblem(id) {
+    if (confirm("確定要刪除此題目？")) {
+        window.currentSystemBankData.problems = window.currentSystemBankData.problems.filter(p => p.id !== id);
+        syncSystemBankToLocal();
+        renderSystemBankTree();
+    }
+}
+
+function addSystemBankProblem(catId) {
+    // 開啟編輯器，傳入 mode=system_edit
+    window.open(`admin.html?mode=system_edit&action=new&catId=${catId}`, '_blank');
+}
+
+function editSystemBankProblem(probId) {
+    window.open(`admin.html?mode=system_edit&probId=${probId}`, '_blank');
+}
+
+// 當 admin.html 修改 localStorage 後，這裡會收到事件並更新畫面
+window.addEventListener('storage', function(e) {
+    if (e.key === 'oj_system_edit_data') {
+        if (e.newValue) {
+            window.currentSystemBankData = JSON.parse(e.newValue);
+            renderSystemBankTree();
+        }
+    }
+});
+
+function syncSystemBankToLocal() {
+    // 確保本機儲存空間與記憶體同步
+    localStorage.setItem('oj_system_edit_data', JSON.stringify(window.currentSystemBankData));
+}
+
+async function publishEditedSystemBank() {
+    if (!window.currentSystemBankData || !window.currentSystemBankFile || !window.currentSystemBankSha) return;
+    
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
+    const fileName = window.currentSystemBankFile;
+    const sha = window.currentSystemBankSha;
+    
+    const btn = document.getElementById('saveSystemBankBtn');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 儲存上傳中...';
+    btn.disabled = true;
+    
+    try {
+        const contentStr = JSON.stringify(window.currentSystemBankData, null, 4);
+        const encodedContent = btoa(unescape(encodeURIComponent(contentStr)));
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`;
+        
+        const body = {
+            message: `Update ${fileName} via System Bank Editor`,
+            content: encodedContent,
+            sha: sha
+        };
+        
+        const putRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        
+        if (!putRes.ok) {
+            const errJson = await putRes.json();
+            throw new Error(errJson.message || 'Unknown Error');
+        }
+        
+        const newJson = await putRes.json();
+        window.currentSystemBankSha = newJson.content.sha; // 更新 SHA 避免下次衝突
+        
+        alert(`✅ 成功推播更新至 GitHub: ${fileName}！`);
+    } catch (e) {
+        alert("❌ 推播失敗：" + e.message);
+    } finally {
+        btn.innerHTML = '<i class="fa-solid fa-upload"></i> 儲存並推播至 GitHub';
+        btn.disabled = false;
+    }
+}
+
