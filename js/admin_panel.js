@@ -273,7 +273,7 @@ function renderSystemBankTree() {
     }
     
     cats.forEach(c => {
-        const catProbs = probs.filter(p => p.category === c.id);
+        const catProbs = probs.filter(p => p.category === c.id || p.catId === c.id);
         let probsHtml = '';
         catProbs.forEach(p => {
             probsHtml += `
@@ -326,7 +326,7 @@ function editSystemBankCategory(id, oldName) {
 function deleteSystemBankCategory(id) {
     if (confirm("確定要刪除此分類？底下的題目也會一起刪除喔！")) {
         window.currentSystemBankData.categories = window.currentSystemBankData.categories.filter(c => c.id !== id);
-        window.currentSystemBankData.problems = window.currentSystemBankData.problems.filter(p => p.category !== id);
+        window.currentSystemBankData.problems = window.currentSystemBankData.problems.filter(p => p.category !== id && p.catId !== id);
         syncSystemBankToLocal();
         renderSystemBankTree();
     }
