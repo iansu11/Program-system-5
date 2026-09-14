@@ -61,27 +61,51 @@ try {
     }
 
     currentProbId = probIdStr;
+    // === 方案二：支援系統題庫草稿測試模式 ===
+    window.isSystemEditMode = urlParams.get('mode') === 'system_edit';
     
-    // 檢查 db 的完整性
-    if (!db || !db.problems) {
+    // 檢查 db 的完整性 (如果在一般模式)
+    if (!window.isSystemEditMode && (!db || !db.problems)) {
         console.error("資料庫未就緒，延遲初始化");
         return;
     }
 
-    const p = db.problems.find(x => String(x.id) === String(currentProbId));
+    let p;
+    if (window.isSystemEditMode) {
+        const systemDataStr = localStorage.getItem('oj_system_edit_data');
+        if (!systemDataStr) {
+            alert("找不到草稿資料！");
+            window.close();
+            return;
+        }
+        window.systemEditData = JSON.parse(systemDataStr);
+        p = window.systemEditData.problems.find(x => String(x.id) === String(currentProbId));
+    } else {
+        p = db.problems.find(x => String(x.id) === String(currentProbId));
+    }
+
     if (!p) {
-        if (!window.isCloudSyncFinished) {
+        if (!window.isSystemEditMode && !window.isCloudSyncFinished) {
             console.warn("暫存題庫中找不到該題目，正在等待雲端同步完成或切換題庫...");
             document.getElementById('wsTitle').innerText = "載入中或正在切換題庫...";
             return;
         } else {
             alert("找不到該題目的詳細資料！");
-            window.location.href = '/categories';
+            if (window.isSystemEditMode) {
+                window.close();
+            } else {
+                window.location.href = '/categories';
+            }
             return;
         }
     }
 
-    document.getElementById('wsTitle').innerText = p.title || "未命名題目";
+    const titleEl = document.getElementById('wsTitle');
+    if (window.isSystemEditMode) {
+        titleEl.innerHTML = `<span style="color:#f59e0b; margin-right:8px;">🧪 系統題庫測試區 (草稿模式)</span> ${p.title || "未命名題目"}`;
+    } else {
+        titleEl.innerText = p.title || "未命名題目";
+    }
     const descContent = p.desc ? p.desc : "這個題目目前沒有描述。請回到設定頁面加入描述。";
     
     // 依據 78-2.html 完整複製 parseContent 邏輯
@@ -1430,6 +1454,12 @@ function stopDrag() {
             p.multiFiles.forEach(f => {
                 fullCodeForHistory += `\n// === ${f.name} ===\n${f.code || ""}\n`;
             });
+        }
+
+        if (window.isSystemEditMode) {
+            btn.disabled = false; 
+            btn.innerText = "▶️ 執行";
+            return;
         }
 
         try {
