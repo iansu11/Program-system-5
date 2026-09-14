@@ -126,10 +126,12 @@ try {
         return html;
     }
 
-    document.getElementById('wsDesc').innerHTML = parseContent(descContent);
+    const descEl = document.getElementById('wsDesc');
+    if (descEl) descEl.innerHTML = parseContent(descContent);
     
     const lang = p.lastLang || 'cpp'; 
-    document.getElementById('langSelect').value = lang; 
+    const langSelect = document.getElementById('langSelect');
+    if (langSelect) langSelect.value = lang;
     
     currentFileIndex = -1; // 進入題庫時預設顯示 main
     if (typeof renderWorkspaceTabs === 'function') renderWorkspaceTabs();
@@ -166,8 +168,11 @@ try {
         editor.setValue(p.code_python !== undefined ? p.code_python : p.tpl_python, -1); 
     }
     
-    document.getElementById('outputLogs').innerHTML = '<div style="color:#666;">等待執行...</div>';
-    document.getElementById('view-workspace').style.display = 'flex';
+    const outLogs = document.getElementById('outputLogs');
+    if (outLogs) outLogs.innerHTML = '<div style="color:#666;">等待執行...</div>';
+    
+    const wsView = document.getElementById('view-workspace');
+    if (wsView) wsView.style.display = 'flex';
   } catch (e) {
     document.body.innerHTML = '<div style="color:red; padding:20px; font-size:20px;">CRITICAL ERROR in initWorkspace: <br><pre>' + e.stack + '</pre></div>';
     console.error(e);
