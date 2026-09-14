@@ -474,6 +474,9 @@
 
                 if (syncHistoryToCloud) {
                     updatePayload.historyData = JSON.stringify(executionHistories);
+                    if (typeof recent3Submissions !== 'undefined') {
+                        updatePayload.recent3Submissions = JSON.stringify(recent3Submissions);
+                    }
                 }
 
                 // 寫入個人的資料庫
@@ -1584,7 +1587,10 @@
     
     if (typeof recent3Submissions !== 'undefined') {
         const idsToDelete = problemsToDelete.map(p => String(p.id));
-        recent3Submissions = recent3Submissions.filter(s => !idsToDelete.includes(String(s.probId)));
+        recent3Submissions = recent3Submissions.filter(s => {
+            const sIdStr = String(s.probId);
+            return !idsToDelete.some(id => sIdStr === String(id) || sIdStr.endsWith('_' + String(id)));
+        });
         localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
     }
     if (typeof executionHistories !== 'undefined') {
@@ -1723,7 +1729,7 @@
             localStorage.setItem('oj_v15_history', JSON.stringify(executionHistories));
         }
         if (typeof recent3Submissions !== 'undefined') {
-            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(id));
+            recent3Submissions = recent3Submissions.filter(s => String(s.probId) !== String(id) && !String(s.probId).endsWith('_' + String(id)));
             localStorage.setItem('oj_v15_recent3', JSON.stringify(recent3Submissions));
         }
 
