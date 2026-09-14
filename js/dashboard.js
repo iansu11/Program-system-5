@@ -1184,18 +1184,38 @@ function renderRecentSubmissions() {
     const listContainer = document.getElementById('recent-submissions-list');
     if (!listContainer) return;
     
-    let localRecent = localStorage.getItem('oj_v15_recent3');
-    if (localRecent) {
+    let localHistory = localStorage.getItem('oj_v15_history');
+    if (localHistory) {
         try {
-            recent3Submissions = JSON.parse(localRecent);
+            executionHistories = JSON.parse(localHistory);
         } catch(e) {}
     }
     
-    if (typeof recent3Submissions === 'undefined' || !Array.isArray(recent3Submissions)) {
-        recent3Submissions = [];
+    let allSubs = [];
+    for (let key in executionHistories) {
+        let histList = executionHistories[key];
+        if (histList && Array.isArray(histList)) {
+            // 抓最新3筆
+            for (let i = 0; i < Math.min(3, histList.length); i++) {
+                let run = histList[i];
+                let timeStr = run.time.replace(/[\u202F\u2009]/g, ' ');
+                let t = new Date(timeStr).getTime();
+                if (isNaN(t)) {
+                    t = Date.now() - Math.random() * 10000;
+                }
+                allSubs.push({
+                    probId: key,
+                    time: run.time,
+                    status: run.status,
+                    timestamp: t,
+                    bankUrl: run.bankUrl,
+                    bankName: run.bankName
+                });
+            }
+        }
     }
-    
-    let recentSubs = recent3Submissions.slice(0, 3);
+    allSubs.sort((a, b) => b.timestamp - a.timestamp);
+    let recentSubs = allSubs.slice(0, 3);
     
     if (recentSubs.length === 0) {
         listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size:1.1rem; font-weight:500;">目前暫時沒有作答紀錄</div>';
