@@ -542,7 +542,7 @@ function parseContent(text) {
         }
     }    
 
-    function openAIHelperModal() {
+    window.openAIHelperModal = function() {
         const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const lang = document.getElementById('langSelect').value; 
         
@@ -576,7 +576,7 @@ function parseContent(text) {
         document.getElementById('aiHelperModal').style.display = 'flex';
     }
 
-    function copyPromptOnly() { 
+    window.copyPromptOnly = function() { 
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
@@ -584,7 +584,7 @@ function parseContent(text) {
         document.getElementById('aiHelperModal').style.display = 'none'; 
     }
 
-    function copyPromptAndOpenGemini() { 
+    window.copyPromptAndOpenGemini = function() { 
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
@@ -1084,7 +1084,7 @@ function clearProblemHistory() {
         }
     }
 
-function openAIHelperModal() {
+window.openAIHelperModal = function() {
         const p = db.problems.find(x => String(x.id) === String(currentProbId)); 
         const lang = document.getElementById('langSelect').value; 
         
@@ -1118,7 +1118,7 @@ function openAIHelperModal() {
         document.getElementById('aiHelperModal').style.display = 'flex';
     }
 
-function copyPromptOnly() { 
+window.copyPromptOnly = function() { 
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
@@ -1126,7 +1126,7 @@ function copyPromptOnly() {
         document.getElementById('aiHelperModal').style.display = 'none'; 
     }
 
-function copyPromptAndOpenGemini() { 
+window.copyPromptAndOpenGemini = function() { 
         const text = document.getElementById('aiPromptOutput'); 
         text.select(); 
         document.execCommand('copy'); 
