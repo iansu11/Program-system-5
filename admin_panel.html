@@ -104,6 +104,44 @@
                 <i class="fa-solid fa-cloud-arrow-up"></i> 發布至 GitHub
             </button>
         </div>
+        
+        <!-- 系統預設題庫線上編輯器 (方案二) -->
+        <div class="saas-card" style="margin-bottom: 30px; cursor: default; transform: none;">
+            <h3 style="margin-top:0; color: #1e293b; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;"><i class="fa-solid fa-code-branch" style="color: #3b82f6;"></i> 線上編輯系統題庫</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">
+                直接從 GitHub 載入系統預設題庫，視覺化編輯層級與題目後，一鍵推播覆蓋回 GitHub。
+            </p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <select id="systemBankSelect" class="auth-input" style="flex:1; border: 1px solid #d1d5db; padding: 10px;">
+                    <option value="program-1.json">📚 114-第一學期程式設計 (program-1.json)</option>
+                    <option value="program-oop.json">🏆 114-第二學期物件導向 (program-oop.json)</option>
+                    <option value="program-exam.json">🔥 其他題目選集 (program-exam.json)</option>
+                </select>
+                <button class="btn btn-primary" style="background: #3b82f6;" onclick="loadSystemBankForEdit()">
+                    <i class="fa-solid fa-download"></i> 載入編輯
+                </button>
+            </div>
+            
+            <!-- 樹狀編輯區 (初始隱藏) -->
+            <div id="systemBankEditorArea" style="display: none; border: 1px solid #d1d5db; border-radius: 8px; padding: 15px; background: #f8fafc; margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
+                    <h4 style="margin: 0; color: #0f172a;" id="editingBankTitle">編輯中：...</h4>
+                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.85rem;" onclick="addSystemBankCategory()">+ 新增分類</button>
+                </div>
+                <div id="systemBankTree" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px;">
+                    <!-- JS 動態生成樹狀結構 -->
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button id="saveSystemBankBtn" class="btn btn-primary" style="flex: 1; background: #10b981;" onclick="publishEditedSystemBank()">
+                        <i class="fa-solid fa-upload"></i> 儲存並推播至 GitHub
+                    </button>
+                    <button class="btn btn-outline" style="padding: 10px;" onclick="document.getElementById('systemBankEditorArea').style.display='none'">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
     </div>
