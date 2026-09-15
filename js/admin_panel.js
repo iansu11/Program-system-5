@@ -17,11 +17,11 @@ window.addEventListener('personalCloudReady', () => {
     loadSystemBanksIndex();
 });
 
-// === 公告管理 ===
+// === ????管?? ===
 async function loadAnnouncements() {
     if (!masterDb) return;
     const list = document.getElementById('admin-announcements-list');
-    list.innerHTML = '讀取中...';
+    list.innerHTML = '讀??中...';
     try {
         const snap = await masterDb.collection('announcements').orderBy('timestamp', 'desc').get();
         if (snap.empty) {
@@ -45,12 +45,12 @@ async function loadAnnouncements() {
                     <div style="color: #475569; font-size: 0.9rem; margin-bottom: 4px; white-space: pre-wrap;">${data.content || ''}</div>
                     <div style="color: #94a3b8; font-size: 0.8rem;">${dateStr}</div>
                 </div>
-                <button class="btn btn-danger btn-sm" style="flex-shrink: 0;" onclick="deleteAnnouncement('${doc.id}')">刪除</button>
+                <button class="btn btn-danger btn-sm" style="flex-shrink: 0;" onclick="deleteAnnouncement('${doc.id}')">??除</button>
             `;
             list.appendChild(div);
         });
     } catch(e) {
-        list.innerHTML = '讀取失敗: ' + e.message;
+        list.innerHTML = '讀??失?? ' + e.message;
     }
 }
 
@@ -59,7 +59,7 @@ async function addAnnouncement() {
     const contentInput = document.getElementById('announcementContent');
     const title = titleInput ? titleInput.value.trim() : '';
     const content = contentInput ? contentInput.value.trim() : '';
-    if (!title || !content) return alert("請輸入標題與內容");
+    if (!title || !content) return alert("請輸????題????容");
     
     try {
         await masterDb.collection('announcements').add({
@@ -71,21 +71,21 @@ async function addAnnouncement() {
         if (contentInput) contentInput.value = '';
         loadAnnouncements();
     } catch(e) {
-        alert("新增失敗: " + e.message);
+        alert("????失??: " + e.message);
     }
 }
 
 async function deleteAnnouncement(id) {
-    if (!confirm("確定要刪除此公告？")) return;
+    if (!confirm("確??要刪??此")) return;
     try {
         await masterDb.collection('announcements').doc(id).delete();
         loadAnnouncements();
     } catch(e) {
-        alert("刪除失敗: " + e.message);
+        alert("??除失??: " + e.message);
     }
 }
 
-// === GitHub 整合設定 ===
+// === GitHub ????設?? ===
 async function loadGitHubSettings() {
     try {
         const doc = await masterDb.collection('systemSettings').doc('githubConfig').get();
@@ -105,7 +105,7 @@ async function saveGitHubSettings() {
     const repo = document.getElementById('ghRepo').value.trim();
     const token = document.getElementById('ghToken').value.trim();
     
-    if (!owner || !repo || !token) return alert("請填寫所有 GitHub 設定欄位");
+    if (!owner || !repo || !token) return alert("請填寫????GitHub 設??欄??");
     
     try {
         await masterDb.collection('systemSettings').doc('githubConfig').set({
@@ -113,18 +113,18 @@ async function saveGitHubSettings() {
             repo: repo,
             token: token
         });
-        alert("✅ GitHub 設定已儲存");
+        alert("??GitHub 設??已儲");
     } catch(e) {
-        alert("儲存失敗: " + e.message);
+        alert("????失??: " + e.message);
     }
 }
 
-// === 發布題庫至 GitHub ===
+// === ????題庫??GitHub ===
 async function loadCustomBanksForSelect() {
     const select = document.getElementById('sourceBankSelect');
-    select.innerHTML = '<option value="">請選擇要發布的自訂題庫...</option>';
+    select.innerHTML = '<option value="">請選??????????自訂????..</option>';
     
-    // 需要從 personalDb 抓取完整的 customBanks，因為 local 可能沒有 problems 陣列
+    // ??要?? personalDb ????完整??customBanks，????local ??能沒?? problems ???
     if (!personalDb || !currentUser) return;
     try {
         const snap = await personalDb.collection('users').doc(currentUser.uid).collection('customBanks').get();
@@ -138,7 +138,7 @@ async function loadCustomBanksForSelect() {
             select.appendChild(opt);
         });
     } catch(e) {
-        select.innerHTML = '<option value="">載入自訂題庫失敗</option>';
+        select.innerHTML = '<option value="">載入????題庫失??</option>';
     }
 }
 
@@ -149,14 +149,14 @@ async function publishToGitHub() {
     const repo = document.getElementById('ghRepo').value.trim();
     const token = document.getElementById('ghToken').value.trim();
     
-    if (!sourceId) return alert("請選擇來源題庫！");
-    if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
+    if (!sourceId) return alert("請選????源??庫??");
+    if (!owner || !repo || !token) return alert("請??完??並儲??GitHub 設");
     
     const bankData = window.adminCustomBanks[sourceId];
-    if (!bankData) return alert("找不到題庫資料！");
+    if (!bankData) return alert("????????庫??????");
     
     const btn = document.getElementById('publishBtn');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 發布中...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ??????..';
     btn.disabled = true;
     
     try {
@@ -204,16 +204,16 @@ async function publishToGitHub() {
             throw new Error(errJson.message || 'Unknown GitHub API Error');
         }
         
-        alert(`✅ 成功發布至 GitHub: ${targetFile}\n大廳讀取時將會自動抓取最新的檔案！`);
+        alert(`????????????GitHub: ${targetFile}\n大廳讀????將????????????????檔??！`);
     } catch(e) {
-        alert("❌ 發布失敗: " + e.message);
+        alert("??????失??: " + e.message);
     } finally {
-        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> 發布至 GitHub';
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> ??????GitHub';
         btn.disabled = false;
     }
 }
 
-// === 方案二：系統預設題庫線上編輯器 ===
+// === ????二??系統??設題庫線??編輯??===
 window.currentSystemBankData = null;
 window.currentSystemBankFile = null;
 window.currentSystemBankSha = null;
@@ -224,9 +224,9 @@ async function loadSystemBankForEdit() {
     const repo = document.getElementById('ghRepo').value.trim();
     const token = document.getElementById('ghToken').value.trim();
     
-    if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
+    if (!owner || !repo || !token) return alert("請??完??並儲??GitHub 設");
     
-    document.getElementById('editingBankTitle').innerText = `載入中...`;
+    document.getElementById('editingBankTitle').innerText = `載入??..`;
     
     try {
         const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`;
@@ -234,7 +234,7 @@ async function loadSystemBankForEdit() {
             headers: { 'Authorization': `token ${token}` }
         });
         
-        if (!res.ok) throw new Error("找不到檔案或無權限");
+        if (!res.ok) throw new Error("????????案");
         
         const data = await res.json();
         const jsonStr = decodeURIComponent(escape(atob(data.content)));
@@ -243,19 +243,19 @@ async function loadSystemBankForEdit() {
         window.currentSystemBankFile = fileName;
         window.currentSystemBankSha = data.sha;
         
-        // 保證結構完整
+        // 保??結??完整
         if (!window.currentSystemBankData.categories) window.currentSystemBankData.categories = [];
         if (!window.currentSystemBankData.problems) window.currentSystemBankData.problems = [];
         
-        // 寫入 localStorage 供 admin.html 共用
+        // 寫入 localStorage ??admin.html ??用
         localStorage.setItem('oj_system_edit_data', JSON.stringify(window.currentSystemBankData));
         
-        document.getElementById('editingBankTitle').innerText = `編輯中：${fileName}`;
+        document.getElementById('editingBankTitle').innerText = `編輯中??${fileName}`;
         document.getElementById('systemBankEditorArea').style.display = 'block';
         
         renderSystemBankTree();
     } catch(e) {
-        alert("載入失敗：" + e.message);
+        alert("載入失" + e.message);
     }
 }
 
@@ -269,7 +269,7 @@ function renderSystemBankTree() {
     const probs = window.currentSystemBankData.problems || [];
     
     if (cats.length === 0) {
-        treeDiv.innerHTML = '<div style="color:#94a3b8; text-align:center;">目前沒有任何分類</div>';
+        treeDiv.innerHTML = '<div style="color:#94a3b8; text-align:center;">????沒??任??????</div>';
         return;
     }
     
@@ -281,16 +281,16 @@ function renderSystemBankTree() {
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; margin-left: 20px; border-left: 2px solid #e2e8f0; border-bottom: 1px solid #f8fafc;">
                     <div style="flex:1; display:flex; align-items:center; gap: 8px;">
                         <div style="display:flex; flex-direction:column; gap:2px;">
-                            <button title="上移" onclick="moveSystemBankProblem('${p.id}', -1)" style="border:none; background:none; cursor:pointer; font-size:10px; padding:0; color:#94a3b8; ${pIdx===0 ? 'visibility:hidden;':''}">▲</button>
-                            <button title="下移" onclick="moveSystemBankProblem('${p.id}', 1)" style="border:none; background:none; cursor:pointer; font-size:10px; padding:0; color:#94a3b8; ${pIdx===catProbs.length-1 ? 'visibility:hidden;':''}">▼</button>
+                            <button title="上移" onclick="moveSystemBankProblem('${p.id}', -1)" style="border:none; background:none; cursor:pointer; font-size:10px; padding:0; color:#94a3b8; ${pIdx===0 ? 'visibility:hidden;':''}">??/button>
+                            <button title="下移" onclick="moveSystemBankProblem('${p.id}', 1)" style="border:none; background:none; cursor:pointer; font-size:10px; padding:0; color:#94a3b8; ${pIdx===catProbs.length-1 ? 'visibility:hidden;':''}">??/button>
                         </div>
                         <span style="color:#64748b; font-size:0.8rem;">[${p.id}]</span> 
                         <span>${p.title}</span>
                     </div>
                     <div>
-                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem; background:#3b82f6; color:white;" onclick="testSystemBankProblem('${p.id}')">🧪 測試</button>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem; background:#3b82f6; color:white;" onclick="testSystemBankProblem('${p.id}')">??? 測試</button>
                         <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankProblem('${p.id}')">編輯</button>
-                        <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankProblem('${p.id}')">刪除</button>
+                        <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankProblem('${p.id}')">??除</button>
                     </div>
                 </div>
             `;
@@ -301,15 +301,15 @@ function renderSystemBankTree() {
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;">
                     <div style="display:flex; align-items:center; gap: 8px; font-weight: bold; color: #1e293b;">
                         <div style="display:flex; flex-direction:column; gap:2px;">
-                            <button title="上移" onclick="moveSystemBankCategory('${c.id}', -1)" style="border:none; background:none; cursor:pointer; font-size:12px; padding:0; color:#94a3b8; ${catIdx===0 ? 'visibility:hidden;':''}">▲</button>
-                            <button title="下移" onclick="moveSystemBankCategory('${c.id}', 1)" style="border:none; background:none; cursor:pointer; font-size:12px; padding:0; color:#94a3b8; ${catIdx===cats.length-1 ? 'visibility:hidden;':''}">▼</button>
+                            <button title="上移" onclick="moveSystemBankCategory('${c.id}', -1)" style="border:none; background:none; cursor:pointer; font-size:12px; padding:0; color:#94a3b8; ${catIdx===0 ? 'visibility:hidden;':''}">??/button>
+                            <button title="下移" onclick="moveSystemBankCategory('${c.id}', 1)" style="border:none; background:none; cursor:pointer; font-size:12px; padding:0; color:#94a3b8; ${catIdx===cats.length-1 ? 'visibility:hidden;':''}">??/button>
                         </div>
                         📁 ${c.name}
                     </div>
                     <div>
-                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="addSystemBankProblem('${c.id}')">+ 新增題目</button>
-                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankCategory('${c.id}', '${c.name}')">改名</button>
-                        <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankCategory('${c.id}')">刪分類</button>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="addSystemBankProblem('${c.id}')">+ ????題目</button>
+                        <button class="action-btn edit-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="editSystemBankCategory('${c.id}', '${c.name}')">????</button>
+                        <button class="action-btn delete-btn" style="padding:2px 8px; font-size:0.75rem;" onclick="deleteSystemBankCategory('${c.id}')">??????/button>
                     </div>
                 </div>
                 ${probsHtml}
@@ -338,8 +338,7 @@ function moveSystemBankProblem(id, dir) {
     const p = probs[pIdx];
     const catId = p.category || p.catId;
     
-    // 找出所有同分類的題目索引
-    const catProbsIndices = [];
+    // ??出????????????????索??    const catProbsIndices = [];
     probs.forEach((prob, index) => {
         if (prob.category === catId || prob.catId === catId) {
             catProbsIndices.push(index);
@@ -363,7 +362,7 @@ function testSystemBankProblem(probId) {
 }
 
 function addSystemBankCategory() {
-    const name = prompt("請輸入新分類名稱：");
+    const name = prompt("請輸??新??????稱");
     if (!name || !name.trim()) return;
     const newId = Date.now().toString();
     window.currentSystemBankData.categories.push({ id: newId, name: name.trim() });
@@ -372,7 +371,7 @@ function addSystemBankCategory() {
 }
 
 function editSystemBankCategory(id, oldName) {
-    const newName = prompt("修改分類名稱：", oldName);
+    const newName = prompt("修改??????稱", oldName);
     if (!newName || !newName.trim() || newName === oldName) return;
     const cat = window.currentSystemBankData.categories.find(c => c.id === id);
     if (cat) {
@@ -383,7 +382,7 @@ function editSystemBankCategory(id, oldName) {
 }
 
 function deleteSystemBankCategory(id) {
-    if (confirm("確定要刪除此分類？底下的題目也會一起刪除喔！")) {
+    if (confirm("確??要刪??此????？??下??題目也??一起刪")) {
         window.currentSystemBankData.categories = window.currentSystemBankData.categories.filter(c => c.id !== id);
         window.currentSystemBankData.problems = window.currentSystemBankData.problems.filter(p => p.category !== id && p.catId !== id);
         syncSystemBankToLocal();
@@ -392,7 +391,7 @@ function deleteSystemBankCategory(id) {
 }
 
 function deleteSystemBankProblem(id) {
-    if (confirm("確定要刪除此題目？")) {
+    if (confirm("確??要刪??此題目")) {
         window.currentSystemBankData.problems = window.currentSystemBankData.problems.filter(p => p.id !== id);
         syncSystemBankToLocal();
         renderSystemBankTree();
@@ -400,7 +399,7 @@ function deleteSystemBankProblem(id) {
 }
 
 function addSystemBankProblem(catId) {
-    // 開啟編輯器，傳入 mode=system_edit
+    // ????編輯??????入 mode=system_edit
     window.open(`admin.html?mode=system_edit&action=new&catId=${catId}`, '_blank');
 }
 
@@ -408,7 +407,7 @@ function editSystemBankProblem(probId) {
     window.open(`admin.html?mode=system_edit&probId=${probId}`, '_blank');
 }
 
-// 當 admin.html 修改 localStorage 後，這裡會收到事件並更新畫面
+// ??admin.html 修改 localStorage 後????裡??收????件並??新??面
 window.addEventListener('storage', function(e) {
     if (e.key === 'oj_system_edit_data') {
         if (e.newValue) {
@@ -419,7 +418,7 @@ window.addEventListener('storage', function(e) {
 });
 
 function syncSystemBankToLocal() {
-    // 確保本機儲存空間與記憶體同步
+    // 確??????????空????????????步
     localStorage.setItem('oj_system_edit_data', JSON.stringify(window.currentSystemBankData));
 }
 
@@ -433,7 +432,7 @@ async function publishEditedSystemBank() {
     const sha = window.currentSystemBankSha;
     
     const btn = document.getElementById('saveSystemBankBtn');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 儲存上傳中...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ????上傳??..';
     btn.disabled = true;
     
     try {
@@ -462,18 +461,18 @@ async function publishEditedSystemBank() {
         }
         
         const newJson = await putRes.json();
-        window.currentSystemBankSha = newJson.content.sha; // 更新 SHA 避免下次衝突
+        window.currentSystemBankSha = newJson.content.sha; // ??新 SHA ????下次衝??
         
-        alert(`✅ 成功推播更新至 GitHub: ${fileName}！`);
+        alert(`????????播??新??GitHub: ${fileName}！`);
     } catch (e) {
-        alert("❌ 推播失敗：" + e.message);
+        alert("????播失" + e.message);
     } finally {
-        btn.innerHTML = '<i class="fa-solid fa-upload"></i> 儲存並推播至 GitHub';
+        btn.innerHTML = '<i class="fa-solid fa-upload"></i> ????並推??至 GitHub';
         btn.disabled = false;
     }
 }
 
-// === 系統大題庫管理 ===
+// === 系統大??庫管??===
 let systemBanksIndexData = [];
 
 async function loadSystemBanksIndex() {
@@ -486,36 +485,35 @@ async function loadSystemBanksIndex() {
             const systemSel = document.getElementById('systemBankSelect');
             
             const optionsHtml = systemBanksIndexData.map(b => 
-                `<option value="${b.file}">${b.icon || '📚'} ${b.shortTitle || b.title} (${b.file})</option>`
+                `<option value="${b.file}">${b.icon || '??'} ${b.shortTitle || b.title} (${b.file})</option>`
             ).join('');
             
             if (targetSel) targetSel.innerHTML = optionsHtml;
             if (systemSel) systemSel.innerHTML = optionsHtml;
         }
     } catch (e) {
-        console.error("載入系統題庫目錄失敗:", e);
+        console.error("載入系統題庫????失??:", e);
     }
 }
 
 async function createNewSystemBank() {
-    const bankName = prompt("請輸入新題庫的名稱 (例如: 2026-前端網頁設計):");
+    const bankName = prompt("請輸??新題庫??????(例??: 2026-??端網??設??):");
     if (!bankName) return;
     
-    const bankFileName = prompt("請輸入新題庫的檔案名稱 (必須以 .json 結尾，例如: frontend-2026.json):");
+    const bankFileName = prompt("請輸??新題庫????案????(必????.json 結尾，???? frontend-2026.json):");
     if (!bankFileName || !bankFileName.endsWith('.json')) {
-        return alert("檔案名稱無效，必須以 .json 結尾");
+        return alert("檔????稱????，????以 .json 結尾");
     }
     
-    const bankIcon = prompt("請輸入一個 Emoji 作為題庫圖示 (例如: 🚀):", "🚀");
+    const bankIcon = prompt("請輸??????Emoji 作為題庫??示 (例??: ??):", "??");
     
     const owner = document.getElementById('gh-owner').value.trim();
     const repo = document.getElementById('gh-repo').value.trim();
     const token = document.getElementById('gh-token').value.trim();
-    if (!owner || !repo || !token) return alert("請先完成並儲存上方 GitHub 設定！");
+    if (!owner || !repo || !token) return alert("請??完??並儲存????GitHub 設");
     
     try {
-        // 1. 建立空題庫
-        const emptyContent = { problems: [] };
+        // 1. 建??空????        const emptyContent = { problems: [] };
         // Base64 encode for UTF-8
         const b64Content = btoa(encodeURIComponent(JSON.stringify(emptyContent, null, 2)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
             return String.fromCharCode('0x' + p1);
@@ -533,23 +531,23 @@ async function createNewSystemBank() {
             })
         });
         
-        if (!res.ok) throw new Error("建立題庫檔案失敗");
+        if (!res.ok) throw new Error("建??題庫檔??失??");
         
-        // 2. 更新 system-banks-index.json
+        // 2. ??新 system-banks-index.json
         const newBankEntry = {
             file: bankFileName,
             title: bankName,
             shortTitle: bankName,
-            desc: "全新系統題庫。",
+            desc: "??新系統題庫",
             footer: "載入題目",
             iconBoxClass: "bg-blue",
             faIcon: "fa-solid fa-folder",
-            icon: bankIcon || "🚀"
+            icon: bankIcon || "??"
         };
         
         systemBanksIndexData.push(newBankEntry);
         
-        // 取得原本 index 的 sha
+        // ??????本 index ??sha
         let sha = null;
         try {
             const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
@@ -580,22 +578,13 @@ async function createNewSystemBank() {
             body: JSON.stringify(updateBody)
         });
         
-        if (!res.ok) throw new Error("更新題庫目錄失敗");
+        if (!res.ok) throw new Error("??新題庫????失??");
         
-        alert("✅ 成功建立新題庫！重新整理頁面後即可看到。");
+        alert("??????建??????庫????新??????面後即");
         loadSystemBanksIndex();
         
     } catch (e) {
-        alert("發生錯誤：" + e.message);
+        alert("??????誤" + e.message);
     }
 }
 
-/ / 
- 
- E n d 
- 
- o f 
- 
- f i l e 
- 
- 
