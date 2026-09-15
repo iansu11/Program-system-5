@@ -358,7 +358,7 @@ function moveSystemBankProblem(id, dir) {
 }
 
 function testSystemBankProblem(probId) {
-    window.open(`workspace.html?mode=system_edit&probId=${probId}`, '_blank');
+    window.open(`workspace.html?v=27&mode=system_edit&probId=${probId}`, '_blank');
 }
 
 function addSystemBankCategory() {
