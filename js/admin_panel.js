@@ -493,7 +493,7 @@ async function loadSystemBanksIndex() {
             if (systemSel) systemSel.innerHTML = optionsHtml;
         }
     } catch (e) {
-        console.error("載入系統題庫發佈失敗: :", e);
+        console.error("載入系統題庫目錄失敗:", e);
     }
 }
 
@@ -508,15 +508,14 @@ async function createNewSystemBank() {
     
     const bankIcon = prompt("請輸入一個 Emoji 作為題庫圖示 (例如: 📁):", "📁");
     
-    const owner = document.getElementById('gh-owner').value.trim();
-    const repo = document.getElementById('gh-repo').value.trim();
-    const token = document.getElementById('gh-token').value.trim();
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
     if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
     
     try {
         // 1. 建立空題庫
         const emptyContent = { problems: [] };
-        // Base64 encode for UTF-8
         const b64Content = btoa(encodeURIComponent(JSON.stringify(emptyContent, null, 2)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
             return String.fromCharCode('0x' + p1);
         }));
@@ -590,3 +589,66 @@ async function createNewSystemBank() {
     }
 }
 
+async function editSystemBankInfo() {
+    const fileName = document.getElementById('systemBankSelect').value;
+    if (!fileName) return alert("請先選擇題庫");
+
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
+    if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
+
+    const bankIndex = systemBanksIndexData.findIndex(b => b.file === fileName);
+    if (bankIndex === -1) return alert("找不到該題庫的索引資料");
+
+    const currentBank = systemBanksIndexData[bankIndex];
+
+    const newTitle = prompt("修改題庫標題：", currentBank.title);
+    if (newTitle === null) return;
+    
+    const newIcon = prompt("修改題庫圖示 (Emoji)：", currentBank.icon || "📁");
+    if (newIcon === null) return;
+
+    if (newTitle === currentBank.title && newIcon === currentBank.icon) return;
+
+    currentBank.title = newTitle;
+    currentBank.shortTitle = newTitle;
+    currentBank.icon = newIcon;
+
+    try {
+        let sha = null;
+        const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (getRes.ok) {
+            const getData = await getRes.json();
+            sha = getData.sha;
+        }
+
+        const indexB64 = btoa(encodeURIComponent(JSON.stringify(systemBanksIndexData, null, 4)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
+
+        const updateBody = {
+            message: `Update system bank info for ${fileName}`,
+            content: indexB64
+        };
+        if (sha) updateBody.sha = sha;
+
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateBody)
+        });
+
+        if (!res.ok) throw new Error("更新題庫目錄失敗");
+
+        alert("✅ 成功修改題庫資訊！");
+        loadSystemBanksIndex();
+    } catch (e) {
+        alert("發生錯誤：" + e.message);
+    }
+}
