@@ -25,5 +25,15 @@
         "footer": "載入其他題目",
         "iconBoxClass": "bg-purple",
         "faIcon": "fa-solid fa-star"
+    },
+    {
+        "file": "test.json",
+        "title": "test",
+        "shortTitle": "test",
+        "desc": "全新系統題庫",
+        "footer": "載入題目",
+        "iconBoxClass": "bg-blue",
+        "faIcon": "fa-solid fa-folder",
+        "icon": "📁"
     }
 ]
