@@ -581,8 +581,8 @@ async function createNewSystemBank() {
         
         if (!res.ok) throw new Error("更新題庫目錄失敗");
         
-        alert("✅ 成功建立新題庫！重新整理頁面後即可看到。");
-        loadSystemBanksIndex();
+        alert("✅ 成功建立新題庫！");
+        window.location.reload();
         
     } catch (e) {
         alert("發生錯誤：" + e.message);
@@ -647,7 +647,7 @@ async function editSystemBankInfo() {
         if (!res.ok) throw new Error("更新題庫目錄失敗");
 
         alert("✅ 成功修改題庫資訊！");
-        loadSystemBanksIndex();
+        window.location.reload();
     } catch (e) {
         alert("發生錯誤：" + e.message);
     }
@@ -702,16 +702,7 @@ async function deleteSystemBank() {
         if (!res.ok) throw new Error("更新題庫目錄失敗");
 
         alert("✅ 成功清除題庫！");
-        
-        // Clear tree view if the deleted bank was being edited
-        if (document.getElementById('editingBankTitle').innerText.includes(fileName)) {
-            document.getElementById('editingBankTitle').innerText = "未載入任何題庫";
-            document.getElementById('systemBankTree').innerHTML = "";
-            window.currentSystemBankData = null;
-            document.getElementById('saveSystemBankBtn').style.display = "none";
-        }
-        
-        loadSystemBanksIndex();
+        window.location.reload();
     } catch (e) {
         alert("清除失敗：" + e.message);
     }
