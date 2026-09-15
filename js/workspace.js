@@ -18,6 +18,17 @@ let editor = null;
 let currentCompileMode = 'wandbox'; 
 
 
+window.handleSystemTools = function(selectEl) {
+    const val = selectEl.value;
+    if (val === 'history') {
+        if (typeof openHistoryModal === 'function') openHistoryModal();
+    } else if (val === 'model_answer') {
+        if (typeof openModelAnswerUI === 'function') openModelAnswerUI();
+    }
+    // 重置選單狀態
+    selectEl.value = '';
+};
+
 function initWorkspace() {
 try {
     if (!editor) {
@@ -82,11 +93,14 @@ try {
         p = window.systemEditData.problems.find(x => String(x.id) === String(currentProbId));
         
         // 動態將「設定」按鈕改為「完成測試」並關閉分頁
-        const adminBtn = document.querySelector('button[onclick="goToAdmin()"]');
+        const adminBtn = document.getElementById('adminSettingBtn');
         if (adminBtn) {
             adminBtn.innerHTML = '✅ 完成測試';
             adminBtn.onclick = function() { window.close(); };
+            adminBtn.style.display = 'inline-block';
         }
+        const sysTools = document.getElementById('systemToolsSelect');
+        if (sysTools) sysTools.style.display = 'none';
 
         // 將草稿題目注入全域 db，這樣後續所有的 helper function (如 renderWorkspaceTabs) 都能正確找到它
         if (!db.problems) db.problems = [];
@@ -95,6 +109,24 @@ try {
         else db.problems[existingIdx] = p;
     } else {
         p = db.problems.find(x => String(x.id) === String(currentProbId));
+        
+        const isCustom = typeof currentBankUrl !== 'undefined' && currentBankUrl && currentBankUrl.startsWith("local_custom_");
+        const adminBtn = document.getElementById('adminSettingBtn');
+        const sysTools = document.getElementById('systemToolsSelect');
+        
+        if (isCustom) {
+            // 自訂題庫：顯示原先設定按鈕，隱藏下拉選單
+            if (adminBtn) {
+                adminBtn.innerHTML = '⚙️ 設定';
+                adminBtn.onclick = goToAdmin;
+                adminBtn.style.display = 'inline-block';
+            }
+            if (sysTools) sysTools.style.display = 'none';
+        } else {
+            // 預設題庫：隱藏設定按鈕，顯示下拉選單
+            if (adminBtn) adminBtn.style.display = 'none';
+            if (sysTools) sysTools.style.display = 'inline-block';
+        }
     }
 
     if (!p) {
