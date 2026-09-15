@@ -246,6 +246,18 @@ function renderCategoryList() {
     if (!list) return;
     list.innerHTML = '';
     
+    const isSystem = !(currentBankUrl && currentBankUrl.startsWith("local_custom_"));
+
+    // 動態隱藏/顯示預設題庫的上方工具列按鈕
+    const catSortBtn = document.getElementById('catSortBtn');
+    if (catSortBtn) catSortBtn.style.display = isSystem ? 'none' : 'inline-block';
+    const backupBtn = document.querySelector('button[onclick="openBackupUI()"]');
+    if (backupBtn) backupBtn.style.display = isSystem ? 'none' : 'inline-block';
+    const resetBtn = document.querySelector('button[onclick="hardResetAll()"]');
+    if (resetBtn) resetBtn.style.display = isSystem ? 'none' : 'inline-block';
+    const createCatBtn = document.querySelector('button[onclick="createCategory()"]');
+    if (createCatBtn) createCatBtn.style.display = isSystem ? 'none' : 'inline-block';
+
     if (isCatSortMode) {
         list.classList.add('sort-mode');
     } else {
@@ -260,13 +272,16 @@ function renderCategoryList() {
         div.dataset.id = cat.id; 
 
         const probCount = db.problems.filter(p => p.catId == cat.id).length;
-        div.innerHTML = `
-            <div class="cat-title">${cat.name}</div>
-            <div class="cat-count"><i class="fa-solid fa-list"></i> ${probCount} 題</div>
+        const actionsHtml = isSystem ? '' : `
             <div class="cat-actions">
                 <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); editCategory(${cat.id}, '${cat.name}')"><i class="fa-solid fa-pen"></i></button>
                 <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteCategory(${cat.id})"><i class="fa-solid fa-trash"></i></button>
             </div>
+        `;
+        div.innerHTML = `
+            <div class="cat-title">${cat.name}</div>
+            <div class="cat-count"><i class="fa-solid fa-list"></i> ${probCount} 題</div>
+            ${actionsHtml}
         `;
         div.onclick = () => {
             if (!isCatSortMode) {
@@ -285,6 +300,14 @@ function renderProblemList() {
     if (!list) return;
     list.innerHTML = '';
     
+    const isSystem = !(currentBankUrl && currentBankUrl.startsWith("local_custom_"));
+    
+    // 動態隱藏/顯示預設題庫的上方工具列按鈕
+    const probSortBtn = document.getElementById('probSortBtn');
+    if (probSortBtn) probSortBtn.style.display = isSystem ? 'none' : 'inline-block';
+    const createProbBtn = document.querySelector('button[onclick="createProblemInCat()"]');
+    if (createProbBtn) createProbBtn.style.display = isSystem ? 'none' : 'inline-block';
+
     if (isProbSortMode) {
         list.classList.add('sort-mode');
     } else {
@@ -317,14 +340,7 @@ function renderProblemList() {
 
         const previewText = (p.desc || "").substring(0, 50).replace(/#/g, '') + "...";
 
-        div.innerHTML = `
-                <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">
-                    <div style="flex:1; min-width:0;">
-                        <a href="/workspace/${p.id}" target="_blank" class="prob-title" style="text-decoration:none; color:inherit; display:block;">${p.title}</a>
-                        <div class="prob-desc-preview" style="pointer-events:none;">${previewText}</div>
-                    </div>
-                </div>
-            
+        const probActionsHtml = isSystem ? '' : `
             <div class="prob-actions">
                 <button class="prob-btn-icon prob-edit-btn" onclick="event.stopPropagation(); openAdmin(${p.id})" title="題目設定與測資">
                     <i class="fa-solid fa-gear"></i>
@@ -333,6 +349,16 @@ function renderProblemList() {
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
+        `;
+
+        div.innerHTML = `
+                <div style="display:flex; align-items:center; gap:15px; flex:1; min-width:0;">
+                    <div style="flex:1; min-width:0;">
+                        <a href="/workspace/${p.id}" target="_blank" class="prob-title" style="text-decoration:none; color:inherit; display:block;">${p.title}</a>
+                        <div class="prob-desc-preview" style="pointer-events:none;">${previewText}</div>
+                    </div>
+                </div>
+            ${probActionsHtml}
         `;
         div.onclick = () => {
             if (!isBankSortMode) {
