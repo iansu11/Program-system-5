@@ -1,0 +1,29 @@
+[
+    {
+        "file": "program-1.json",
+        "title": "📚 114-第一學期程式設計",
+        "shortTitle": "114-第一學期程式設計",
+        "desc": "C/C++ 基礎語法與控制結構練習。",
+        "footer": "載入 114 的題目",
+        "iconBoxClass": "bg-blue",
+        "faIcon": "fa-solid fa-laptop-code"
+    },
+    {
+        "file": "program-oop.json",
+        "title": "🏆 114-第二學期物件導向",
+        "shortTitle": "114-第二學期物件導向",
+        "desc": "進階程式設計與物件導向概念。",
+        "footer": "載入 114 的題目",
+        "iconBoxClass": "bg-orange",
+        "faIcon": "fa-solid fa-mug-hot"
+    },
+    {
+        "file": "program-exam.json",
+        "title": "🔥 其他題目選集",
+        "shortTitle": "其他題目選集",
+        "desc": "老師精選進階挑戰與額外加分題。",
+        "footer": "載入其他題目",
+        "iconBoxClass": "bg-purple",
+        "faIcon": "fa-solid fa-star"
+    }
+]
