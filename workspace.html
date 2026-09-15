@@ -26,7 +26,13 @@
             </div>
             <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px 0 15px; box-sizing: border-box; overflow-x: visible; gap: 10px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-left: -24px;">
-                    <button class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0;" onclick="goToAdmin()">⚙️ 設定</button>
+                    <button id="adminSettingBtn" class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0;" onclick="goToAdmin()">⚙️ 設定</button>
+                    
+                    <select id="systemToolsSelect" class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0; display: none;" onchange="handleSystemTools(this)">
+                        <option value="">請選擇功能...</option>
+                        <option value="history">🕒 執行紀錄</option>
+                        <option value="model_answer">💡 示範解答</option>
+                    </select>
 
                     <select id="langSelect" onchange="changeWorkspaceLang()">
                         <option value="cpp">C++ (GCC)</option>
@@ -107,10 +113,10 @@
         <button class="btn" style="background: white; color: #059669;" onclick="applyUpdate()">立即同步</button>
     </div>
 
-    <script src="/js/config.js?v=27"></script>
-    <script src="/js/db.js?v=27"></script>
-    <script src="/js/workspace.js?v=27"></script>
-    <script src="/js/auth.js?v=27"></script>
+    <script src="/js/config.js?v=28"></script>
+    <script src="/js/db.js?v=28"></script>
+    <script src="/js/workspace.js?v=28"></script>
+    <script src="/js/auth.js?v=28"></script>
 
     <script>
         // 確保不依賴舊事件，當 window 載入、且 db 已從本地/雲端就緒後啟動
