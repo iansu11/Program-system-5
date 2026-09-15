@@ -29,7 +29,7 @@
                     <button id="adminSettingBtn" class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0;" onclick="goToAdmin()">⚙️ 設定</button>
                     
                     <select id="systemToolsSelect" class="header-btn btn-sm" style="padding: 4px 8px; font-size: 0.8rem; flex-shrink: 0; display: none;" onchange="handleSystemTools(this)">
-                        <option value="">請選擇功能...</option>
+                        <option value="" disabled selected hidden>工具選單 ▾</option>
                         <option value="history">🕒 執行紀錄</option>
                         <option value="model_answer">💡 示範解答</option>
                     </select>
@@ -91,6 +91,17 @@
         </div>
     </div>
 
+    <div id="modelAnswerModal" class="modal">
+        <div class="modal-box" style="width:600px; max-width:90%; height:500px; display:flex; flex-direction:column;">
+            <h3 style="color:var(--accent); margin-top:0;"><i class="fa-solid fa-lightbulb"></i> 示範解答</h3>
+            <textarea id="modelAnswerInput" style="flex:1; resize:none; font-family:'Consolas',monospace; background:#1e1e1e; color:#d4d4d4; border:1px solid #333; padding:10px; margin-bottom:15px;" readonly></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #ddd; padding-top:15px;">
+                <button class="btn btn-outline" onclick="document.getElementById('modelAnswerModal').style.display='none'">關閉</button>
+                <button class="btn btn-primary" onclick="copyModelAnswer()">📋 複製解答</button>
+            </div>
+        </div>
+    </div>
+
     <div id="aiHelperModal" class="modal">
         <div class="modal-box" style="width:600px; max-width:90%; height:550px; display:flex; flex-direction:column;">
             <h3 style="display:flex; align-items:center; gap:10px; color:var(--accent); margin-top:0;">
@@ -113,10 +124,10 @@
         <button class="btn" style="background: white; color: #059669;" onclick="applyUpdate()">立即同步</button>
     </div>
 
-    <script src="/js/config.js?v=28"></script>
-    <script src="/js/db.js?v=28"></script>
-    <script src="/js/workspace.js?v=28"></script>
-    <script src="/js/auth.js?v=28"></script>
+    <script src="/js/config.js?v=29"></script>
+    <script src="/js/db.js?v=29"></script>
+    <script src="/js/workspace.js?v=29"></script>
+    <script src="/js/auth.js?v=29"></script>
 
     <script>
         // 確保不依賴舊事件，當 window 載入、且 db 已從本地/雲端就緒後啟動
