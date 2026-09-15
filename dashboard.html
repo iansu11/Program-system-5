@@ -169,27 +169,8 @@
             </div>
         </div>
         
-        <div class="dashboard-grid">
-            <div class="saas-card saas-card-sm clickable" onclick="fetchAndLoadBank('/program-1.json', '📚 114-第一學期程式設計')">
-                <div class="card-icon-box bg-blue"><i class="fa-solid fa-laptop-code"></i></div>
-                <h3>114-第一學期程式設計</h3>
-                <p>C/C++ 基礎語法與控制結構練習。</p>
-                <div class="card-footer">載入 114 的題目</div>
-            </div>
-            
-            <div class="saas-card saas-card-sm clickable" onclick="fetchAndLoadBank('/program-oop.json', '🏆 114-第二學期物件導向')">
-                <div class="card-icon-box bg-orange"><i class="fa-solid fa-mug-hot"></i></div>
-                <h3>114-第二學期物件導向</h3>
-                <p>進階程式設計與物件導向概念。</p>
-                <div class="card-footer">載入 114 的題目</div>
-            </div>
-            
-            <div class="saas-card saas-card-sm clickable" onclick="fetchAndLoadBank('/program-exam.json', '🔥 其他題目')">
-                <div class="card-icon-box bg-purple"><i class="fa-solid fa-star"></i></div>
-                <h3>其他題目選集</h3>
-                <p>老師精選進階挑戰與額外加分題。</p>
-                <div class="card-footer">載入其他題目</div>
-            </div>
+        <div class="dashboard-grid" id="systemBanksGrid">
+            <!-- 系統題庫將由 JavaScript 動態讀取 system-banks-index.json 生成 -->
         </div>
     </div>
 </div>
