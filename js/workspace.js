@@ -149,6 +149,9 @@ try {
     if (titleEl) {
         if (window.isSystemEditMode) {
             titleEl.innerHTML = `<span style="color:#f59e0b; margin-right:8px;">🧪 系統題庫測試區 (草稿模式)</span> ${p.title || "未命名題目"}`;
+            titleEl.onclick = null;
+            titleEl.style.cursor = "default";
+            titleEl.title = "";
         } else {
             titleEl.innerText = p.title || "未命名題目";
         }
