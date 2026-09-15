@@ -652,3 +652,67 @@ async function editSystemBankInfo() {
         alert("發生錯誤：" + e.message);
     }
 }
+
+async function deleteSystemBank() {
+    const fileName = document.getElementById('systemBankSelect').value;
+    if (!fileName) return alert("請先選擇題庫");
+
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
+    if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
+
+    if (!confirm(`確定要清除題庫 ${fileName} 嗎？這會將它從系統目錄中移除。`)) return;
+
+    const bankIndex = systemBanksIndexData.findIndex(b => b.file === fileName);
+    if (bankIndex === -1) return alert("找不到該題庫的索引資料");
+
+    // Remove from index array
+    systemBanksIndexData.splice(bankIndex, 1);
+
+    try {
+        let sha = null;
+        const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (getRes.ok) {
+            const getData = await getRes.json();
+            sha = getData.sha;
+        }
+
+        const indexB64 = btoa(encodeURIComponent(JSON.stringify(systemBanksIndexData, null, 4)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
+
+        const updateBody = {
+            message: `Remove system bank ${fileName}`,
+            content: indexB64
+        };
+        if (sha) updateBody.sha = sha;
+
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateBody)
+        });
+
+        if (!res.ok) throw new Error("更新題庫目錄失敗");
+
+        alert("✅ 成功清除題庫！");
+        
+        // Clear tree view if the deleted bank was being edited
+        if (document.getElementById('editingBankTitle').innerText.includes(fileName)) {
+            document.getElementById('editingBankTitle').innerText = "未載入任何題庫";
+            document.getElementById('systemBankTree').innerHTML = "";
+            window.currentSystemBankData = null;
+            document.getElementById('saveSystemBankBtn').style.display = "none";
+        }
+        
+        loadSystemBanksIndex();
+    } catch (e) {
+        alert("清除失敗：" + e.message);
+    }
+}
