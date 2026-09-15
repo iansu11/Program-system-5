@@ -95,9 +95,7 @@
                 </select>
                 <i class="fa-solid fa-arrow-right" style="color: #94a3b8;"></i>
                 <select id="targetBankSelect" class="auth-input" style="flex:1; border: 1px solid #d1d5db; padding: 10px;">
-                    <option value="program-1.json">📚 114-第一學期程式設計</option>
-                    <option value="program-oop.json">🏆 114-第二學期物件導向</option>
-                    <option value="program-exam.json">🔥 其他題目選集</option>
+                    <!-- 由 admin_panel.js 動態載入 system-banks-index.json -->
                 </select>
             </div>
             <button id="publishBtn" class="btn btn-primary" style="width: 100%; background: #24292e;" onclick="publishToGitHub()">
@@ -114,12 +112,13 @@
             
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <select id="systemBankSelect" class="auth-input" style="flex:1; border: 1px solid #d1d5db; padding: 10px;">
-                    <option value="program-1.json">📚 114-第一學期程式設計 (program-1.json)</option>
-                    <option value="program-oop.json">🏆 114-第二學期物件導向 (program-oop.json)</option>
-                    <option value="program-exam.json">🔥 其他題目選集 (program-exam.json)</option>
+                    <!-- 由 admin_panel.js 動態載入 system-banks-index.json -->
                 </select>
                 <button class="btn btn-primary" style="background: #3b82f6;" onclick="loadSystemBankForEdit()">
                     <i class="fa-solid fa-download"></i> 載入編輯
+                </button>
+                <button class="btn btn-outline" style="border-color: #10b981; color: #10b981;" onclick="createNewSystemBank()">
+                    <i class="fa-solid fa-plus"></i> 新增題庫
                 </button>
             </div>
             
