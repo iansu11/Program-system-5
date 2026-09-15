@@ -6,5 +6,29 @@
             "name": "第一類"
         }
     ],
-    "problems": []
+    "problems": [
+        {
+            "id": "sys_1789456836319",
+            "category": "1778587748094",
+            "catId": "1778587748094",
+            "title": "CPE 第一題測試",
+            "desc": "The world-known gangster Vito Deadstone is moving to New York. He has a very big family there, all\nof them living in Lamafia Avenue. Since he will visit all his relatives very often, he is trying to find a\nhouse close to them.\n\nVito wants to minimize the total distance to all of them and has blackmailed you to write a program\nthat solves his problem.\n\nInput\nThe input consists of several test cases. The first line contains the number of test cases.\n\nFor each test case you will be given the integer number of relatives r (0 < r < 500) and the street\nnumbers (also integers) s1, s2, . . . , si\n, . . . , sr where they live (0 < si < 30000 ). Note that several\nrelatives could live in the same street number.\n\nOutput\nFor each test case your program must write the minimal sum of distances from the optimal Vito’s house\nto each one of his relatives. The distance between two street numbers si and sj is dij = |si − sj |\n\nSample Input\n2\n2 2 4\n3 2 4 6\n\nSample Output\n2\n4",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}",
+            "tpl_python": "# your code here\n",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}",
+            "code_python": "# your code here\n",
+            "isMultiFile": false,
+            "multiFiles": [],
+            "testCases": [
+                {
+                    "input": "2\n2 2 4\n3 2 4 6",
+                    "output": "2\n4"
+                },
+                {
+                    "input": "1\n4 10 1 100 50",
+                    "output": "139"
+                }
+            ]
+        }
+    ]
 }
