@@ -425,7 +425,13 @@ function stopAdminDrag() {
 }
 
 function openModelAnswerUI() {
-    const p = db.problems.find(x => String(x.id) === String(adminProbId));
+    let p;
+    if (window.isSystemEditMode) {
+        p = window.systemEditData.problems.find(x => String(x.id) === String(adminProbId));
+    } else {
+        p = db.problems.find(x => String(x.id) === String(adminProbId));
+    }
+    
     if (!p) return;
     if (p.testCases && p.testCases.length > 0) {
         document.getElementById('modelAnswerInput').value = p.testCases[0].output || "";
