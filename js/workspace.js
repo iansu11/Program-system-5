@@ -1397,7 +1397,7 @@ function stopDrag() {
                     } 
 
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 15000);
+                    const timeoutId = setTimeout(() => controller.abort(), 60000);
                     const res = await fetch('https://wandbox.org/api/compile.json', { 
                         method: 'POST', 
                         headers: {'Content-Type': 'application/json'}, 
@@ -1444,7 +1444,7 @@ function stopDrag() {
                             : 'https://python-compiler-sever.onrender.com/run'; 
 
                         const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 15000);
+                        const timeoutId = setTimeout(() => controller.abort(), 60000);
                         const res = await fetch(apiUrl, { 
                             method: 'POST', 
                             headers: {'Content-Type': 'application/json'}, 
