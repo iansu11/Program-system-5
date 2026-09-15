@@ -80,6 +80,13 @@ try {
         }
         window.systemEditData = JSON.parse(systemDataStr);
         p = window.systemEditData.problems.find(x => String(x.id) === String(currentProbId));
+        
+        // 將草稿題目注入全域 db，這樣後續所有的 helper function (如 renderWorkspaceTabs) 都能正確找到它
+        if (!window.db) window.db = { problems: [] };
+        if (!window.db.problems) window.db.problems = [];
+        const existingIdx = window.db.problems.findIndex(x => String(x.id) === String(currentProbId));
+        if (existingIdx === -1) window.db.problems.push(p);
+        else window.db.problems[existingIdx] = p;
     } else {
         p = db.problems.find(x => String(x.id) === String(currentProbId));
     }
