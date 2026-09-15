@@ -1,3 +1,29 @@
 {
-  "problems": []
+    "problems": [
+        {
+            "id": "sys_1789480879037",
+            "category": "1789480873882",
+            "catId": "1789480873882",
+            "title": "新題目測試1",
+            "desc": "123456",
+            "tpl_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}",
+            "tpl_python": "# your code here\n",
+            "code_cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code here\n    return 0;\n}",
+            "code_python": "# your code here\n",
+            "isMultiFile": false,
+            "multiFiles": [],
+            "testCases": [
+                {
+                    "input": "321",
+                    "output": "123"
+                }
+            ]
+        }
+    ],
+    "categories": [
+        {
+            "id": "1789480873882",
+            "name": "測試第一"
+        }
+    ]
 }
