@@ -117,7 +117,7 @@ async function loadSystemBanksGrid() {
         banks.forEach(bank => {
             const card = document.createElement('div');
             card.className = 'saas-card saas-card-sm clickable';
-            card.onclick = () => fetchAndLoadBank('/' + bank.file, bank.title);
+            card.setAttribute('onclick', `fetchAndLoadBank('/${bank.file}', '${bank.title}')`);
             
             card.innerHTML = `
                 <div class="card-icon-box ${bank.iconBoxClass || 'bg-blue'}"><i class="${bank.faIcon || 'fa-solid fa-folder'}"></i></div>
