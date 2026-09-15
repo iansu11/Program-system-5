@@ -1120,7 +1120,12 @@ function openModelAnswerUI() {
     }
 
 function openHistoryModal() {
-        const histList = executionHistories[currentProbId];
+        let histList = executionHistories[currentProbId];
+        if (!histList && typeof currentBankUrl !== 'undefined') {
+            histList = executionHistories[currentBankUrl + "_" + currentProbId];
+        }
+        if (!histList) histList = [];
+
         const listDiv = document.getElementById('historyList'); 
         document.getElementById('historyCodeView').value = ""; 
         listDiv.innerHTML = "";
