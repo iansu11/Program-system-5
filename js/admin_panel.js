@@ -14,6 +14,7 @@ window.addEventListener('personalCloudReady', () => {
     loadAnnouncements();
     loadGitHubSettings();
     loadCustomBanksForSelect();
+    loadSystemBanksIndex();
 });
 
 // === 公告管理 ===
@@ -472,3 +473,129 @@ async function publishEditedSystemBank() {
     }
 }
 
+// === 系統大題庫管理 ===
+let systemBanksIndexData = [];
+
+async function loadSystemBanksIndex() {
+    try {
+        const res = await fetch('/system-banks-index.json?_t=' + new Date().getTime());
+        if (res.ok) {
+            systemBanksIndexData = await res.json();
+            
+            const targetSel = document.getElementById('targetBankSelect');
+            const systemSel = document.getElementById('systemBankSelect');
+            
+            const optionsHtml = systemBanksIndexData.map(b => 
+                `<option value="${b.file}">${b.icon || '📚'} ${b.shortTitle || b.title} (${b.file})</option>`
+            ).join('');
+            
+            if (targetSel) targetSel.innerHTML = optionsHtml;
+            if (systemSel) systemSel.innerHTML = optionsHtml;
+        }
+    } catch (e) {
+        console.error("載入系統題庫目錄失敗:", e);
+    }
+}
+
+async function createNewSystemBank() {
+    const bankName = prompt("請輸入新題庫的名稱 (例如: 2026-前端網頁設計):");
+    if (!bankName) return;
+    
+    const bankFileName = prompt("請輸入新題庫的檔案名稱 (必須以 .json 結尾，例如: frontend-2026.json):");
+    if (!bankFileName || !bankFileName.endsWith('.json')) {
+        return alert("檔案名稱無效，必須以 .json 結尾");
+    }
+    
+    const bankIcon = prompt("請輸入一個 Emoji 作為題庫圖示 (例如: 🚀):", "🚀");
+    
+    const owner = document.getElementById('gh-owner').value.trim();
+    const repo = document.getElementById('gh-repo').value.trim();
+    const token = document.getElementById('gh-token').value.trim();
+    if (!owner || !repo || !token) return alert("請先完成並儲存上方 GitHub 設定！");
+    
+    try {
+        // 1. 建立空題庫
+        const emptyContent = { problems: [] };
+        // Base64 encode for UTF-8
+        const b64Content = btoa(encodeURIComponent(JSON.stringify(emptyContent, null, 2)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
+        
+        let res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${bankFileName}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Create new system bank: ${bankFileName}`,
+                content: b64Content
+            })
+        });
+        
+        if (!res.ok) throw new Error("建立題庫檔案失敗");
+        
+        // 2. 更新 system-banks-index.json
+        const newBankEntry = {
+            file: bankFileName,
+            title: bankName,
+            shortTitle: bankName,
+            desc: "全新系統題庫。",
+            footer: "載入題目",
+            iconBoxClass: "bg-blue",
+            faIcon: "fa-solid fa-folder",
+            icon: bankIcon || "🚀"
+        };
+        
+        systemBanksIndexData.push(newBankEntry);
+        
+        // 取得原本 index 的 sha
+        let sha = null;
+        try {
+            const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if (getRes.ok) {
+                const getData = await getRes.json();
+                sha = getData.sha;
+            }
+        } catch(e){}
+        
+        const indexB64 = btoa(encodeURIComponent(JSON.stringify(systemBanksIndexData, null, 4)).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
+        
+        const updateBody = {
+            message: `Update system banks index with ${bankFileName}`,
+            content: indexB64
+        };
+        if (sha) updateBody.sha = sha;
+        
+        res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/system-banks-index.json`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateBody)
+        });
+        
+        if (!res.ok) throw new Error("更新題庫目錄失敗");
+        
+        alert("✅ 成功建立新題庫！重新整理頁面後即可看到。");
+        loadSystemBanksIndex();
+        
+    } catch (e) {
+        alert("發生錯誤：" + e.message);
+    }
+}
+
+/ / 
+ 
+ E n d 
+ 
+ o f 
+ 
+ f i l e 
+ 
+ 
