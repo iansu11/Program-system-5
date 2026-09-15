@@ -14,7 +14,6 @@ window.addEventListener('personalCloudReady', () => {
     loadAnnouncements();
     loadGitHubSettings();
     loadCustomBanksForSelect();
-    loadSystemBanksIndex();
 });
 
 // === 公告管理 ===
@@ -473,12 +472,3 @@ async function publishEditedSystemBank() {
     }
 }
 
-/ / 
- 
- E n d 
- 
- o f 
- 
- f i l e 
- 
- 
