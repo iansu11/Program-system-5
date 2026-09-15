@@ -81,6 +81,13 @@ try {
         window.systemEditData = JSON.parse(systemDataStr);
         p = window.systemEditData.problems.find(x => String(x.id) === String(currentProbId));
         
+        // 動態將「設定」按鈕改為「完成測試」並關閉分頁
+        const adminBtn = document.querySelector('button[onclick="goToAdmin()"]');
+        if (adminBtn) {
+            adminBtn.innerHTML = '✅ 完成測試';
+            adminBtn.onclick = function() { window.close(); };
+        }
+
         // 將草稿題目注入全域 db，這樣後續所有的 helper function (如 renderWorkspaceTabs) 都能正確找到它
         if (!db.problems) db.problems = [];
         const existingIdx = db.problems.findIndex(x => String(x.id) === String(currentProbId));
