@@ -101,6 +101,50 @@ function showView(viewId) {
     });
 }
 
+async function loadSystemBanksGrid() {
+    const grid = document.getElementById('systemBanksGrid');
+    if (!grid) return;
+    
+    // 從快取讀取
+    let cachedBanks = [];
+    try {
+        const cached = localStorage.getItem('oj_v15_system_banks_index');
+        if (cached) cachedBanks = JSON.parse(cached);
+    } catch(e) {}
+    
+    function renderBanks(banks) {
+        grid.innerHTML = '';
+        banks.forEach(bank => {
+            const card = document.createElement('div');
+            card.className = 'saas-card saas-card-sm clickable';
+            card.onclick = () => fetchAndLoadBank('/' + bank.file, bank.title);
+            
+            card.innerHTML = `
+                <div class="card-icon-box ${bank.iconBoxClass || 'bg-blue'}"><i class="${bank.faIcon || 'fa-solid fa-folder'}"></i></div>
+                <h3>${bank.shortTitle || bank.title}</h3>
+                <p>${bank.desc || '系統預設題庫。'}</p>
+                <div class="card-footer">${bank.footer || '載入題目'}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 先用快取渲染一次 (無延遲)
+    if (cachedBanks.length > 0) renderBanks(cachedBanks);
+    
+    // 背景更新最新目錄
+    try {
+        const res = await fetch('/system-banks-index.json?_t=' + new Date().getTime());
+        if (res.ok) {
+            const banks = await res.json();
+            localStorage.setItem('oj_v15_system_banks_index', JSON.stringify(banks));
+            renderBanks(banks);
+        }
+    } catch (e) {
+        console.error("載入題庫目錄失敗:", e);
+    }
+}
+
 function navigateTo(path) {
     history.pushState(null, '', path);
     handleRouteChange();
@@ -117,6 +161,7 @@ function handleRouteChange() {
 
     if (path === '/source-selector') {
         updateLearningStats();
+        if (typeof loadSystemBanksGrid === 'function') loadSystemBanksGrid();
         showView('view-source-selector');
     }
     else if (path === '/portal') {
