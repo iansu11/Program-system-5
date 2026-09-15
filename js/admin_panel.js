@@ -662,7 +662,7 @@ async function deleteSystemBank() {
     const token = document.getElementById('ghToken').value.trim();
     if (!owner || !repo || !token) return alert("請先完成並儲存 GitHub 設定！");
 
-    if (!confirm(`確定要清除題庫 ${fileName} 嗎？這會將它從系統目錄中移除。`)) return;
+    if (!confirm(`確定要清除題庫 ${fileName} 嗎？這會將它從系統目錄中移除，並且從 GitHub 上刪除該檔案！`)) return;
 
     const bankIndex = systemBanksIndexData.findIndex(b => b.file === fileName);
     if (bankIndex === -1) return alert("找不到該題庫的索引資料");
@@ -701,7 +701,32 @@ async function deleteSystemBank() {
 
         if (!res.ok) throw new Error("更新題庫目錄失敗");
 
-        alert("✅ 成功清除題庫！");
+        // 嘗試從 GitHub 上刪除實體檔案
+        try {
+            const fileGetRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if (fileGetRes.ok) {
+                const fileData = await fileGetRes.json();
+                if (fileData.sha) {
+                    await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Delete system bank file ${fileName}`,
+                            sha: fileData.sha
+                        })
+                    });
+                }
+            }
+        } catch (delErr) {
+            console.error("刪除實體檔案失敗：", delErr);
+        }
+
+        alert("✅ 成功清除題庫與實體檔案！");
         window.location.reload();
     } catch (e) {
         alert("清除失敗：" + e.message);
